@@ -37,9 +37,6 @@ web/
 |회원가입|약관동의도 간략하게 만들건지?, DB연결|임새롬|
 |데이터분석관련페이지는 추후에|-|-|
 
-
-
-
 ## 참고할 사이트
 <a href="https://seahippocampus.tistory.com/category/%EA%B0%9C%EB%B0%9C/%EC%9B%B9%20%EA%B0%9C%EB%B0%9C">[웹개발관련]</a>  
 <a href="https://hnev.tistory.com/category/Spring%20Boot/%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A7%8C%EB%93%A4%EA%B8%B0">[부트스트랩 게시판]</a>
