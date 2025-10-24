@@ -1,18 +1,21 @@
 # JOB-A-YO_PJ
 
 ```
-web/
+Front/
 ├── css/
+│   ├── ckEditorStyle.css  
 │   ├── common.css
 │   ├── join.css
 │   ├── login.css
-│   └── main.css
+│   ├── main.css
+│   └── writeBoard.css
 ├── font/
 ├── image/
 ├── js/
 ├── join.html
 ├── login.html
-└── main.html
+├── main.html
+└── writeBoard.html
 ```
 
 - <a href="https://bigdata.sbiz.or.kr/#/" target="_blank">[소상공인365 사이트]</a>
