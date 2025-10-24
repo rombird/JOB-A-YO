@@ -24,15 +24,15 @@ public class BoardController {
         return "board";
     }
 
-    @GetMapping("/boardWrite")
+    @GetMapping("/writeBoard")
     public String writeForm(){
-        log.info("Get/ boardWrite 게시판 글쓰기");
+        log.info("Get/ writeBoard 게시판 글쓰기");
 
-        return"boardWrite";
+        return"writeBoard";
 
     }
 
-    @PostMapping("/boardWrite")
+    @PostMapping("/writeBoard")
     public String write(@ModelAttribute BoardDto boardDto){
         System.out.println("boardDto:" +boardDto);
         boardService.save(boardDto);
