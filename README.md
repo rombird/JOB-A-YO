@@ -1,6 +1,14 @@
 # JOB-A-YO_PJ
-- 각자 이름으로 브랜치 만들어서 작업 - main JOB-A-YO 그대로 이어 작업하기!!  
-- 진행상황은 개인 브랜치에서 readme 파일이 기록!!
+> 핵심 기능 : 사용자가 원하는 소비층, 사용할 수 있는 자금, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
+>   
+> 필수 기능 : 로그인·회원가입, 게시판글쓰기·글목록
+> → 백엔드 작업으로 구현 (**11월 3일까지**) 
+
+
+- 각자 이름으로 브랜치 만들어서 작업 - main : JOB-A-YO 그대로 이어 작업
+- 진행상황은 개인 브랜치에서 readme 파일이 기록
+
+
 ```
 Front/
 ├── css/
@@ -19,9 +27,12 @@ Front/
 └── writeBoard.html
 ```
 
+## 참고 사이트
+- <a href="https://seahippocampus.tistory.com/category/%EA%B0%9C%EB%B0%9C/%EC%9B%B9%20%EA%B0%9C%EB%B0%9C">[웹개발관련]</a>  
+- <a href="https://hnev.tistory.com/category/Spring%20Boot/%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A7%8C%EB%93%A4%EA%B8%B0">[부트스트랩 게시판]</a>
 - <a href="https://bigdata.sbiz.or.kr/#/" target="_blank">[소상공인365 사이트]</a>
 - <a href="https://www.semas.or.kr/web/main/index.kmdc" target="_blank">[소상공인시장진흥공단 사이트]</a>  
-- <a href="https://ols.semas.or.kr/ols/man/SMAN010M/page.do" target="_blank">[소상공인정책자금 사이트]</a>  
+- <a href="https://ols.semas.or.kr/ols/man/SMAN010M/page.do" target="_blank">[소상공인정책자금 사이트]</a>
 
 ## 역할분담
 |이름|통합 담당 분야|
@@ -41,9 +52,12 @@ Front/
 |회원가입|약관동의도 간략하게 만들건지?, DB연결|임새롬|
 |데이터분석관련페이지는 추후에|-|-|
 
+## 필요한 데이터
+- 인구 및 상권 데이터
+- 상권 및 업종 데이터(폐업률, 창업률 등)  
+- 지역별 카드 매출 데이터
+- 지역별 소득 데이터  
+- 지자체 도시계획, 재개발/재건축 구역 정보(? - 포함할 지 고민중)
 
 
 
-## 참고할 사이트
-<a href="https://seahippocampus.tistory.com/category/%EA%B0%9C%EB%B0%9C/%EC%9B%B9%20%EA%B0%9C%EB%B0%9C">[웹개발관련]</a>  
-<a href="https://hnev.tistory.com/category/Spring%20Boot/%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A7%8C%EB%93%A4%EA%B8%B0">[부트스트랩 게시판]</a>
