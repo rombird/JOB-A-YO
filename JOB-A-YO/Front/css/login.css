@@ -10,18 +10,18 @@ body{
     height: 700px;
     display: flex;
     justify-content: center;
-    /* border:1px solid; */
+    
     flex-grow: 1;
 }
 
 .sign-in>main{
     margin:70px 0;
     width: 500px;
-    /* border:1px solid; */
+    
 }
 
 .sign-in>main>h2{
-    /* 로그인 글자  */
+    
     text-align: center;
     width: 500px;
     height: 45px;
@@ -30,31 +30,26 @@ body{
 }
 
 .under-line{
-    /* 로그인 밑의 줄을 위해 */
+    
     height: 30px;
     margin-bottom: 40px;
     border-bottom: 1px solid black;
 }
 
 .login{
-    /* 아이디(이메일)부터 비밀번호찾기까지의 공간 */
+    
     width: 500px;
 }
 
-.login>.form{
-    /* 로그인 폼 있는 공간 */
-    /* border:1px solid; */
-}
 
 .form>dt{
-    /* 아이디랑 비밀번호 글자 태그 */
     width: 100%;
     font-family:"nexonBold";
     margin: 5px 0;
     font-size:20px;
 }
 .form>input{
-    /* 아이디와 비밀번호 input 태그  */
+    
     width: 100%;
     height: 50px;
     margin: 5px 0;
@@ -63,7 +58,7 @@ body{
 }
 
 .form>.submit-block{
-    /* 로그인 submit 태그 */
+    
     height: 70px;
     background-color: #3A6B71;
     color: white;
@@ -86,7 +81,7 @@ body{
 }
 
 .login-a-tag{
-    /* 회원가입, 아이디 찾기, 비밀번호 찾기의 a태그 */
+     
     word-spacing: -1px;
     font-family:"nexonRegular";
 }
