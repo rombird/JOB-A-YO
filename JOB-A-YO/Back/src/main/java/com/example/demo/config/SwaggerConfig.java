@@ -1,19 +1,26 @@
 package com.example.demo.config;
-
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
+@EnableWebMvc
 public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(info);
+                .components(new Components())
+                .info(apiInfo());
     }
 
-    Info info = new Info().title("Swagger").version("0.0.1").description(
-            "<h3>Job-A-YO API 설명서</h3>");
+    private Info apiInfo() {
+        return new Info()
+                .title("API Title") // API의 제목
+                .description("This is my Swagger UI") // API에 대한 설명
+                .version("1.0.0"); // API의 버전
+    }
 }

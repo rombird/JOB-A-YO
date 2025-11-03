@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.BoardDto;
 import com.example.demo.service.BoardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -14,42 +16,46 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/board")
 @RequiredArgsConstructor
+@Tag(name = "BoardController", description = "게시판")
 public class BoardController {
 
     private final BoardService boardService;
 
 
     // 게시글 목록 페이지
-    @GetMapping("")
+    @Operation(summary = "board", description = "게시판목록")
+    @GetMapping("/board")
     public String findAll(Model model){
         // DB에서 전체 게시글 데이터를 가져와서 board.html에 보여준다
         log.info("GET /board 게시글 목록 페이지");
 
         List<BoardDto> boardDtoList =  boardService.findAll();
         model.addAttribute("boardList", boardDtoList);
-        return "board";
-
+        return "board/board";
     }
 
     // 글쓰기 페이지 이동
-    @GetMapping("/writeBoard")
+    @Operation(summary = "writeBoard", description = "글쓰기 페이지 이동")
+    @GetMapping("/board/writeBoard")
     public String writeForm(){
         log.info("Get/ writeBoard 게시판 글쓰기");
 
-        return"writeBoard";
+        return"board/writeBoard";
     }
 
     // 글쓴거 포스팅
-    @PostMapping("/writeBoard")
+    @Operation(summary = "writeBoardPost", description = "글 쓴거 DB로 보냄")
+    @PostMapping("/board/writeBoard")
     public String write(@ModelAttribute BoardDto boardDto){
         System.out.println("boardDto:" +boardDto);
         boardService.save(boardDto);
 
-        return "redirect:/board";
+        return "redirect:/board/board";
     }
 
-    // 게시글
-    @GetMapping("/{id}")
+    // 게시글 조회
+    @Operation(summary = "boardDetail", description = "게시글 단건 조회")
+    @GetMapping("/board/{id}")
     public String findById(@PathVariable Long id, Model model){
         // 해당 게시글의 조회수를 하나 늘리고
         // 게시글 데이터를 가져와서 detail.html에 출력
@@ -57,7 +63,18 @@ public class BoardController {
         BoardDto boardDto = boardService.findById(id);
         model.addAttribute("board", boardDto);
 
-        return "detail";
+        return "board/detail";
     }
+
+    // 게시글 수정 (Update)
+    @GetMapping("/board/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model){
+        BoardDto boardDto = boardService.findById(id);
+        model.addAttribute("boardUpdate", boardDto);
+
+        return null;
+    }
+
+
 
 }
