@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BoardDto {
     private Long id;
-//    private String boardWriter;
-//    private String boardPass;
+    private String boardWriter;
+    private String boardPass;
     private String boardTitle;
     private String boardContents;
     private int boardHits;
@@ -23,6 +23,8 @@ public class BoardDto {
         BoardDto boardDto = new BoardDto();
 
         boardDto.setId(boardEntity.getId());
+        boardDto.setBoardWriter(boardEntity.getBoardWriter());
+        boardDto.setBoardPass(boardEntity.getBoardPass());
         boardDto.setBoardContents(boardEntity.getBoardContents());
         boardDto.setBoardHits(boardEntity.getBoardHits());
         boardDto.setBoardTitle(boardEntity.getBoardTitle());

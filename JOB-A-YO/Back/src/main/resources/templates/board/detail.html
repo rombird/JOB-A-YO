@@ -11,6 +11,10 @@
         <td th:text="${board.id}"></td>
     </tr>
     <tr>
+        <th>Writer</th>
+        <td th:text="${board.boardWriter}"></td>
+    </tr>
+    <tr>
         <th>title</th>
         <td th:text="${board.boardTitle}"></td>
     </tr>
@@ -42,13 +46,13 @@
     const updateReq = () => {
         console.log("수정페이지 요청");
         const id = [[${board.id}]];
-        location.href = "/board/board/update" + id;
+        location.href = "/board/board/update/" + id;
     }
 
     const deleteReq = () => {
         console.log("삭제 요청");
         const id = [[${board.id}]];
-        location.href = "/board/board/delete" + id;
+        location.href = "/board/board/delete/" + id;
     }
 
 

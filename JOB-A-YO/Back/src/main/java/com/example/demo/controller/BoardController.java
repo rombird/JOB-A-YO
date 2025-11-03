@@ -72,9 +72,17 @@ public class BoardController {
         BoardDto boardDto = boardService.findById(id);
         model.addAttribute("boardUpdate", boardDto);
 
-        return null;
+        return "board/update";
     }
 
+    @PostMapping("/board/update")
+    public String update(@ModelAttribute BoardDto boardDto, Model model){
+        BoardDto board = boardService.update(boardDto);
+        model.addAttribute("board", board);
+
+        System.out.println("contents = " + boardDto.getBoardContents());
+        return "board/detail";
+    }
 
 
 }
