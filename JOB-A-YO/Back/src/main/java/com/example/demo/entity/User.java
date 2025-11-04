@@ -26,5 +26,6 @@ public class User {
     @Column(length=255, nullable=false)
     private String password;
 
+    private String role;
     // private String addr;
 }
