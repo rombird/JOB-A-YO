@@ -2,9 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import "./join.css";
 
-
 import MemoPost from "./components/User/join";
-
 
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
