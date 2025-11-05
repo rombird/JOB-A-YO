@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
-@RequestMapping("/board")
+//@RequestMapping("/board")
 @RequiredArgsConstructor
 @Tag(name = "BoardController", description = "게시판")
 public class BoardController {
@@ -50,7 +50,7 @@ public class BoardController {
         System.out.println("boardDto:" +boardDto);
         boardService.save(boardDto);
 
-        return "redirect:/board/board";
+        return "redirect:/board";
     }
 
     // 게시글 조회
@@ -67,6 +67,7 @@ public class BoardController {
     }
 
     // 게시글 수정 (Update)
+    @Operation(summary = "boardUpdate", description = "게시글 수정 ")
     @GetMapping("/board/update/{id}")
     public String updateForm(@PathVariable Long id, Model model){
         BoardDto boardDto = boardService.findById(id);
@@ -75,13 +76,16 @@ public class BoardController {
         return "board/update";
     }
 
+    @Operation(summary = "boardUpdatePost", description = "게시글 수정 포스팅")
     @PostMapping("/board/update")
     public String update(@ModelAttribute BoardDto boardDto, Model model){
+        log.info("post/ board/update... 게시판 업데이트 포스팅");
+
         BoardDto board = boardService.update(boardDto);
         model.addAttribute("board", board);
 
         System.out.println("contents = " + boardDto.getBoardContents());
-        return "board/detail";
+        return "redirect:/board/" + boardDto.getId(); // 게시글 상세페이지로 이동
     }
 
 
