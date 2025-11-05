@@ -1,25 +1,38 @@
 package com.example.demo.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
 
 @Configuration
+@EnableTransactionManagement
 public class TxConfig {
-    // Basic TransactionManager Settings
     @Autowired
-    private HikariDataSource dataSource;
+    private DataSource dataSource;
+
+//    // 기본 TransactionManager
+//    @Bean(name = "dataSourceTransactionManager")
+//    public DataSourceTransactionManager transactionManager2() {
+//        //System.out.println("TX dataSrouce2 : " + dataSource2.toString());
+//        return new DataSourceTransactionManager(dataSource);
+//    }
+
 
     //    JPA TransactionManager Settings
     @Bean(name="jpaTransactionManager")
-    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         transactionManager.setDataSource(dataSource);
+
         return transactionManager;
     }
 
 }
+

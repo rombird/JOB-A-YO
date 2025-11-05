@@ -1,27 +1,34 @@
-import logo from "./logo.svg";
-import "./App.css";
-import "./join.css";
+import logo from './logo.svg';
+import './App.css';
+import Join from './components/Join'
+import Login from './components/Login'
+import Logout from './components/Logout'
+import Main from './components/Main'
+import User from './components/User'
 
-import MemoPost from "./components/User/join";
-
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-
+import {BrowserRouter as Router,Route,Routes,Link} from 'react-router-dom'
 function App() {
   return (
     <Router>
       <div>
-        <Link to="/param">PARAM TEST</Link> <br/>
-        <Link to="/memo/post">MEMO POST</Link> <br/>
-        <Link to="/memo/list">MEMO LIST(EXCEPTION TEST)</Link> <br/><br/>
+        <Link to="/">MAIN</Link> <br/>
+        <Link to="/user">USER</Link> <br/>
+        <Link to="/join">JOIN</Link> <br/>
+        <Link to="/login">LOGIN</Link> <br/>
+        <Link to="/logout">LOGOUT</Link> <br/>
+
       </div>
+
       <Routes>
-        {/* Route 설정 */}
-        <Route path="/user/join" element={<Join />} />
-        <Route path="/memo/list" element={<MemoList />} />
-        <Route path="/exception" element={<Exception />} />
+        <Route path="/" element={<Main />} />
+        <Route path="/user" element={   <User/>  } />
+        <Route path="/join" element={<Join />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+

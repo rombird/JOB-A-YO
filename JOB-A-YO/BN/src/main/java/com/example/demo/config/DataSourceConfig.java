@@ -1,23 +1,34 @@
 package com.example.demo.config;
 
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.boot.jdbc.DataSourceBuilder;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 public class DataSourceConfig {
 
-    @Bean
-    public HikariDataSource dataSource()
-    {
-        return 	DataSourceBuilder.create()
 
-                .type(HikariDataSource.class)
-                .username("root")
-                .password("1234")
-                .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://localhost:3306/testdb")
-                .build();
-    }
+	@Value("${spring.datasource.classname}")
+	private String DBClassName;
+	@Value("${spring.datasource.url}")
+	private String DBJdbcUrl;
+	@Value("${spring.datasource.username}")
+	private String username;
+	@Value("${spring.datasource.password}")
+	private String password;
+	@Bean
+	public HikariDataSource dataSource()
+	{
+		HikariDataSource dataSource = new HikariDataSource();
+		dataSource.setDriverClassName(DBClassName);
+		dataSource.setJdbcUrl(DBJdbcUrl);
+		dataSource.setUsername(username);
+		dataSource.setPassword(password);
+		 
+		return dataSource;
+	}
+	
+	
 }
