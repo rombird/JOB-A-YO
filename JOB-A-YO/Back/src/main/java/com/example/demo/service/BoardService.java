@@ -61,6 +61,7 @@ public class BoardService {
         }
     }
 
+    // DB에 수정된 Dto를 entity로 변환해서 넣어주기
     public BoardDto update(BoardDto boardDto){
         BoardEntity boardEntity = BoardEntity.toUpdateEntity(boardDto);
 
@@ -68,5 +69,12 @@ public class BoardService {
 
         return findById(boardDto.getId());
     }
+
+    // 삭제 기능
+    public void delete(Long id){
+        boardRepository.deleteById(id);
+
+    }
+
 
 }
