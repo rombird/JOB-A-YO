@@ -6,6 +6,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -88,12 +91,36 @@ public class BoardController {
         return "redirect:/board/" + boardDto.getId(); // 게시글 상세페이지로 이동
     }
 
+    @Operation(summary = "boardDeleteGet", description = "게시글 삭제 Get 요청")
     @GetMapping("/board/delete/{id}")
     public String delete(@PathVariable Long id){
         log.info("GET/ board/delete/{id}... 게시글 지우기 boardController");
 
         boardService.delete(id);
         return "redirect:/board";
+    }
+
+    // 이런식으로 요청 날릴거야/board/paging?/page=1
+    @GetMapping("/board/paging")
+    public String paging(@PageableDefault(page = 1)Pageable pageable, Model model){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
+        log.info("GET/board/paging... 페이징처리 BoardController");
+        Page<BoardDto> boardList = boardService.paging(pageable);
+
+        int blockLimit = 3;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; // 1, 4, 7,
+        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+
+        // page 갯수 20개
+        // 현재 사용자각 3페이지
+        // 보여지는 페이지1 2 3
+        // 현재 사용자가 5페이지라면 5, 6, 7
+        // 보여지는 페이지 갯수 3개
+
+        model.addAttribute("boardList" , boardList);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "board/paging";
     }
 
 }
