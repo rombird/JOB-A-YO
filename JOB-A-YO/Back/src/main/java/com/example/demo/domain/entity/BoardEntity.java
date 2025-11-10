@@ -1,6 +1,6 @@
-package com.example.demo.entity;
+package com.example.demo.domain.entity;
 
-import com.example.demo.dto.BoardDto;
+import com.example.demo.domain.dto.BoardDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
