@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.BoardDto;
-import com.example.demo.entity.BoardEntity;
-import com.example.demo.repository.BoardRepository;
+import com.example.demo.domain.dto.BoardDto;
+import com.example.demo.domain.entity.BoardEntity;
+import com.example.demo.domain.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;

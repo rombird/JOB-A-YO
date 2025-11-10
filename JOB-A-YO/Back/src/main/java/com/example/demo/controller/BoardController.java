@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BoardDto;
+import com.example.demo.domain.dto.BoardDto;
 import com.example.demo.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,13 +59,14 @@ public class BoardController {
     // 게시글 조회
     @Operation(summary = "boardDetail", description = "게시글 단건 조회")
     @GetMapping("/board/{id}")
-    public String findById(@PathVariable Long id, Model model){
+    public String findById(@PathVariable Long id, Model model,
+                           @PageableDefault(page = 1)Pageable pageable) {
         // 해당 게시글의 조회수를 하나 늘리고
         // 게시글 데이터를 가져와서 detail.html에 출력
         boardService.updateHits(id);
         BoardDto boardDto = boardService.findById(id);
         model.addAttribute("board", boardDto);
-
+        model.addAttribute("page", pageable.getPageNumber());
         return "board/detail";
     }
 
