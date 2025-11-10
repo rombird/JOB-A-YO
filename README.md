@@ -94,5 +94,5 @@ Front/
 
 ## 참고할 사이트
 <a href="https://seahippocampus.tistory.com/category/%EA%B0%9C%EB%B0%9C/%EC%9B%B9%20%EA%B0%9C%EB%B0%9C">[웹개발관련]</a>  
-<a href="[https://seahippocampus.tistory.com/category/%EA%B0%9C%EB%B0%9C/%EC%9B%B9%20%EA%B0%9C%EB%B0%9C](https://www.youtube.com/watch?v=nMSFHreQdbU)">[스프링부트, 리액트를 이용한 로그인(스프링 부트 기반 RestFul 서버 구축, 리액트 기반 JWT 저장, 자체/소셜(네이버,카카오) 로그인, RefreshToken과 AccessToken]</a>  
+<a href="https://www.youtube.com/watch?v=nMSFHreQdbU">[스프링부트, 리액트를 이용한 로그인(스프링 부트 기반 RestFul 서버 구축, 리액트 기반 JWT 저장, 자체/소셜(네이버,카카오) 로그인, RefreshToken과 AccessToken]</a>  
 <a href="https://hnev.tistory.com/category/Spring%20Boot/%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A7%8C%EB%93%A4%EA%B8%B0">[부트스트랩 게시판]</a>
