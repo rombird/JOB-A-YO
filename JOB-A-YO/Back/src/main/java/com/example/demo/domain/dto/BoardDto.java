@@ -3,6 +3,7 @@ package com.example.demo.domain.dto;
 
 import com.example.demo.domain.entity.BoardEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,11 @@ public class BoardDto {
     private LocalDateTime boardCreateTime;
     private LocalDateTime boardUpdateTime;
 
+    // 파일 업로드 관련
+    private MultipartFile fileUpload; // 파일 담는 용도
+    private String originalFilename; // 원본 파일 이름
+    private String storedFilename; // 서버 저장용 파일 이름
+    private int fileAttached;   // 파일 첨부 여부(첨부 1, 미첨부 0)
 
     public BoardDto(Long id, String boardWriter, String boardTitle, int boardHits, LocalDateTime boardCreateTime) {
         this.id = id;

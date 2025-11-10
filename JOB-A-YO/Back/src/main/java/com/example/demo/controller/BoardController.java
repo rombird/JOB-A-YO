@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -49,8 +50,9 @@ public class BoardController {
     // 글쓴거 포스팅
     @Operation(summary = "writeBoardPost", description = "글 쓴거 DB로 보냄")
     @PostMapping("/board/writeBoard")
-    public String write(@ModelAttribute BoardDto boardDto){
+    public String write(@ModelAttribute BoardDto boardDto) throws IOException {
         System.out.println("boardDto:" +boardDto);
+
         boardService.save(boardDto);
 
         return "redirect:/board";

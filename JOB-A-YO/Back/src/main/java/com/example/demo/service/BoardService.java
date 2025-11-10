@@ -11,8 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,13 +29,35 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public void save(BoardDto boardDto){
+    public void save(BoardDto boardDto) throws IOException {
 
+        // TextArea에서 SQL로 넘어갈때 HTML태그도 같이 저장되는 걸 막기 위해서
         String cleanText = Jsoup.parse(boardDto.getBoardContents()).text();
         boardDto.setBoardContents(cleanText);
 
-        BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDto);
-        boardRepository.save(boardEntity);     // boardRepository는 파라미터로 entity객체만 받음. 그래서 dto <-> entity 작업이 필요
+        // 파일 첨부 여부에 따라 로직 분리
+        if(boardDto.getFileUpload().isEmpty()){
+            // 첨부 파일 없음
+            BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDto);
+            boardRepository.save(boardEntity);     // boardRepository는 파라미터로 entity객체만 받음. 그래서 dto <-> entity 작업이 필요
+        }else{
+            // 첨부 파일 있음
+            // 1. DTO에 담긴 파일 꺼냄
+            // 2. 파일의 이름 가져옴
+            // 3. 서버 저장용 이름을 만듬 // ex: 내사진.jpg ->  123123123_내사진.jpg
+            // 4. 저장 경로 설정
+            // 5. 해당 경로에 파일을 저장하는 처리
+            // 6. board_table(SQL)에 해당 데이터 Save 처리
+            // 7, board_file_table에 해당 데 이터 save 처리
+
+            MultipartFile boardFile = boardDto.getFileUpload(); // 1. Dto에 담긴 파일 꺼냄
+            String originalFilename = boardFile.getOriginalFilename(); // 2. 파일의 이름 가져옴
+            String storedFileName = System.currentTimeMillis() + "_" + originalFilename; // 3. 서버저장용 이름 만듬
+            String savePath = "c:/springboot_img/" + storedFileName; // 4. 저장 경로 설정
+            boardFile.transferTo(new File(savePath));   // 5. 해당경로에 파일 저장
+
+
+        }
 
     }
 
