@@ -1,7 +1,7 @@
-package com.example.demo.dto;
+package com.example.demo.domain.dto;
 
 
-import com.example.demo.entity.BoardEntity;
+import com.example.demo.domain.entity.BoardEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;

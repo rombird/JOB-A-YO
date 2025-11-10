@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.domain.entity.User;
+import com.example.demo.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,10 +14,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User create(String username, String email_id, String password, String addr) {
+    public User create(String id, String username, String password, String addr_sido) {
         User user = new User();
+        user.setId(id);
         user.setUsername(username);
-        user.setEmail_id(email_id);
+        user.setAddr_sido(addr_sido);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(password));
 //        user.setAddr(addr);

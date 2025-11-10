@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.domain.entity;
 
 
 import jakarta.persistence.Column;
@@ -18,7 +18,7 @@ public class User {
 
     @Id
     @Column(length=255, unique = true)
-    private String email_id;
+    private String id;
 
     @Column(length=255)
     private String username;
@@ -26,5 +26,9 @@ public class User {
     @Column(length=255, nullable=false)
     private String password;
 
-    // private String addr;
+    private String email;
+
+    private String addr_sido;
+
+    private String role;
 }
