@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Board DB의 테이블 역할을 하는 클래스
 @Entity
 @Data
@@ -35,6 +38,13 @@ public class BoardEntity extends BaseEntity{
 
     @Column
     private int fileAttached; // 1 or 0
+
+
+    // 1 대 N
+    // mappedBy 차례대로 어떤 것(boardEntity)과 매칭되느냐?, cascade 하고, onDelete 하나, fetch 속성은 Lazy
+    @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
+
 
     public static BoardEntity toSaveEntity(BoardDto boardDto){
         BoardEntity boardEntity = new BoardEntity();
