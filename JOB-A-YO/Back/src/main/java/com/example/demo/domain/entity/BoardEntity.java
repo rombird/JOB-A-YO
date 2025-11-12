@@ -73,4 +73,16 @@ public class BoardEntity extends BaseEntity{
         return boardEntity;
     }
 
+    public static BoardEntity toSaveFileEntity(BoardDto boardDto) {
+        BoardEntity boardEntity = new BoardEntity();
+
+        boardEntity.setBoardWriter(boardDto.getBoardWriter());
+        boardEntity.setBoardPass(boardDto.getBoardPass());
+        boardEntity.setBoardHits(0);
+        boardEntity.setBoardTitle(boardDto.getBoardTitle());
+        boardEntity.setBoardContents(boardDto.getBoardContents());
+        boardEntity.setFileAttached(1); // 파일 있음,
+
+        return boardEntity;
+    }
 }

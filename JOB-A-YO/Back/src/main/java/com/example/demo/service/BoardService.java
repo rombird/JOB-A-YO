@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.domain.dto.BoardDto;
 import com.example.demo.domain.entity.BoardEntity;
+import com.example.demo.domain.entity.BoardFileEntity;
+import com.example.demo.domain.repository.BoardFileRepository;
 import com.example.demo.domain.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardFileRepository boardFileRepository;
 
     public void save(BoardDto boardDto) throws IOException {
 
@@ -48,7 +51,7 @@ public class BoardService {
             // 4. 저장 경로 설정
             // 5. 해당 경로에 파일을 저장하는 처리
             // 6. board_table(SQL)에 해당 데이터 Save 처리
-            // 7, board_file_table에 해당 데 이터 save 처리
+            // 7, board_file_table에 해당 데이터 save 처리
 
             MultipartFile boardFile = boardDto.getFileUpload(); // 1. Dto에 담긴 파일 꺼냄
             String originalFilename = boardFile.getOriginalFilename(); // 2. 파일의 이름 가져옴
@@ -56,7 +59,13 @@ public class BoardService {
             String savePath = "c:/springboot_img/" + storedFileName; // 4. 저장 경로 설정
             boardFile.transferTo(new File(savePath));   // 5. 해당경로에 파일 저장
 
+            BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDto);   // 6. board_table(SQL)에 해당 데이터 Save 처리
+            Long saveId = boardRepository.save(boardEntity).getId();
+            BoardEntity board  = boardRepository.findById(saveId).get();
 
+            // 7, board_file_table에 해당 데이터 save 처리
+            BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
+            boardFileRepository.save(boardFileEntity);
         }
 
     }
