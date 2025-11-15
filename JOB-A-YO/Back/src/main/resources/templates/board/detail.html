@@ -30,6 +30,13 @@
         <th>contents</th>
         <td th:text="${board.boardContents}"></td>
     </tr>
+    <tr th:if="${board.fileAttached == 1}">
+        <th>업로드한 파일</th>
+<!--  이미지를 보여주고 싶을 경우  <td><img th:src="@{|/upload/${board.storedFilename}|}" alt="파일이름"></td>-->
+        <td th:each="filename: ${board.storedFilename}">
+            <a th:href="@{|/upload/${board.id}|}" th:text="${board.originalFilename}"></a>
+        </td>
+    </tr>
 </table>
 
 <button onclick="listReq()">목록</button>

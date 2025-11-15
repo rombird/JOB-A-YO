@@ -3,6 +3,7 @@ package com.example.demo.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 
@@ -39,6 +40,7 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Entity
 @Getter
+@ToString
 @Setter
 @Table(name = "board_file_table")
 public class BoardFileEntity extends BaseEntity{
@@ -56,6 +58,7 @@ public class BoardFileEntity extends BaseEntity{
     // N:1관계(board_file_table입장에서)
     @ManyToOne(fetch = FetchType.LAZY) // Eager -> 부모테이블 조회시 자식 테이블도 같이 다 조회, Lazy -> 부모테이블 조회 시 필요한 상황에만 호출
     @JoinColumn(name = "board_id")  // 만들어질 컬럼 이름
+    @ToString.Exclude
     private BoardEntity boardEntity;    // 부모 엔티티 타입으로 받아야함
                                         // 참조값을 PK값이 아닌 entity로 넘김
 

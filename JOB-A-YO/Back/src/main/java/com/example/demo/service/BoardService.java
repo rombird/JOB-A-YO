@@ -22,6 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriUtils;
+
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 // DTO -> Entity (Entity 클래스에서 할거임)
 // Entity -> DTO(DTO클래스에서 할거임)
 
@@ -31,6 +47,8 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
+
+
 
     public void save(BoardDto boardDto) throws IOException {
 
@@ -53,23 +71,25 @@ public class BoardService {
             // 6. board_table(SQL)에 해당 데이터 Save 처리
             // 7, board_file_table에 해당 데이터 save 처리
 
-            MultipartFile boardFile = boardDto.getFileUpload(); // 1. Dto에 담긴 파일 꺼냄
-            String originalFilename = boardFile.getOriginalFilename(); // 2. 파일의 이름 가져옴
-            String storedFileName = System.currentTimeMillis() + "_" + originalFilename; // 3. 서버저장용 이름 만듬
-            String savePath = "c:/springboot_img/" + storedFileName; // 4. 저장 경로 설정
-            boardFile.transferTo(new File(savePath));   // 5. 해당경로에 파일 저장
-
             BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDto);   // 6. board_table(SQL)에 해당 데이터 Save 처리
             Long saveId = boardRepository.save(boardEntity).getId();
             BoardEntity board  = boardRepository.findById(saveId).get();
+            for(MultipartFile boardFile: boardDto.getFileUpload()){
+//                MultipartFile boardFile = boardDto.getFileUpload(); // 1. Dto에 담긴 파일 꺼냄
+                String originalFilename = boardFile.getOriginalFilename(); // 2. 파일의 이름 가져옴
+                String storedFileName = System.currentTimeMillis() + "_" + originalFilename; // 3. 서버저장용 이름 만듬
+                String savePath = "c:/springboot_img/" + storedFileName; // 4. 저장 경로 설정
+                boardFile.transferTo(new File(savePath));   // 5. 해당경로에 파일 저장
 
-            // 7, board_file_table에 해당 데이터 save 처리
-            BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
-            boardFileRepository.save(boardFileEntity);
+                // 7, board_file_table에 해당 데이터 save 처리
+                BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
+                boardFileRepository.save(boardFileEntity);
+            }
         }
 
     }
 
+    @Transactional
     public List<BoardDto> findAll(){
         List<BoardEntity> boardEntityList = boardRepository.findAll();
 
@@ -87,6 +107,7 @@ public class BoardService {
         boardRepository.updateHits(id);
     }
 
+    @Transactional
     // 게시글 클릭 시 DB에 있는 내용 보여주기
     public BoardDto findById(Long id){
         Optional<BoardEntity> optionalBoardEntity = boardRepository.findById(id);
@@ -114,6 +135,7 @@ public class BoardService {
     }
 
     // 페이징 기능
+    @Transactional
     public Page<BoardDto> paging(Pageable pageable){
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 3;  // 한 페이지에 보여줄 글 개수

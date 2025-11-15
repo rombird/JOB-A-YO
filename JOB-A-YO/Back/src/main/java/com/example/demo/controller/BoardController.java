@@ -4,11 +4,14 @@ import com.example.demo.domain.dto.BoardDto;
 import com.example.demo.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.dialect.PostgreSQLJsonPGObjectJsonType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +58,7 @@ public class BoardController {
 
         boardService.save(boardDto);
 
-        return "redirect:/board";
+        return "redirect:/board/paging";
     }
 
     // 게시글 조회
@@ -126,4 +129,11 @@ public class BoardController {
         return "board/paging";
     }
 
+//    @Operation(summary = "fileDownload", description = "게시글에 첨부된 파일 다운로드")
+//    @GetMapping("/board/download/{fileId}")
+//    public ResponseEntity<Resource> fileDownload(@PathVariable Long id){
+//        log.info("GET /download/{id}... 파일 다운로등 요청 BoardController");
+//
+//        return boardService.fileDownload(id);
+//    }
 }

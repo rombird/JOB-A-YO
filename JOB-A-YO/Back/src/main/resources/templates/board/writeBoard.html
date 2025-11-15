@@ -19,31 +19,31 @@
 
 
 
-    <style>
-        @font-face {
-            font-family: 'nexonBold';
-            src: url('./font/NEXONLv1GothicBold.ttf');
-            font-style: normal;
-        }
+<!--    <style>-->
+<!--        @font-face {-->
+<!--            font-family: 'nexonBold';-->
+<!--            src: url('/font/NEXONLv1GothicBold.ttf');-->
+<!--            font-style: normal;-->
+<!--        }-->
 
-        @font-face {
-            font-family: 'nexonLight';
-            src: url('./font/NEXONLv1GothicLight.ttf');
-            font-style: normal;
-        }
+<!--        @font-face {-->
+<!--            font-family: 'nexonLight';-->
+<!--            src: url('/font/NEXONLv1GothicLight.ttf');-->
+<!--            font-style: normal;-->
+<!--        }-->
 
-        @font-face {
-            font-family: 'nexonRegular';
-            src: url('./font/NEXONLv1GothicRegular.ttf');
-            font-style: normal;
-        }
+<!--        @font-face {-->
+<!--            font-family: 'nexonRegular';-->
+<!--            src: url('/font/NEXONLv1GothicRegular.ttf');-->
+<!--            font-style: normal;-->
+<!--        }-->
 
-        @font-face {
-            font-family: 'logo';
-            src: url('./font/BitcountGridDouble-SemiBold.ttf');
-            font-style: normal;
-        }
-    </style>
+<!--        @font-face {-->
+<!--            font-family: 'logo';-->
+<!--            src: url('/font/BitcountGridDouble-SemiBold.ttf');-->
+<!--            font-style: normal;-->
+<!--        }-->
+<!--    </style>-->
 
 
 </head>
@@ -55,7 +55,7 @@
             <div class="topList layoutCenter">
                 <ul class="topNav">
                     <li class="topNavli">
-                        <a class="login" href="/user/login"><img class="imgLogin" src="/image/person.svg" alt="">로그인</a>
+                        <a class="login" href="/user/login"><img class="imgLogin" src="@{/image/person.svg}" alt="">로그인</a>
                     </li>
                     <li class="topNavli">
                         <a class=join href="/user/join">회원가입</a>
@@ -129,7 +129,7 @@
                                     <a href="javascript:void(0)">공지사항</a>
                                 </li>
                                 <li class="subList">
-                                    <a href="/board">게시판</a>
+                                    <a href="/board/paging">게시판</a>
                                 </li>
                                 <li class="subList">
                                     <a href="javascript:void(0)">캘린더</a>
@@ -307,7 +307,7 @@
 
                 <input class = "submit-btn" type="submit" id = "submitBtn">
                 <label for="submitBtn">
-                    <button style = "border-color: #3A6B71; color: #335f64;" type="button" class="btn btn-outline-success btn-lg"><a href="/board/board">목록</a></button>
+                    <button style = "border-color: #3A6B71; color: #335f64;" type="button" class="btn btn-outline-success btn-lg"><a href="/board/paging">목록</a></button>
                 </label>
             </div>
 
@@ -348,10 +348,6 @@
     </div>
 </footer>
 </div>
-
-
-
-
 
 
 

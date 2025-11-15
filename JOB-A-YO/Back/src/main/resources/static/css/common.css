@@ -1,21 +1,21 @@
 @font-face {
             font-family: 'nexonBold';
-            src: url('./font/NEXONLv1GothicBold.ttf');
+            src: url('/font/NEXONLv1GothicBold.ttf');
             font-style: normal;
         }
         @font-face {
             font-family: 'nexonLight';
-            src: url('./font/NEXONLv1GothicLight.ttf');
+            src: url('/font/NEXONLv1GothicLight.ttf');
             font-style: normal;
         }
         @font-face {
             font-family: 'nexonRegular';
-            src: url('./font/NEXONLv1GothicRegular.ttf');
+            src: url('/font/NEXONLv1GothicRegular.ttf');
             font-style: normal;
         }
         @font-face {
             font-family: 'logo';
-            src: url('./font/BitcountGridDouble-SemiBold.ttf');
+            src: url('/font/BitcountGridDouble-SemiBold.ttf');
             font-style: normal;
         }
 * {
