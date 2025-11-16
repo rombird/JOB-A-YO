@@ -6,6 +6,9 @@
 
 [서울시 상권분석 서비스 데이터](https://data.seoul.go.kr/dataList/datasetList.do)
 
+<img width="1657" height="537" alt="{321D9C66-5B05-490F-93B0-0A2E9A97992B}" src="https://github.com/user-attachments/assets/e67a58a7-f83b-4bd0-ab10-9a2363e600e6" />
+
+
 - 각자 이름으로 브랜치 만들어서 작업 - main : JOB-A-YO 그대로 이어 작업
 - 진행상황은 개인 브랜치에서 readme 파일이 기록
 
