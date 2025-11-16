@@ -1,7 +1,11 @@
 # dev 브랜치에서 확인가능합니다
 - 각자 이름으로 브랜치 만들어서 작업
 - 진행상황은 개인 브랜치에서 readme 파일이 기록
-- 참고 <a href="https://dev-coco.tistory.com/111">포트폴리오</a>
+- <a href="https://dev-coco.tistory.com/111">포트폴리오</a>  
+- <a href="https://blog.naver.com/cslee_official/223468932912">참고</a>
+- <a href="https://jm-rograming.tistory.com/140">참고</a>  
+
+
 
 <hr/>
 <br/>
