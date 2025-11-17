@@ -6,6 +6,7 @@
 
 [서울시 상권분석 서비스 데이터](https://data.seoul.go.kr/dataList/datasetList.do)
 
+[서울시 상권분석 서비스 사이트](https://golmok.seoul.go.kr/main.do)
 <img width="1657" height="537" alt="{321D9C66-5B05-490F-93B0-0A2E9A97992B}" src="https://github.com/user-attachments/assets/e67a58a7-f83b-4bd0-ab10-9a2363e600e6" />
 
 
