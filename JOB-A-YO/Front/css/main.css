@@ -44,9 +44,6 @@ body {
     padding:5px 0;
     margin:10px 0;
 }
-.custom>.header>.topHeader>.topList{
-    /* border:1px solid; */
-}
 
 .custom>.header>.topHeader>.topList>.topNav{
     display:flex;
@@ -258,9 +255,7 @@ body {
 .custom .mainFooter>.footerInfo>.footerInfoR li{
     margin:10px;
 }
-.custom .mainFooter>.footerInfo>.footerInfoR a{
-    /* margin:0px; */
-}
+
 .custom .mainFooter>.footerInfo>.footerInfoR>.related{
     border-right:1px solid lightgray;
     width:140px;
@@ -454,6 +449,66 @@ body {
 .issue>.issueBoxes>#box *{
     padding:10px;
 }
+
+/* 수정중 */
+.title{}
+.illu.service{
+    bottom: -158px;
+    left: 0;
+    width: 550px;
+    height: 464px;
+    background-image: url(../image/jobayo_bg.png);
+}
+
+
+
+
+
+#box dt{
+    width:220px;
+    height:290px;
+    padding: 251px 0;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+#box dd{
+    color: var(--color-gray2);
+    font-size: 16px;
+    padding:0;
+    display: block;
+    margin-inline-start: 40px;
+    unicode-bidi: isolate;
+}
+
+#box>.commercial dt{
+    background-size:200px auto;
+    background-image:url(../image/building.png);
+    background-position-y: 43px;
+    background-repeat: no-repeat;
+    width:250px;
+    height:300px
+}
+#box>.girl dt{
+    background-size:200px auto;
+    background-image:url(../image/girl_image.png);
+    background-position-y: 43px;
+    background-repeat: no-repeat;
+    width:250px;
+    height:300px
+}
+
+#box>.man dt{
+    background-size:200px auto;
+    background-image:url(../image/man_image.png);
+    background-position-y: 43px;
+    background-repeat: no-repeat;
+    width:250px;
+    height:300px
+}
+
 .issue>.issueBoxes>#box .img{
     display:block;
     width:100%;
