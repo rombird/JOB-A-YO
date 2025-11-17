@@ -4,10 +4,9 @@ import com.example.demo.domain.dto.BoardDto;
 import com.example.demo.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.dialect.PostgreSQLJsonPGObjectJsonType;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -129,11 +128,15 @@ public class BoardController {
         return "board/paging";
     }
 
-//    @Operation(summary = "fileDownload", description = "게시글에 첨부된 파일 다운로드")
-//    @GetMapping("/board/download/{fileId}")
-//    public ResponseEntity<Resource> fileDownload(@PathVariable Long id){
-//        log.info("GET /download/{id}... 파일 다운로등 요청 BoardController");
-//
-//        return boardService.fileDownload(id);
-//    }
+    @Operation(summary = "fileDownload", description = "게시글에 첨부된 파일 다운로드")
+    @GetMapping("/board/download/{boardId}/{fileIndex}")
+    public ResponseEntity<Resource> fileDownload(@PathVariable Long boardId,
+                                                 @PathVariable int fileIndex){    // Resource: 파일 시스템에 있는 파일(데이터)을 추상화한 스프링 클래스
+                                                                            // ResponseEntity: HTTP 상태 코드, 헤더, 본문(여기서는 파일 데이터)을 모두 포함하는 응답 객체
+                                                                            // 이 객체를 반환하면 스프링이 자동으로 파일 다운로드 형태로 클라이언트에게 데이터를 전송
+        log.info("GET /download/{id}... 파일 다운로등 요청 BoardController");
+
+        return boardService.fileDownloadByIndex(boardId, fileIndex);
+    }
+
 }

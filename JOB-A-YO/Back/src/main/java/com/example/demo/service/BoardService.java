@@ -5,6 +5,7 @@ import com.example.demo.domain.entity.BoardEntity;
 import com.example.demo.domain.entity.BoardFileEntity;
 import com.example.demo.domain.repository.BoardFileRepository;
 import com.example.demo.domain.repository.BoardRepository;
+import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -48,7 +49,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
 
-
+    @Value("${file.dir}")       // 파일 저장 경로
+    private String fileDir;
 
     public void save(BoardDto boardDto) throws IOException {
 
@@ -162,5 +164,45 @@ public class BoardService {
         return boardDtos;
 
     }
+
+    @Transactional
+    public ResponseEntity<Resource> fileDownloadByIndex(Long boardId, int fileIndex){
+
+        // 1. 게시글 ID로 파일 정보 조회 (BoardEntity는 여러 파일(BoardFileEntity)을 가질 수 있으므로 목록 조회)
+//          Optional<BoardEntity> optionalBoard = boardRepository.findById(boardId)
+        BoardDto boardDto = findById(boardId);
+        if (boardDto == null || boardDto.getFileAttached() != 1 || boardDto.getStoredFilename().size() <= fileIndex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "요청된 파일 정보를 찾을 수 없거나 인덱스가 잘못되었습니다.");
+        }
+        // 인덱스를 사용하여 파일 이름 추출
+        String storedFilename = boardDto.getStoredFilename().get(fileIndex);
+        String originalFilename = boardDto.getOriginalFilename().get(fileIndex);
+
+        Path filePath = Paths.get(fileDir, storedFilename);
+
+        try{    // 파일을 Resource 객체로 감싸기
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if(!resource.exists() || !resource.isReadable()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "파일이 존재하지 않거나 읽을 수 없는 파일입니다");
+            }
+
+            // 3. HTTP 헤더 설정
+            String encodedFileName = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
+            String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
+
+            // 4. ResponseEntity 반환
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .body(resource);
+
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
 
 }
