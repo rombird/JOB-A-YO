@@ -36,9 +36,9 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByUsername(dto.getUsername());
     }
 
-    // 자체 로그인 회원 가입
+    // 자체 로그인 회원 가입 - username, email, nickname, password 받을 것
     @Transactional
-    public Long addUser(UserDto dto) {
+    public Long addUser(UserDto dto) { // 회원가입을 완료했을 때 id 값만 리턴하려고 Long
 
         // 앞에서 유저확인은 프론트엔드용으로 안전하게 한번 더 검증
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -63,8 +63,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         UserEntity entity = userRepository.findByUsernameAndIsLockAndIsSocial(username, false, false)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UsernameNotFoundException(username)); // 없다면
 
+        // 있다면 return
         return User.builder()
                 .username(entity.getUsername())
                 .password(entity.getPassword())
@@ -84,7 +85,7 @@ public class UserService implements UserDetailsService {
             throw new AccessDeniedException("본인 계정만 수정 가능");
         }
 
-        // 조회
+        // 조회(username이 있는지, isLock인지, isSocial인지 확인하고 수정할 수 있도록)
         UserEntity entity = userRepository.findByUsernameAndIsLockAndIsSocial(dto.getUsername(), false, false)
                 .orElseThrow(() -> new UsernameNotFoundException(dto.getUsername()));
 

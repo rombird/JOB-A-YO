@@ -67,6 +67,7 @@ body {
     gap:5px;
     text-decoration: none;
     margin:5px 0;
+    font-family:'kopu';
 }
 .topHeader>.topList>.topNav>.topNavli .imgLogin{
     width:25px;
@@ -79,6 +80,7 @@ body {
     gap:5px;
     text-decoration: none;
     margin:5px 0;
+    font-family:'kopu';
 }
 .topHeader>.topList>.topNav>.topNavli .imgJoin{
     width:25px;
@@ -102,26 +104,26 @@ body {
     height:105px;
 }
 .detailnav>h1{
-    font-style:#95BECD;
+    /* font-style:#95BECD; */
 }
 .detailnav>h1>a{
     font-family:'logo';
     color:#65A3FF;
     font-size:60px;
 }
-.detailnav>.wrap{
+.wrap{
     display:flex;
     position: absolute;
     /* width: calc(100% - 600px); */
     left: 300px;
     /* border:1px solid; */
 }
-.detailnav>.wrap>.mainNav {
+.wrap>.mainNav {
     display: flex;
     justify-content: space-evenly;
     /* border:1px solid; */
 }
-.detailnav>.wrap>.mainNav>.mainList {
+.wrap>.mainNav>.mainList {
     /* border:1px solid; */
     margin:0 20px;
     position: relative; 
@@ -129,13 +131,16 @@ body {
     width: 250px;
     height:105px;
 }
-.detailnav>.wrap>.mainNav>.mainList>.listLine {
+.mainMenu{
+    font-family:'kopu';
+}
+.wrap>.mainNav>.mainList>.listLine {
     /* border:1px solid; */
     margin:0 20px;
     line-height: 105px;
     font-size: 25px;
 }
-.detailnav>.wrap>.mainNav>.mainList>.listLine::before{
+.wrap>.mainNav>.mainList>.listLine::before{
   content: "";
   width: 100%;
   height: 4px;
@@ -147,25 +152,25 @@ body {
   transform-origin: left;
   background: #65A3FF;
 }
-.detailnav>.wrap>.mainNav>.mainList>.listLine:hover::before{
+.wrap>.mainNav>.mainList>.listLine:hover::before{
   transform: scaleX(1);
 }
-.detailnav>.wrap>.mainNav>.mainList>.listLine:hover>.mainMenu{
+.wrap>.mainNav>.mainList>.listLine:hover>.mainMenu{
     color:#65A3FF;
     font-weight: bold;
 }
 
 /* mainNav 호버하면 전체 서브메뉴 나옴 */
-.detailnav>.wrap>.mainNav>.mainList:hover .subNav {
+.wrap>.mainNav>.mainList:hover .subNav {
     display: block;
 }
 
-.detailnav>.wrap>.mainNav>.mainList:nth-child(1){
+.wrap>.mainNav>.mainList:nth-child(1){
     /* margin-left:30px; */
 }
 
 
-.detailnav>.wrap>.mainNav>.mainList>.subNav {
+.wrap>.mainNav>.mainList>.subNav {
     width:100%;
     height:200px;
     position: absolute;
@@ -178,17 +183,18 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     z-index: 0;
 }
-.detailnav>.wrap>.mainNav>.mainList>.subNav>.subList{
+.wrap>.mainNav>.mainList>.subNav>.subList{
     /* border:1px solid; */
     height:60px;
 }
-.custom .navHeader>.detailnav>.wrap>.mainNav>.mainList>.subNav>.subList>a{
+.wrap>.mainNav>.mainList>.subNav>.subList>a{
     display:flex;
     height: 100%; 
     align-items: center;
     padding:0 20px;
     /* line-height:60px; */
     justify-content: center;
+    font-family:'kopu';
 }
 
 
@@ -198,67 +204,66 @@ body {
     /* #3a6b7113 */
     height:240px;
 }
-.custom .mainFooter{
+.mainFooter{
     /* border:1px solid; */
     padding-top: 20px;
     /* 여기서 마진 잡으면 X */
 }
-.custom .mainFooter>.footerLogo>h1{
+.footerLogo>h1{
     margin:20px 30px;
     font-family:'logo';
 }
-.custom .mainFooter>.footerInfo{
+.footerInfo{
     display:flex;
 }
-.custom .mainFooter>.footerInfo>.footerInfoL{
+.footerInfoL{
     margin-left:30px;
 }
-.custom .mainFooter>.footerInfo>.footerInfoL>p{
+.footerInfoL>p{
     width:700px;
     padding:0;
     margin:0 90px 0 0;
 }
-.custom .mainFooter>.footerInfo>.footerInfoR{
+.footerInfoR{
     /* border:1px solid; */
     margin-left:220px;
     width:500px;
     display:flex;
 }
-.custom .mainFooter>.footerInfo>.footerInfoR>.site{
+.footerInfoR>.site{
     border-right:1px solid lightgray;
     width:120px;
     
 }
-.custom .mainFooter>.footerInfo>.footerInfoR>.site a{
+.footerInfoR>.site a{
     padding:10px;
 }
-.custom .mainFooter>.footerInfo>.footerInfoR li{
+.footerInfoR li{
     margin:10px;
 }
-
-.custom .mainFooter>.footerInfo>.footerInfoR>.related{
+.footerInfoR>.related{
     border-right:1px solid lightgray;
     width:140px;
 }
-.custom .mainFooter>.footerInfo>.footerInfoR>.related a{
+.footerInfoR>.related a{
     padding:10px;
 }
 
 
-.custom .mainFooter>.footerInfo>.footerInfoR>.personInfo{
+.footerInfoR>.personInfo{
     width:210px;
 }
-.custom .mainFooter>.footerInfo>.footerInfoR>.personInfo a{
+.footerInfoR>.personInfo a{
     padding:10px;
 }
 
 /* footer font */
-.custom .mainFooter>.footerInfo p{
-    font-family:"nexonRegular";
+.footerInfo p{
+    font-family:"kopume";
 }
 
-.custom .mainFooter>.footerInfo a{
-    font-family:"nexonRegular";
+.footerInfo a{
+    font-family:"kopume";
 }
 
 

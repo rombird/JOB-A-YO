@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+// JWT 발급과 검증을 요구하는 클래스
 public class JwtUtil {
     private static final SecretKey secretKey;
     private static final Long accessTokenExpiresIn;
@@ -33,7 +34,9 @@ public class JwtUtil {
     }
 
     // JWT 유효 여부 (위조, 시간, Access/Refresh 여부)
+    // 유효하다면 return true, 유효하지 않다면 return false
     public static Boolean isValid(String token, Boolean isAccess) {
+        // 파싱하는 과정에서 시간이 다되었다면 자동으로 exception이 던져지기 때문에 exception을 잡을 수 있도록
         try {
             Claims claims = Jwts.parser()
                     .verifyWith(secretKey)
@@ -64,7 +67,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("sub", username)
                 .claim("role", role)
-                .claim("type", type)
+                .claim("type", type) // access or refresh
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expiry))
                 .signWith(secretKey)
