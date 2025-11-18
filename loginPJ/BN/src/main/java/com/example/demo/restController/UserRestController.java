@@ -46,13 +46,12 @@ public class UserRestController {
     }
 
     // 회원가입
-
     @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> joinApi(
-            @Validated(UserDto.addGroup.class) @RequestBody UserDto dto
+            @Validated(UserDto.addGroup.class) @RequestBody UserDto dto // 데이터를 받으면서 검증을 수행
     ) {
         Long id = userService.addUser(dto);
-        Map<String, Long> responseBody = Collections.singletonMap("userEntityId", id);
+        Map<String, Long> responseBody = Collections.singletonMap("userEntityId", id); // 회원가입을 받게된다면
         return ResponseEntity.status(201).body(responseBody);
     }
 

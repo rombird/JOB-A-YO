@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class) // 자동 적용가능하도록
 @Table(name = "jwt_refresh_entity")
 @Getter
 @Builder
@@ -28,6 +28,7 @@ public class RefreshEntity {
     @Column(name = "refresh", nullable = false, length = 512)
     private String refresh;
 
+    // refresh token 발급 시간
     @CreatedDate
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;

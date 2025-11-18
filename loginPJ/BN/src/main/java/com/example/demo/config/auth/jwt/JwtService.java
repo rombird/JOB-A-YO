@@ -2,12 +2,13 @@ package com.example.demo.config.auth.jwt;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+// refresh token을 저장하기 위한 service 클래스 필요
 @Service
 public class JwtService {
     private final RefreshRepository refreshRepository;
 
     public JwtService(RefreshRepository refreshRepository) {
+
         this.refreshRepository = refreshRepository;
     }
 
@@ -17,28 +18,30 @@ public class JwtService {
 
     // JWT Refresh 토큰 발급 후 저장 메소드
     @Transactional
-    public void addRefresh(String username, String refreshToken) {
+    public void addRefresh(String username, String refreshToken){
         RefreshEntity entity = RefreshEntity.builder()
                 .username(username)
                 .refresh(refreshToken)
                 .build();
-
         refreshRepository.save(entity);
     }
 
-    // JWT Refresh 존재 확인 메소드
+    // JWT Refresh 존재 확인(조회만진행 - readOnly) 메소드
     @Transactional(readOnly = true)
     public Boolean existsRefresh(String refreshToken) {
+
         return refreshRepository.existsByRefresh(refreshToken);
     }
 
     // JWT Refresh 토큰 삭제 메소드
     public void removeRefresh(String refreshToken) {
+
         refreshRepository.deleteByRefresh(refreshToken);
     }
 
     // 특정 유저 Refresh 토큰 모두 삭제 (탈퇴)
     public void removeRefreshUser(String username) {
+
         refreshRepository.deleteByUsername(username);
     }
 }

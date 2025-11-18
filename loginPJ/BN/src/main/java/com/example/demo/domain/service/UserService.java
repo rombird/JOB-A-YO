@@ -18,14 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
 
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    private UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-    }
-
-    private UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

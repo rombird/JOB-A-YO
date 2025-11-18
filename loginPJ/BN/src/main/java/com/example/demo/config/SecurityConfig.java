@@ -24,6 +24,14 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final AuthenticationSuccessHandler loginSuccessHandler;
 
+
+
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          @Qualifier("LoginSuccessHandler") AuthenticationSuccessHandler loginSuccessHandler) {
+        this.authenticationConfiguration = authenticationConfiguration;
+        this.loginSuccessHandler = loginSuccessHandler;
+    }
+
     //비밀번호 단방향 암호화용 Bean
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,12 +42,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-                          @Qualifier("LoginSuccessHandler") AuthenticationSuccessHandler loginSuccessHandler) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     // SecurityFilterChain
@@ -78,21 +80,15 @@ public class SecurityConfig {
                 );
         // 커스텀 필터 추가
         http
-                .addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), loginSuccessHandler ), UsernamePasswordAuthenticationFilter.class);
 
         // 세션 필터 설정 (STATELESS)
         http
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // OAuth2 인증용
-        http
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler());
-
         return http.build();
     }
 
-
-
 }
+

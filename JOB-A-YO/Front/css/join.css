@@ -26,7 +26,7 @@ input::placeholder {
 }
 .box>.title>h2 {
     /* border:1px solid; */
-    font-family:"nexonBold";
+    font-family:"kopu";
     font-size:45px;
     text-align: center;
 }
@@ -55,7 +55,7 @@ input::placeholder {
     display: inline-block;
     width: 37px;
     height: 37px;
-    font-family: "nexonLight";
+    font-family: "kopume";
     /* color: #3A6B71; */
     text-align: center;
     line-height: 37px;
@@ -79,7 +79,7 @@ input::placeholder {
 
 .step>.on>.num>em.active {
     /* 1, 2, 3 꺼멓게 칠할거 */
-    background-color: #3A6B71;
+    background-color: #65A3FF;
     font-weight: bold;
     color: white;
 }
@@ -99,7 +99,7 @@ input::placeholder {
     height: 104px;
     margin-right: 0 0 30px;
     padding: 25px 0;
-    background-color: #3A6B71;
+    background-color: #65A3FF;
     color: #A5A5A5;
     font: 14px;
     font-family:"nexonRegular";
@@ -116,7 +116,7 @@ input::placeholder {
     width: 100%;
     height: 26px;
     font-size: 18px;
-    font-family: "nexonRegular";
+    font-family: "kopume";
     color: white;
     margin: 0 0 8px;
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-@Qualifier("LoginSuccessHandler")
+@Qualifier("LoginSuccessHandler") // 주입받을 빈 이름 명확히 지정
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
 
@@ -22,7 +22,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException, ServletException {
 
         // username, role
         String username =  authentication.getName();
