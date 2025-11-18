@@ -4,6 +4,7 @@ import com.example.demo.domain.dto.NoticesDto;
 import com.example.demo.domain.entity.NoticesEntity;
 import com.example.demo.domain.repository.NoticesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,10 @@ public class NoticesService {
     //3. 작성(Create)
     @Transactional
     public NoticesDto saveNotices(NoticesDto dto){
-        //DTO-> Entity
+        // 현재 로그인된 사용자의 ID(Username) 자동 삽입
+        String currentAdminUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        // DTO의 작성자 필드를 현재 로그인된 관리자 ID로 덮어씌웁니다.
+        dto.setAuthor(currentAdminUsername);
         NoticesEntity savedEntity = noticesRepository.save(NoticesEntity.fromDto(dto));
         //저장된 Entity-> DTO
         return NoticesDto.fromEntity(savedEntity);
