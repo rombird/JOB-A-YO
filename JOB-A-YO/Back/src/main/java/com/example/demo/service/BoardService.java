@@ -165,6 +165,8 @@ public class BoardService {
 
     }
 
+
+    // 첨부파일 다운로드
     @Transactional
     public ResponseEntity<Resource> fileDownloadByIndex(Long boardId, int fileIndex){
 

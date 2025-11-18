@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.dto.BoardDto;
+import com.example.demo.domain.dto.CommentDto;
 import com.example.demo.service.BoardService;
+import com.example.demo.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-
+    private final CommentService commentService;
 
     // 게시글 목록 페이지
     @Operation(summary = "board", description = "게시판목록")
@@ -69,8 +71,14 @@ public class BoardController {
         // 게시글 데이터를 가져와서 detail.html에 출력
         boardService.updateHits(id);
         BoardDto boardDto = boardService.findById(id);
+
+        // 댓글 목록 조회
+        List<CommentDto>commentDtoList = commentService.findAll(id);
+
         model.addAttribute("board", boardDto);
         model.addAttribute("page", pageable.getPageNumber());
+        // 댓글 목록도 모델에 추가
+        model.addAttribute("commentList", commentDtoList);
         return "board/detail";
     }
 
@@ -128,13 +136,14 @@ public class BoardController {
         return "board/paging";
     }
 
+    // 첨부파일 다운로드
     @Operation(summary = "fileDownload", description = "게시글에 첨부된 파일 다운로드")
     @GetMapping("/board/download/{boardId}/{fileIndex}")
     public ResponseEntity<Resource> fileDownload(@PathVariable Long boardId,
                                                  @PathVariable int fileIndex){    // Resource: 파일 시스템에 있는 파일(데이터)을 추상화한 스프링 클래스
                                                                             // ResponseEntity: HTTP 상태 코드, 헤더, 본문(여기서는 파일 데이터)을 모두 포함하는 응답 객체
                                                                             // 이 객체를 반환하면 스프링이 자동으로 파일 다운로드 형태로 클라이언트에게 데이터를 전송
-        log.info("GET /download/{id}... 파일 다운로등 요청 BoardController");
+        log.info("GET /download/{boardId}/{fileIndex}... 파일 다운로등 요청 BoardController");
 
         return boardService.fileDownloadByIndex(boardId, fileIndex);
     }
