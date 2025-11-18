@@ -2,6 +2,7 @@ package com.example.demo.restController;
 
 import com.example.demo.domain.dto.UserDto;
 import com.example.demo.domain.repository.UserRepository;
+import com.example.demo.domain.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,13 +19,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -32,24 +31,35 @@ import java.util.Optional;
 @Tag(name="UserController", description="This is User Controller")
 public class UserRestController {
 
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-//
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
-//
-//    @Autowired
-//    private JwtTokenRepository jwtTokenRepository;
-//
-//    @Autowired
-//    private JwtTokenProvider jwtTokenProvider;
-//
-//    @Autowired
-//    private RedisUtil redisUtil;
-//
+    private final UserService userService;
+
+    public UserRestController(UserService userService) {
+        this.userService = userService;
+    }
+
+    // 자체 로그인 유저 존재 확인
+    @PostMapping(value = "/user/exist", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> existUserApi(
+            @Validated(UserDto.existGroup.class) @RequestBody UserDto dto
+    ) {
+        return ResponseEntity.ok(userService.existUser(dto));
+    }
+
+    // 회원가입
+
+    @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Long>> joinApi(
+            @Validated(UserDto.addGroup.class) @RequestBody UserDto dto
+    ) {
+        Long id = userService.addUser(dto);
+        Map<String, Long> responseBody = Collections.singletonMap("userEntityId", id);
+        return ResponseEntity.status(201).body(responseBody);
+    }
+
+
+
+
+
     @Operation(summary="join", description = "JOIN")
     @PostMapping(value = "/join",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -71,6 +81,16 @@ public class UserRestController {
 //        //
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
+
+    // 유저 정보
+
+    // 유저 수정 (자체 로그인 유저만)
+
+    // 유저 제거 (자체/소셜)
+
+
+
+
 //
 //    //Header 방식 (Authorization: Bearer <token>)
 //    // - XXS 공격에 매우취약 - LocalStorage / SessionStorage에 저장시 문제 발생

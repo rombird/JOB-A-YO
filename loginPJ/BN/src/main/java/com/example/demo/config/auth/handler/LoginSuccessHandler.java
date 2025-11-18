@@ -44,6 +44,5 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.getWriter().flush();
 
 
-
     }
 }

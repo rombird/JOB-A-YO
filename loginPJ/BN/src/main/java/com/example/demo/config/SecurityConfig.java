@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.filter.LoginFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,12 +14,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final AuthenticationSuccessHandler loginSuccessHandler;
 
     //비밀번호 단방향 암호화용 Bean
     @Bean
@@ -32,15 +36,15 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          @Qualifier("LoginSuccessHandler") AuthenticationSuccessHandler loginSuccessHandler) {
         this.authenticationConfiguration = authenticationConfiguration;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     // SecurityFilterChain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-
 
         // CSRF 보안 필터 disable
         http
@@ -79,6 +83,11 @@ public class SecurityConfig {
         http
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // OAuth2 인증용
+        http
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler());
 
         return http.build();
     }
