@@ -1,0 +1,74 @@
+package com.example.demo.service;
+
+import com.example.demo.domain.dto.NoticesDto;
+import com.example.demo.domain.entity.NoticesEntity;
+import com.example.demo.domain.repository.NoticesRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class NoticesService {
+    public final NoticesRepository noticesRepository;
+
+    //1. 공지사항 목록조회
+    @Transactional(readOnly = true)
+    public List<NoticesDto> findAllNotices(){
+        //DB에서 가져온 여러 Entity를 Stream으로 순회하며 DTO로 변환 후 List로 다시 모아 프론트로 전달하기 위한 과정
+        return noticesRepository.findAll().stream()
+                .map(NoticesDto::fromEntity)
+                .collect(Collectors.toList());
+
+
+    }
+
+    //2. 상세 조회 및 조회수 증가 READ + UPDATE
+    @Transactional
+    public NoticesDto findNoticesDetail(Long id){
+
+        //엔티티 조회( + 예외발생)
+        NoticesEntity entity = noticesRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Notices not found with id : " + id));
+
+        //조회수 증가 쿼리 호출(DB에서 1증가 처리)
+        noticesRepository.updateViews(id);
+
+        //조회된 Entity -> Dto 후 return
+        return NoticesDto.fromEntity(entity);
+    }
+
+    //3. 작성(Create)
+    @Transactional
+    public NoticesDto saveNotices(NoticesDto dto){
+        //DTO-> Entity
+        NoticesEntity savedEntity = noticesRepository.save(NoticesEntity.fromDto(dto));
+        //저장된 Entity-> DTO
+        return NoticesDto.fromEntity(savedEntity);
+    }
+
+    //4. 수정(Update)
+    @Transactional
+    public NoticesDto updateNotices(Long id, NoticesDto dto){
+        NoticesEntity trueEntity = noticesRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("Notices not found with id : " + id));
+
+        trueEntity.updateFromDto(dto);
+        return NoticesDto.fromEntity(trueEntity);
+    }
+
+    //5. 삭제(Delete)
+    @Transactional
+    public void deleteNotices(Long id){
+        noticesRepository.deleteById(id);
+    }
+
+
+
+
+
+
+}
