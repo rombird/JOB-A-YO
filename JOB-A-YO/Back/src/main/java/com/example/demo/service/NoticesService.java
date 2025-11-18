@@ -18,9 +18,11 @@ public class NoticesService {
     //1. 공지사항 목록조회
     @Transactional(readOnly = true)
     public List<NoticesDto> findAllNotices(){
-        //DB에서 가져온 여러 Entity를 Stream으로 순회하며 DTO로 변환 후 List로 다시 모아 프론트로 전달하기 위한 과정
+        //DB에서 가져온 여러 Entity를 Stream으로 순회
         return noticesRepository.findAll().stream()
+                //하며 DTO로 변환
                 .map(NoticesDto::fromEntity)
+                //List(여러 개의 DTO전달을 위해)로 다시 모아 프론트로 전달
                 .collect(Collectors.toList());
 
 
@@ -56,7 +58,7 @@ public class NoticesService {
         NoticesEntity trueEntity = noticesRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("Notices not found with id : " + id));
 
-        trueEntity.updateFromDto(dto);
+        trueEntity.updateFromDto(dto); //title(제목), contents(내용) 변경
         return NoticesDto.fromEntity(trueEntity);
     }
 
