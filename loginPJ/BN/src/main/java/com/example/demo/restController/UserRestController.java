@@ -1,6 +1,7 @@
 package com.example.demo.restController;
 
 import com.example.demo.domain.dto.UserDto;
+import com.example.demo.domain.dto.UserResponseDto;
 import com.example.demo.domain.repository.UserRepository;
 import com.example.demo.domain.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +23,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -46,51 +47,41 @@ public class UserRestController {
     }
 
     // 회원가입
+    @Operation(summary="join", description = "JOIN")
     @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> joinApi(
-            @Validated(UserDto.addGroup.class) @RequestBody UserDto dto // 데이터를 받으면서 검증을 수행
+    public ResponseEntity<Map<String, Long>> join(
+            @Validated(UserDto.addGroup.class) @RequestBody UserDto userDto // 데이터를 받으면서 검증을 수행
     ) {
-        Long id = userService.addUser(dto);
+        log.info("POST /join..."+ userDto);
+        Long id = userService.addUser(userDto);
         Map<String, Long> responseBody = Collections.singletonMap("userEntityId", id); // 회원가입을 받게된다면
         return ResponseEntity.status(201).body(responseBody);
     }
 
-
-
-
-
-    @Operation(summary="join", description = "JOIN")
-    @PostMapping(value = "/join",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<String> join_post(@RequestBody UserDto userDto){
-        log.info("POST /join..."+userDto);
-//
-//        //dto->entity
-//        User user = User.builder()
-//                .id(userDto.getId())
-//                .username(userDto.getUsername())
-//                .password( passwordEncoder.encode(userDto.getPassword())  )
-//                .addr_sido(userDto.getAddr_sido())
-//                .role("ROLE_USER")
-//                .build();
-//
-//        // save entity to DB
-//        userRepository.save(user);
-//
-//        //
-        return new ResponseEntity<String>("success", HttpStatus.OK);
+    // 유저 정보
+    @GetMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserResponseDto userMeApi() {
+        return userService.readUser();
     }
 
-    // 유저 정보
-
     // 유저 수정 (자체 로그인 유저만)
+    @PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> updateUserApi(
+            @Validated(UserDto.updateGroup.class) @RequestBody UserDto dto
+    ) throws AccessDeniedException {
+        return ResponseEntity.status(200).body(userService.updateUser(dto));
+    }
 
     // 유저 제거 (자체/소셜)
+    @DeleteMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> deleteUserApi(
+            @Validated(UserDto.deleteGroup.class) @RequestBody UserDto dto
+    ) throws AccessDeniedException {
 
+        userService.deleteUser(dto);
+        return ResponseEntity.status(200).body(true);
+    }
 
-
-
-//
 //    //Header 방식 (Authorization: Bearer <token>)
 //    // - XXS 공격에 매우취약 - LocalStorage / SessionStorage에 저장시 문제 발생
 //    // - 쿠키방식이 비교적 안전

@@ -258,15 +258,11 @@ input::placeholder {
     content: "";
     width: 10px;
     height: 10px;
-    
     background-color: black;
-    
     border-radius: 50%;
-    
     left: 13%;
     top: 13%;
     position: absolute;
-
     opacity: 0;
     transition: opacity 0.2s;
 }
@@ -283,7 +279,6 @@ input::placeholder {
     box-shadow: 0 0 0 max(4px, 1px) lightgray;
     cursor: pointer;
 }
-
 
 .guide{
     /* 비밀번호 규칙 안내 공간 -> 영문 대소문자, 숫자, 특수문자 ... */
@@ -302,27 +297,18 @@ input::placeholder {
 
 }
 
-
 .etc-input{
     /* background-color: red; */
-    
-    margin-left: 20px;
 
+    margin-left: 20px;
     width: 88%;
     height: 40px;
-
     border: 1px solid #d8d8d8;
-
     flex: 1;  /* grid 안에서 적절히 늘어나도록 */
-    
     margin: 0 0 0 10px; /* 위아래 여백 없애기 */
-
-
 }
 
-
 .addr-d1{}
-
 
 .line{
     /* width: 100%; */
@@ -488,5 +474,5 @@ input::placeholder {
 }
 
 .cancel-join>:nth-child(2){
-    background-color: #3A6B71;
+    background-color: #65A3FF;
 }

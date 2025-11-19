@@ -1,5 +1,11 @@
 package com.example.demo.config;
 
+import com.example.demo.config.auth.handler.LogoutSuccessHandler;
+import com.example.demo.config.auth.jwt.JwtService;
+import com.example.demo.domain.dto.UserDto;
+import com.example.demo.domain.entity.SocialProviderType;
+import com.example.demo.domain.entity.UserEntity;
+import com.example.demo.domain.entity.UserRoleType;
 import com.example.demo.filter.LoginFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,25 +17,39 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final AuthenticationConfiguration authenticationConfiguration;
     private final AuthenticationSuccessHandler loginSuccessHandler;
+    private final AuthenticationSuccessHandler socialSuccessHandler;
 
 
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-                          @Qualifier("LoginSuccessHandler") AuthenticationSuccessHandler loginSuccessHandler) {
+                          @Qualifier("LoginSuccessHandler") AuthenticationSuccessHandler loginSuccessHandler,
+                          @Qualifier("SocialSuccessHandler") AuthenticationSuccessHandler socialSuccessHandler) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.loginSuccessHandler = loginSuccessHandler;
+        this.socialSuccessHandler = socialSuccessHandler;
     }
 
     //비밀번호 단방향 암호화용 Bean
@@ -87,8 +107,23 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        // OAuth2 인증용
+        http
+                .oauth2Login(oauth2 -> oauth2.successHandler(socialSuccessHandler));
+
+        // 기본 로그아웃 필터 + 커스텀 Refresh 토큰 삭제 핸들러 추가
+
+        http
+                .logout(logout -> logout
+                        .addLogoutHandler(new LogoutSuccessHandler(jwtService));
+
+
+
+
+
         return http.build();
     }
+
 
 }
 
