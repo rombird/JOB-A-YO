@@ -162,7 +162,7 @@ input::placeholder {
     font-family: "kopu";
 }
 
-.join-form input {
+.input-group>input {
     /* 오른쪽의 사용자가 입력하는 공간 */
     /* width: 1000px;
     height: 50px; */
@@ -172,28 +172,23 @@ input::placeholder {
     border: none;
     outline: none;
     font-size: 20px;
-    margin:15px;
+    margin:12px;
 }
 
 .join-form .first{
     margin-top:30px;
 }
 
-/* 아이디 */
-
-
-/* 비밀번호 */
 .guide{
-    /* 비밀번호 규칙 안내 공간 -> 영문 대소문자, 숫자, 특수문자 ... */
     height: 20px;
     width: 100%;
-    text-align:center;
+    /* text-align:center; */
     /* padding-top: 2px; */
     color: #a7a7a7;
     font-size: 15px;
-    line-height: 20px;
-    margin-top: -15px; /* 입력 그룹과의 간격 조절 */
-    margin-bottom: 20px;
+    margin-top:-15px;
+    line-height:10px;
+    margin-left:800px;
 }
 
 /* 생년월일 */
@@ -294,22 +289,16 @@ input::placeholder {
 }
 
 /* 이메일 */
-.email>input{
-    margin:15px;
+.email>p{
+    margin:12px;
 }
 .email>select{
     width:300px;
     align-items: center;
     justify-content: center;
     border-style: none;
-    margin:15px;
+    margin:12px;
     font-size:15px;
-}
-
-.line{
-    /* width: 100%; */
-    margin: 30px;
-    border: 1px solid #d8d8d8;
 }
 
 /* 관심 창업 아이템 체크박스들 */
@@ -333,15 +322,17 @@ input::placeholder {
     align-items: center;
     cursor: pointer;
     margin:0 10px;
+    width:100px;
 }
 
 .keyword-checkbox>label>input[type="checkbox"] {
     appearance: none;
-    width: 3px;
-    height: 3px;
+    width: 20px;
+    height: 20px;
     border: 2px solid #666;
     position: relative;
     cursor: pointer;
+    margin-right:8px;
 }
 
 .keyword-checkbox>label>input[type="checkbox"]:checked {
@@ -405,16 +396,17 @@ input::placeholder {
     display:flex;
     align-items: center;
     cursor: pointer;
+    margin-right:30px;
 }
 
 .recieve-checkbox>label>input[type="checkbox"]{
-    /* appearance: none;
-    width: 10px;
-    height: 10px;
+    appearance: none;
+    width: 20px;
+    height: 20px;
     border: 2px solid #666;
     position: relative;
     cursor: pointer;
-    margin-right: 8px; */
+    margin-right: 8px;
 }
 
 .recieve-checkbox>label>input[type="checkbox"]:checked {
@@ -447,6 +439,9 @@ input::placeholder {
 .recieve-checkbox>label>input[type="checkbox"]:hover{
     box-shadow: 0 0 0 max(4px, 1px) lightgray;
     cursor: pointer;
+}
+.line{
+    margin:30px;
 }
 
 /* 버튼 */
