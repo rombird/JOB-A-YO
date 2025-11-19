@@ -1,60 +1,70 @@
 package com.example.demo.domain.entity;
 
+import com.example.demo.domain.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "")
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_table")
 public class UserEntity {
-    // 1. id: 고유 식별 기본 키 (Primary Key)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 2. username: 로그인 시 사용되는 아이디 (고유해야 함)
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(name = "username", unique = true, nullable = false, updatable = false)
     private String username;
 
-    // 3. password: 해시 처리된 비밀번호
-    // DB 컬럼 이름은 "password"가 됩니다. (password_hash가 필요한 경우 @Column(name="password_hash")가 필요)
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    // 4. email: 사용자의 이메일 주소 (고유 설정 및 필수)
-    @Column(unique = true, nullable = false, length = 100)
+    @Column(name = "is_lock", nullable = false)
+    private Boolean isLock;
+
+    @Column(name = "is_social", nullable = false)
+    private Boolean isSocial;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "social_provider_type")
+    private SocialProviderType socialProviderType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_type", nullable = false)
+    private UserRoleType roleType;
+
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(name = "email")
     private String email;
 
-    // 5. firstName: 이름 (DB 컬럼명은 "first_name" 또는 "firstName"으로 자동 매핑 규칙에 따라 결정됨)
-    @Column(length = 50)
-    private String firstName;
+    @Column(name = "addr")
+    private String addr;
 
-    // 6. lastName: 성
-    @Column(length = 50)
-    private String lastName;
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
-    // 7. createdAt: 계정 생성 일시
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @LastModifiedDate
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
 
-    // 8. updatedAt: 마지막 정보 수정 일시
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    public void updateUser(UserDto dto) {
+        this.email = dto.getEmail();
+        this.nickname = dto.getNickname();
+    }
 
-    // 9. role: 사용자의 권한 수준 (ADMIN, USER 등)
-    @Column(nullable = false, length = 20)
-    private String role;
-
-    // 10. isActive: 계정의 활성화 상태
-    @Column(nullable = false)
-    private Boolean isActive = true;
 }

@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.domain.service;
 
 import com.example.demo.domain.dto.NoticesDto;
 import com.example.demo.domain.entity.NoticesEntity;

@@ -1,74 +1,79 @@
 package com.example.demo.config;
 
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.demo.config.auth.jwt.JWTAuthorizationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-//Spring Security관련 설정 클래스
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
-
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    //비밀번호 암호화
+    // JWTAuthorizationFilter를 생성자 주입으로 받아옵니다. (image_77b9a3.png 오류 해결)
+    private final JWTAuthorizationFilter jwtAuthorizationFilter;
+
+    // Cors 설정 주입 (CORS Bean을 사용하여 SecurityFilterChain에서 바로 정의)
+     private final CorsConfigurationSource corsConfigurationSource; // 제거 가능
+
+
+    // 비밀번호 암호화 Bean
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    //HTTP 요청에 대한 보안 필터 체인 설정(사용자가 요청을 보내면 Controller한테 가기 전에 여기서 낚아채서 검증)
+    // HTTP 요청에 대한 보안 설정 (메인 로직)
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        //공지사항 조회 경로는 인증없이 누구나 접근 가능
-                        .requestMatchers("/notices/**", "/api/notices/**").permitAll()
-                        //조회 외의 요청은 인증 필요(로그인 필수)
+                // CSRF 비활성화 (JWT를 사용하므로 세션에 의존하지 않음)
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // 폼 로그인 및 HTTP Basic 인증 비활성화 (JWT 사용)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+
+                // 세션 관리: STATELESS 설정 (세션을 생성하거나 사용하지 않음 = JWT 방식)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                //corsConfigurationSource 빈을 이용한 CORS 설정 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // **메서드 호출이 아닌 필드를 직접 사용**
+                // URL 접근 권한 설정
+                .authorizeHttpRequests(authorize -> authorize
+                        // 로그인, 회원가입, 소셜 로그인 진입점, 토큰 갱신 등은 인증 없이 접근 허용
+                        .requestMatchers(
+                                "/api/user/signup",
+                                "/api/user/login",
+                                "/login/**", // 소셜 로그인 진입점
+                                "/oauth2/**" // 소셜 로그인 리다이렉션
+                        ).permitAll()
+
+                        // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception -> exception
 
-                                // [Case 1] 미인증 사용자 (로그인 X)가 보호된 리소스에 접근 시
-                        // 403 Forbidden 상태 코드 반환 (권한 없음과 동일하게 처리)
-                        .authenticationEntryPoint((request, response, authException) -> {
+                // JWT 필터 등록
+                // UsernamePasswordAuthenticationFilter 이전에 JWTAuthorizationFilter를 실행
+                // -> 모든 요청 전에 토큰의 유효성을 검사하고 인증 정보를 SecurityContext에 저장
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                            //REACT버전
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 설정
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"접근 권한이 없습니다. 관리자 로그인이 필요합니다.\"}");
-
-                            //SB통합버전
-                            // 공지사항 목록으로 리다이렉트 (권한 없음 메시지 전달)
-                            //response.sendRedirect("/notices?error=forbidden");
-                        })
-
-
-                        // [Case 2] 인증된 사용자지만 권한이 없는 경우 (@PreAuthorize 검증 실패)
-                                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                                    // 403 Forbidden 상태 코드를 반환하도록 설정
-                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 설정
-                                    response.setContentType("application/json;charset=UTF-8");
-                                    // 프론트엔드에서 이 JSON 응답을 받아 권한 없음 메시지를 표시
-                                    response.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"접근 권한이 없습니다. 관리자 로그인이 필요합니다.\"}");
-
-                                    //SB통합버전
-                                    // 공지사항 목록으로 리다이렉트 (권한 없음 메시지 전달)
-                                    //response.sendRedirect("/notices?error=forbidden");
-                                })
-                )
-
-                // 3. 기본 로그인 폼 비활성화 (Exception Handling이 대신 처리하므로)
-                .formLogin(form -> form.disable()
-                )
-                .logout(logout->logout.permitAll());
         return http.build();
     }
+
+
 }

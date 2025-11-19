@@ -39,6 +39,19 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
 	implementation 'org.jsoup:jsoup:1.21.2'
 
+    //VALIDATION
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // JJWT Core (API, Runtime 구현)
+    // 이 라이브러리가 Keys, Decoders, Jwts 등의 클래스를 제공합니다.
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Jackson은 JSON 처리용
+
+    //OAUTH2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
 }
 
 tasks.named('test') {

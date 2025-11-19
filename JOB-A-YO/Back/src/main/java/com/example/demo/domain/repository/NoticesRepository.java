@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface NoticesRepository extends JpaRepository<NoticesEntity, Long> {
 
-    //조회수 증가
-    @Modifying
-    @Query(value = "update NoticesRepository n set n.noticesViews = n.noticesViews + 1 where n.id = :id")
-    void updateViews(@Param("id") Long id);
+    @Modifying // 데이터를 변경하는 쿼리임을 명시
+    @Transactional // 트랜잭션 내에서 실행되도록 명시
+    @Query("UPDATE NoticesEntity n SET n.noticesViews = n.noticesViews + 1 WHERE n.id = :id")
+    void updateViews(@Param("id") Long id); // @Param을 사용하여 :id에 파라미터 바인딩
+
+
 }
