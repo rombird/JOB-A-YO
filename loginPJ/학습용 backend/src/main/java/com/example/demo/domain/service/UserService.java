@@ -67,7 +67,7 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
                 .isLock(false)
                 .isSocial(false)
                 .roleType(UserRoleType.USER) // 우선 일반 유저로 가입
-                .nickname(dto.getNickname())
+                .phone(dto.getPhone())
                 .email(dto.getEmail())
                 .build();
 
@@ -182,7 +182,7 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
 
             // 기존 유저 업데이트
             UserDto dto = new UserDto();
-            dto.setNickname(nickname);
+            dto.setPhone(phone);
             dto.setEmail(email);
             entity.get().updateUser(dto);
 
@@ -196,7 +196,7 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
                     .isSocial(true)
                     .socialProviderType(SocialProviderType.valueOf(registrationId))
                     .roleType(UserRoleType.USER)
-                    .nickname(nickname)
+                    .phone(phone)
                     .email(email)
                     .build();
 
@@ -209,14 +209,14 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
     }
 
     // 자체/소셜 유저 정보 조회
-    @Transactional(readOnly = true)
-    public UserResponseDto readUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        UserEntity entity = userRepository.findByUsernameAndIsLock(username, false)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다: " + username));
-
-        return new UserResponseDto(username, entity.getIsSocial(), entity.getNickname(), entity.getEmail());
-    }
+//    @Transactional(readOnly = true)
+//    public UserResponseDto readUser() {
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        UserEntity entity = userRepository.findByUsernameAndIsLock(username, false)
+//                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다: " + username));
+//
+//        return new UserResponseDto(username, entity.getIsSocial(), entity.getPhone(), entity.getEmail());
+//    }
 
 }
