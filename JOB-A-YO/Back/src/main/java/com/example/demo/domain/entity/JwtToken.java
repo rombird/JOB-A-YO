@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +26,6 @@ public class JwtToken {
     private String username;
     @Column
     private String auth; // "ROLE_USER,ROLE_ADMIN"
-    @Column(name="createdAt",columnDefinition = "DATETIME",nullable = false)
-    private LocalDateTime createAt;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

@@ -4,6 +4,10 @@ import com.example.demo.config.auth.jwt.JWTAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,16 +23,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    // JWTAuthorizationFilter를 생성자 주입으로 받아옵니다. (image_77b9a3.png 오류 해결)
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
-
-    // Cors 설정 주입 (CORS Bean을 사용하여 SecurityFilterChain에서 바로 정의)
-     private final CorsConfigurationSource corsConfigurationSource; // 제거 가능
-
 
     // 비밀번호 암호화 Bean
     @Bean
@@ -36,44 +36,77 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // HTTP 요청에 대한 보안 설정 (메인 로직)
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // CSRF 비활성화 (JWT를 사용하므로 세션에 의존하지 않음)
-                .csrf(AbstractHttpConfigurer::disable)
 
-                // 폼 로그인 및 HTTP Basic 인증 비활성화 (JWT 사용)
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    //  CorsConfigurationSource Bean 정의
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 실제 프론트엔드 도메인으로 변경.
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 CORS 설정 적용
+        return source;
+    }
+
+
+    // HTTP 요청 보안 설정
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
+        http
+                // 1. CSRF, FormLogin, HttpBasic 비활성화 (JWT 사용)
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                // 세션 관리: STATELESS 설정 (세션을 생성하거나 사용하지 않음 = JWT 방식)
+                // 2. CORS 설정 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+
+                // 3. 세션 관리: STATELESS 설정
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                //corsConfigurationSource 빈을 이용한 CORS 설정 적용
-                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // **메서드 호출이 아닌 필드를 직접 사용**
-                // URL 접근 권한 설정
+
+                // 4. URL 접근 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
-                        // 로그인, 회원가입, 소셜 로그인 진입점, 토큰 갱신 등은 인증 없이 접근 허용
+                        // --- 공지사항 관련 권한 설정 시작 ---
+                        // [공지사항 목록 및 내용 조회] GET 요청은 모두 허용 (permitAll)
+                        .requestMatchers(HttpMethod.GET, "/api/notices/**").permitAll()
+
+                        // [공지사항 수정/추가/삭제] POST, PUT, DELETE 요청은 ROLE_ADMIN만 허용
+                        .requestMatchers(HttpMethod.POST, "/api/notices/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/notices/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/notices/**").hasRole("ADMIN")
+
+                        // [선택사항: 일반 사용자 정보 조회] 인증된 사용자만 허용
+                        .requestMatchers("/api/user/info").authenticated()
+
+                        // --- 공지사항 관련 권한 설정 끝 ---
+                        // 로그인, 회원가입, 소셜 로그인 경로는 인증 없이 허용
                         .requestMatchers(
                                 "/api/user/signup",
                                 "/api/user/login",
-                                "/login/**", // 소셜 로그인 진입점
-                                "/oauth2/**" // 소셜 로그인 리다이렉션
+                                "/login/**",
+                                "/oauth2/**"
                         ).permitAll()
 
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
 
-                // JWT 필터 등록
-                // UsernamePasswordAuthenticationFilter 이전에 JWTAuthorizationFilter를 실행
-                // -> 모든 요청 전에 토큰의 유효성을 검사하고 인증 정보를 SecurityContext에 저장
+                // 5. JWT 필터 등록
+                // 모든 요청 전에 JWTAuthorizationFilter를 실행하여 토큰을 검증합니다.
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
 }

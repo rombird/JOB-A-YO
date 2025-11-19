@@ -1,29 +1,24 @@
 package com.example.demo.domain.service;
 
-import com.example.demo.config.auth.jwt.JwtTokenProvider; // JWT 토큰 생성용 Provider
+import com.example.demo.config.auth.jwt.JwtTokenProvider;
 import com.example.demo.domain.dto.CustomOAuth2User;
-import com.example.demo.domain.dto.TokenInfo; // 토큰 정보 DTO
+import com.example.demo.domain.dto.TokenInfo;
 import com.example.demo.domain.dto.UserDto;
 import com.example.demo.domain.dto.UserResponseDto;
-import com.example.demo.domain.entity.JwtToken; // DB에 토큰 저장용 Entity
+import com.example.demo.domain.entity.JwtToken;
 import com.example.demo.domain.entity.SocialProviderType;
 import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.domain.entity.UserRoleType;
-import com.example.demo.domain.repository.JwtTokenRepository; // DB 토큰 관리용 Repository
+import com.example.demo.domain.repository.JwtTokenRepository;
 import com.example.demo.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -36,38 +31,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 @Slf4j
 @Service
-public class UserService extends DefaultOAuth2UserService implements UserDetailsService {
+public class UserService extends DefaultOAuth2UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
-    //  JWT 관련 필드 추가
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtTokenRepository jwtTokenRepository;
 
-    // 생성자 수정: 필요한 컴포넌트들 모두 주입
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository,
-                       AuthenticationManagerBuilder authenticationManagerBuilder,
-                       JwtTokenProvider jwtTokenProvider, JwtTokenRepository jwtTokenRepository) {
+    public UserService(PasswordEncoder passwordEncoder,
+                       UserRepository userRepository,
+                       AuthenticationManager authenticationManager,
+                       JwtTokenProvider jwtTokenProvider,
+                       JwtTokenRepository jwtTokenRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.jwtTokenRepository = jwtTokenRepository;
     }
 
-
-    // 자체 로그인 회원 가입 (존재 여부)
     @Transactional(readOnly = true)
     public Boolean existUser(UserDto dto) {
         return userRepository.existsByUsername(dto.getUsername());
     }
 
-    // 자체 로그인 회원 가입 - username, email, nickname, password 받을 것
     @Transactional
     public Long addUser(UserDto dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
@@ -86,58 +76,40 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
         return userRepository.save(entity).getId();
     }
 
-    // 추가: JWT 토큰 발행을 위한 로그인 로직
     @Transactional
     public TokenInfo login(UserDto dto) {
-        // 1. Username + Password 기반으로 Authentication 객체 생성
+        // 1. Username/Password 인증 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
 
-        // 2. 실제 검증 (CustomUserDetailsService.loadUserByUsername 호출됨)
-        // 이 시점에 비밀번호 검증이 완료됩니다.
-        Authentication authentication =
-                authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        // 2. 인증 시도 및 Authentication 객체 획득 (CustomUserDetailsService 호출됨)
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성 (Access Token, Refresh Token)
+        // 3. JWT 토큰 생성
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-        // 4. DB에 Refresh Token 저장 (기존 토큰은 삭제/업데이트)
-
-        // 기존 토큰 정보가 있으면 삭제 (Clean-up)
+        // 4. 기존 Refresh Token 삭제 및 새로운 토큰 저장
         jwtTokenRepository.deleteByUsername(dto.getUsername());
 
-        // 새로운 토큰 정보 저장
+        // 사용자 권한 가져오기
+        String authority = authentication.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElseThrow(() -> new IllegalStateException("권한 정보가 없습니다."));
+
+        // JWT 토큰 엔티티 생성
         JwtToken jwtToken = JwtToken.builder()
                 .username(dto.getUsername())
                 .accessToken(tokenInfo.getAccessToken())
                 .refreshToken(tokenInfo.getRefreshToken())
-                .auth(authentication.getAuthorities().stream().findFirst().get().getAuthority())
+                .auth(authority)
                 .build();
 
         jwtTokenRepository.save(jwtToken);
 
         return tokenInfo;
     }
-    // ----------------------------------------------------------------------
 
-
-    // 자체 로그인 인증 로직 (Spring Security용)
-    @Transactional(readOnly = true)
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        UserEntity entity = userRepository.findByUsernameAndIsLockAndIsSocial(username, false, false)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-
-        return User.builder()
-                .username(entity.getUsername())
-                .password(entity.getPassword())
-                .roles(entity.getRoleType().name())
-                .accountLocked(entity.getIsLock())
-                .build();
-    }
-
-    // 자체 로그인 회원 정보 수정
     @Transactional
     public Long updateUser(UserDto dto) throws AccessDeniedException {
         String sessionUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -146,41 +118,33 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
         }
 
         UserEntity entity = userRepository.findByUsernameAndIsLockAndIsSocial(dto.getUsername(), false, false)
-                .orElseThrow(() -> new UsernameNotFoundException(dto.getUsername()));
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         entity.updateUser(dto);
 
         return userRepository.save(entity).getId();
     }
 
-
-    // 자체/소셜 로그인 회원 탈퇴
     @Transactional
     public void deleteUser(UserDto dto) throws AccessDeniedException {
-
-        SecurityContext context = SecurityContextHolder.getContext();
-        String sessionUsername = context.getAuthentication().getName();
-        String sessionRole = context.getAuthentication().getAuthorities().iterator().next().getAuthority();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String sessionUsername = auth.getName();
+        String sessionRole = auth.getAuthorities().iterator().next().getAuthority();
 
         boolean isOwner = sessionUsername.equals(dto.getUsername());
-        boolean isAdmin = sessionRole.equals("ROLE_"+UserRoleType.ADMIN.name());
+        boolean isAdmin = sessionRole.equals("ROLE_" + UserRoleType.ADMIN.name());
 
         if (!isOwner && !isAdmin) {
             throw new AccessDeniedException("본인 혹은 관리자만 삭제할 수 있습니다.");
         }
 
-        // 유저 제거
         userRepository.deleteByUsername(dto.getUsername());
-
-        // Refresh 토큰 제거 (jwtService의 역할을 jwtTokenRepository가 수행)
         jwtTokenRepository.deleteByUsername(dto.getUsername());
     }
 
-
-    // 소셜 로그인 (매 로그인시 : 신규 = 가입, 기존 = 업데이트)
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes;
         List<GrantedAuthority> authorities;
@@ -231,16 +195,13 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
         return new CustomOAuth2User(attributes, authorities, username);
     }
 
-
-    // 자체/소셜 유저 정보 조회
     @Transactional(readOnly = true)
     public UserResponseDto readUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity entity = userRepository.findByUsernameAndIsLock(username, false)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다: " + username));
+                .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다: " + username));
 
         return new UserResponseDto(username, entity.getIsSocial(), entity.getNickname(), entity.getEmail());
     }
-
 }
