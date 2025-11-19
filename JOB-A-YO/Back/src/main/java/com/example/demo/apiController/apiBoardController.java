@@ -32,15 +32,15 @@ public class apiBoardController {
     private final BoardService boardService;
     private final CommentService commentService;
 
-    @CrossOrigin(origins = {"http://127.0.0.1:3000","http://localhost:3000"})
+    @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.5.7:3000"})
     @Operation(summary = "PagingList", description = "게시글 목록 및 페이징 정보")
     @GetMapping("/paging")
     public ResponseEntity<?> paging(
-            @PageableDefault(page = 1) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
+            @PageableDefault(page = 1, size = 11) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
         log.info("GET  /api/board/paging... 페이징처리 REST API");
         Page<BoardDto> boardList = boardService.paging(pageable);
 
-        int blockLimit = 13;
+        int blockLimit = 11;
         // React에서 startPage, endPage 계산에 필요한 정보를 함께 JSON으로 반환
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; // 1, 4, 7,
         int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();

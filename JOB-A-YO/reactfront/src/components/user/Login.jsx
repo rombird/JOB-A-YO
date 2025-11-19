@@ -10,10 +10,6 @@ import "../../css/login.css";
 
 const Login = ()=>{
     const navigate = useNavigate();
-
-    const test1 =(endPoint, ...params)=>{
-        
-    }
     
     return (
         <>
