@@ -8,6 +8,7 @@ import com.example.demo.domain.entity.SocialProviderType;
 import com.example.demo.domain.entity.UserEntity;
 import com.example.demo.domain.entity.UserRoleType;
 import com.example.demo.domain.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,17 +32,18 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor // final 필드들을 주입하는 public 생성자를 lombok이 자동으로 생성
 public class UserService extends DefaultOAuth2UserService implements UserDetailsService  {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
-    private UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-    }
+//    private UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService) {
+//        this.passwordEncoder = passwordEncoder;
+//        this.userRepository = userRepository;
+//        this.jwtService = jwtService;
+//    }
 
 
     // 자체 로그인 회원 가입 (존재 여부)
@@ -205,7 +207,6 @@ public class UserService extends DefaultOAuth2UserService implements UserDetails
 
         return new CustomOAuth2User(attributes, authorities, username);
     }
-
 
     // 자체/소셜 유저 정보 조회
     @Transactional(readOnly = true)

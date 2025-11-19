@@ -39,7 +39,7 @@ public class UserRestController {
     }
 
     // 자체 로그인 유저 존재 확인
-    @PostMapping(value = "/user/exist", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/join/exist", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> existUserApi(
             @Validated(UserDto.existGroup.class) @RequestBody UserDto dto
     ) {
@@ -48,7 +48,7 @@ public class UserRestController {
 
     // 회원가입
     @Operation(summary="join", description = "JOIN")
-    @PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/join", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> join(
             @Validated(UserDto.addGroup.class) @RequestBody UserDto userDto // 데이터를 받으면서 검증을 수행
     ) {
@@ -59,13 +59,13 @@ public class UserRestController {
     }
 
     // 유저 정보
-    @GetMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/join", consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserResponseDto userMeApi() {
         return userService.readUser();
     }
 
     // 유저 수정 (자체 로그인 유저만)
-    @PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/join", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> updateUserApi(
             @Validated(UserDto.updateGroup.class) @RequestBody UserDto dto
     ) throws AccessDeniedException {
@@ -73,7 +73,7 @@ public class UserRestController {
     }
 
     // 유저 제거 (자체/소셜)
-    @DeleteMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/join", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> deleteUserApi(
             @Validated(UserDto.deleteGroup.class) @RequestBody UserDto dto
     ) throws AccessDeniedException {

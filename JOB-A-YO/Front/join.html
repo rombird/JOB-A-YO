@@ -46,7 +46,6 @@
             </div>
 
             <div class="navHeader">
-                
                 <div class="detailnav layoutCenter"> 
                     <h1><a href="./main.html">JOB-A-YO</a></h1>
                     <div class="wrap">
@@ -55,51 +54,16 @@
                                 <div class="listLine">
                                     <a class=mainMenu href="javascript:void(0)">상권트렌드</a>
                                 </div>
-                                <!-- <ul class="subNav">
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">맞춤형정보</a>
-                                    </li>
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">맞춤형정보2</a>
-                                    </li>
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">상권정보3</a>
-                                    </li>
-                                </ul> -->
-
                             </li>
                             <li class="mainList">
                                 <div class="listLine">
                                     <a class=mainMenu href="javascript:void(0)">나는 사장</a>
                                 </div>
-                                <!-- <ul class="subNav">
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">내 가게 경영진단</a>
-                                    </li>
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">NEWS</a>
-                                    </li>
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">Trend 3</a>
-                                    </li>
-                                </ul> -->
                             </li>
-                            
                             <li class="mainList">
                                 <div class="listLine">
                                     <a class=mainMenu href="javascript:void(0)">나도 곧 사장</a>
                                 </div>
-                                <!-- <ul class="subNav">
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">내 가게 경영진단</a>
-                                    </li>
-                                    <li class="subList">
-                                        <a href="javascript:void(0)">커뮤니티</a>
-                                    </li>
-                                    <li class="subList">
-                                        <a href="javascript:void(0)"></a>
-                                    </li>
-                                </ul> -->
                             </li>
                             <li class="mainList">
                                 <div class="listLine">
@@ -142,34 +106,46 @@
                 <b>SMS, 이메일 및 카카오톡 수신 동의 여부 '아니오' 선택할 시, 맞춤형 지원사업 안내 및 지원사업 신청 상태 알림을 받을 수 없습니다.</b>
             </div>
             <form class="join-form" form="post">
-                <dl>
-                    <dt>아이디(이메일)</dt>
-                    <dd>
-                        <input type="email" name="userid" readonly required>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>이름</dt>
-                    <dd>
-                        <input type="text" name="username" required>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>생년월일</dt>
-                    <dd class="select-div">
+                <div class="input-group first">
+                    <label for="id">아이디</label>
+                    <input type="text" name="userid" required>
+                </div>
+                <div class="input-group">
+                    <label for="pw">비밀번호</label>
+                    <input type="password" name = "password" required>
+                </div>
+                <p class="guide"> 영문 대소문자, 숫자, 특수문자를 혼합하여 8~15자 이내로 입력해주세요</p>
+                
+                <div class ="input-group">
+                    <label for="pw">비밀번호 확인</label>
+                    <input type="password" name="rePassword" required>
+                </div>
+                <div class ="input-group">
+                    <label>이름</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class ="input-group">
+                    <label>생년월일</label>
+                    <div class="select-div">
                         <select name="birthYear" id="birthYear" required>
-                            <option value="2025" selected>2025년</option>
-                            <option value="2024">2024년</option>
-                            <option value="2023">2023년</option>
-                            <option value="2022">2022년</option>
-                            <option value="2021">2021년</option>
-                            <option value="2020">2020년</option>
-                            <option value="2019">2019년</option>
-                            <option value="2018">2018년</option>
-                            <option value="2017">2017년</option>
-                            <option value="2016">2016년</option>
-                            <option value="2015">2015년</option>
-                            <option value="2014">2014년</option>
+                            <option value="2000" selected>2000년</option>
+                            <option value="1999">1999년</option>
+                            <option value="1998">1998년</option>
+                            <option value="1997">1997년</option>
+                            <option value="1996">1996년</option>
+                            <option value="1995">1995년</option>
+                            <option value="1994">1994년</option>
+                            <option value="1993">1993년</option>
+                            <option value="1992">1992년</option>
+                            <option value="1991">1991년</option>
+                            <option value="1990">1990년</option>
+                            <option value="1989">1989년</option>
+                            <option value="1988">1988년</option>
+                            <option value="1987">1987년</option>
+                            <option value="1986">1986년</option>
+                            <option value="1985">1985년</option>
+                            <option value="1984">1984년</option>
+                            <option value="1983">1983년</option>
                         </select>
                         <select name="birthMonth" id="birthMonth" required>
                             <option value="01" selected>01월</option>
@@ -218,96 +194,80 @@
                             <option value="30">30일</option>
                             <option value="31">31일</option>
                         </select>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>성별</dt>
-                    <dd class="gender-check">
+                    </div>
+                </div>
+                <div class ="input-group">
+                    <label>성별</label>
+                    <div class="gender-check">
                         <label for="man">
-                            <input type="radio" name="gender" id="man" value = "man">
+                            <input id="man" type="radio" name="gender"  value = "man"> 
                             남자
                         </label>
                         <label for="woman">
-                            <input type="radio" name="gender" id="woman" value = "woman">
+                            <input id="woman"  type="radio" name="gender" value = "woman">
                             여자
                         </label>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>연락처</dt>
-                    <dd>
-                        <input type="text" id="phoneNumber" name = "phoneNumber" placeholder="   (- 없이 숫자만 입력)" required>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>비밀번호</dt>
-                    <dd>
-                        <input type="password" name = "password" required>
-                        <div class="guide">
-                            영문 대소문자, 숫자, 특수문자를 혼합하여 8~15자 이내로 입력해주세요
-                        </div>
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>비밀번호 확인</dt>
-                    <dd>
-                        <input type="password" name="rePassword" required>
-                    </dd>
-                </dl>
-                <dl class = "addr-dl">
-                    <dt>주소</dt>
-                        
-                </dl>
+                    </div>
+                </div>
+                <div class ="input-group phone">
+                    <label>연락처</label>
+                    <input type="text" id="phoneNumber" name = "phoneNumber" placeholder="   (- 없이 숫자만 입력)" required>
+                </div>
+                <div class ="input-group email">
+                    <label>이메일</label>
+                    <input type="text">
+                    <p>@</p>
+                    <select>
+                        <option>naver.com</option>
+                        <option>gmail.com</option>
+                        <option>daum.net</option>
+                        <option>nate.com</option>
+                    </select>    
+                </div>
                 <div class="line"></div>
-                <dl class="keyword-dl">
-                    <dt>관심 창업 아이템</dt>
-                    <dd class="keyword-checkbox">
+                <div class ="input-group keyword-dl">
+                    <label>관심 요식업 아이템</label>
+                    <div class="keyword-checkbox">
                         <label for="bigdata">
                             <input type="checkbox" name="keyword"  value="bigdata" id = "bigdata">
-                            온라인 비즈니스
+                            휴게음식점
                         </label>
                         <label for="color">
                             <input type="checkbox" name="keyword" value="color" id = "color" >
-                            오프라인 소매업
+                            일반음식점
                         </label>
                         <label for="seasonTrend">
                             <input type="checkbox" name="keyword" value="seasonTrend" id="seasonTrend" >
-                            푸드/외식업
+                            단란주점
                         </label>
                         <label for="style">
                             <input type="checkbox" name="keyword" value="style" id="style">
-                            전문 서비스업
+                            유흥주점
                         </label>
                         <label for="style">
                             <input type="checkbox" name="keyword" value="style" id="style">
-                            지식/컨텐츠 사업
+                            제과점영업
                         </label>
-                        <label for="style">
-                            <input type="checkbox" name="keyword" value="style" id="style">
-                            기타
-                        </label>
-                        <div class = "keyword-guide">
-                            1개 이상 선택해 주세요.
-                            맞춤형 콘텐츠를 제공 받을 수 있습니다.
-                        </div> 
-                    </dd>
-                </dl>
-                <dl class = "recieve-dl">
-                    <dt>수신여부(선택)</dt>
-                    <dd class = "recieve-checkbox">
-                        <label for="recieveSMS">
-                            <input type="checkbox" name="recieve" value="recieveSMS" id="recieveSMS">
-                            SMS 수신
+                    </div>
+                </div>
+                <p class = "guide">식품위생법에 따라 분류했으며 1개 이상 선택가능합니다. </p> 
+                        
+                <div class ="input-group recieve-dl">
+                    <label>수신여부(선택)</label>
+                    <div class = "recieve-checkbox">
+                        <label for= "recieveSms">
+                            <input type="checkbox" name="recieve" value="recieveSms" id="recieveSms">
+                            SMS 수신 
                         </label>
                         <label for="recieveEmail">
                             <input type="checkbox" name="recieve" value="recieveEmail" id="recieveEmail">
                             이메일 수신
                         </label>
-                        <div class="recieve-guide">
-                            수신 여부는 마이페이지>회원정보 수정에서 변경하실 수 있습니다.
+                    </div>
+                </div>
+                <div class="guide">
+                            수신 여부는 마이페이지 > 회원정보 수정에서 변경하실 수 있습니다.
                         </div>
-                    </dd>
-                </dl>
                 <div class = "line"></div>
                 <div class = "cancel-join">
                     <a href="javascript:void(0)">취소</a>

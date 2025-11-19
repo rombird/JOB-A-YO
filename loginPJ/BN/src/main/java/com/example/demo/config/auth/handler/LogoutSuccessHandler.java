@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 // 로그아웃시 발급한 refresh token을 받아 무효화 처리 진행
-@Component
-@Qualifier("LogoutSuccessHandler")
+// RefreshTokenLogoutHandler
 public class LogoutSuccessHandler implements LogoutHandler {
 
     private final JwtService jwtService;
@@ -49,6 +48,7 @@ public class LogoutSuccessHandler implements LogoutHandler {
 
             // Refresh 토큰 삭제
             jwtService.removeRefresh(refreshToken);
+
         } catch (IOException e){
             throw new RuntimeException("Failed to read refresh token", e);
         }

@@ -18,14 +18,12 @@ body {
 }
 
 .layoutCenter{
-    width:1600px;
+    width:1440px;
     margin:0 auto;
 }
 
- /* header width:1444px */
- 
- .header{
-    height:155px;
+.header{
+    height:130px;
     /* border-bottom: 3px solid #3A6B71; */
     box-shadow: 0 4px 3px #bbb;
     background-color: white;
@@ -56,10 +54,9 @@ body {
 .topHeader>.topList>.topNav>.topNavli a{
     transition: color 0.3s ease;
     /* border:1px solid; */
-    font-size:22px;
+    font-size:16px;
     color:black;
     width:130px;
-    
 }
 .topHeader>.topList>.topNav>.topNavli>.login{
     display:flex;
@@ -96,12 +93,11 @@ body {
 .detailnav {
     display: flex;
     position:relative;
-    height:101px;
+    height:85px;
     margin: 0 auto;
     justify-content:space-between;
     align-items: center;
     /* border:1px solid; */
-    height:105px;
 }
 .detailnav>h1{
     /* font-style:#95BECD; */
@@ -109,7 +105,7 @@ body {
 .detailnav>h1>a{
     font-family:'logo';
     color:#65A3FF;
-    font-size:60px;
+    font-size:40px;
 }
 .wrap{
     display:flex;
@@ -129,7 +125,7 @@ body {
     position: relative; 
     text-align:center;
     width: 250px;
-    height:105px;
+    height:70px;
 }
 .mainMenu{
     font-family:'kopu';
@@ -137,8 +133,8 @@ body {
 .wrap>.mainNav>.mainList>.listLine {
     /* border:1px solid; */
     margin:0 20px;
-    line-height: 105px;
-    font-size: 25px;
+    line-height: 60px;
+    font-size: 20px;
 }
 .wrap>.mainNav>.mainList>.listLine::before{
   content: "";
@@ -185,7 +181,8 @@ body {
 }
 .wrap>.mainNav>.mainList>.subNav>.subList{
     /* border:1px solid; */
-    height:60px;
+    font-size:16px;
+    height:63px;
 }
 .wrap>.mainNav>.mainList>.subNav>.subList>a{
     display:flex;
@@ -264,7 +261,6 @@ body {
 .footerInfo a{
     font-family:"kopume";
 }
-
 
 @media screen and (max-width: 1500px) {
     .detailnav {

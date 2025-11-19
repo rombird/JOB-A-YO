@@ -24,7 +24,7 @@ public class UserDto {
     @Size(min = 4)
     private String password;
     @NotBlank(groups = {addGroup.class, updateGroup.class})
-    private String nickname;
+    private String phone;
     @Email(groups = {addGroup.class, updateGroup.class})
     private String email;
 }
