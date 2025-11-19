@@ -1,8 +1,11 @@
 
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import "../../css/login.css";
+import { Link } from 'react-router-dom';
+
 import "../../css/common.css";
+import "../../css/login.css";
+
 
 
 const Login = ()=>{
@@ -123,7 +126,10 @@ const Login = ()=>{
                                         <a href="javascript:void(0)">공지사항</a>
                                     </li>
                                     <li className="subList">
-                                        <a href="javascript:void(0)">캘린더</a>
+                                        <a href="javascript:void(0)">문의사항</a>
+                                    </li>
+                                    <li className="subList">
+                                        <Link to="/board/Paging">커뮤니티</Link>
                                     </li>
                                 </ul>
                             </li>

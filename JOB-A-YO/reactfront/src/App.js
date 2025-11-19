@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import Login from "./components/user/Login";
+import WriteBoard from './components/board/WriteBoard';
 
 
 function App() {
@@ -12,11 +13,12 @@ function App() {
       <Router>
         <div>
           <Link to="/user/login">Login 화면</Link> <br />
+
         </div>
         <Routes>
           {/* Route 설정 */}
           <Route path="/user/login" element={<Login />} />
-
+          <Route path="/board/WriteBoard" element={<WriteBoard />} />
         </Routes>
       </Router>
 
