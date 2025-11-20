@@ -25,39 +25,32 @@ public class UserService {
     }
 
     // 자체 로그인 회원 가입 - username, email, name, password 받을 것
-    @Transactional
-    public void join(UserDto userDto){
-        log.info(userDto.getUsername(), UserRoleType.USER.name());
-
-        User user = User.builder()
-                .username(userDto.getUsername())
-                .password(passwordEncoder.encode(userDto.getPassword())) // Dto에서 넘어온 비밀번호 인코딩
-                .isLock(false)
-                .isSocial(false)
-                .socialProviderType(null)
-                .roleType(UserRoleType.USER)
-//                .name(userDto.getName())
-                .phone(userDto.getPhone())
-                .email(userDto.getEmail())
-
-                .build();
-
-        // DB 저장
-        userRepository.save(user);
-    }
+//    @Transactional
+//    public void join(UserDto userDto){
+//        log.info(userDto.getUsername(), UserRoleType.USER.name());
+//
+//        User user = User.builder()
+//                .username(userDto.getUsername())
+//                .password(passwordEncoder.encode(userDto.getPassword())) // Dto에서 넘어온 비밀번호 인코딩
+//                .isLock(false)
+//                .isSocial(false)
+//                .socialProviderType(null)
+//                .roleType(UserRoleType.USER)
+////                .name(userDto.getName())
+//                .phone(userDto.getPhone())
+//                .email(userDto.getEmail())
+//                .build();
+//
+//        // DB 저장
+//        userRepository.save(user);
+//    }
 
     // 자체 로그인
-
 
     // 자체 로그인 회원 정보 수정
     // 자체 로그인 여부 or 잠김여부(계정이 잠겨있는지 확인)
 
-
     // 자체/소셜 로그인 회원 탈퇴
-
-
-
-
 
     // 소셜 로그인 (매 로그인시 : 신규 = 가입, 기존 = 업데이트)
 

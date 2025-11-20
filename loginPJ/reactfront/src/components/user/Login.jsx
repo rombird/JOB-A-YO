@@ -37,8 +37,6 @@ const Login = ()=>{
                     </div>
                 </main>
             </div>
-
-        
         </>
 
     )

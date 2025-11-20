@@ -6,6 +6,7 @@ import com.example.demo.config.auth.jwt.TokenInfo;
 import com.example.demo.config.auth.redis.RedisUtil;
 import com.example.demo.domain.dto.UserDto;
 import com.example.demo.domain.entity.User;
+import com.example.demo.domain.entity.UserRoleType;
 import com.example.demo.domain.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,7 +57,7 @@ public class UserRestController {
     private RedisUtil redisUtil;
 
     @Operation(summary="join", description = "JOIN")
-    @PostMapping(value = "/join",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> join_post(@RequestBody UserDto userDto){
         log.info("POST /join..."+userDto);
@@ -67,15 +68,13 @@ public class UserRestController {
                 .password( passwordEncoder.encode(userDto.getPassword()))
                 .isLock(false) // 기본적으로 잠금 해제 상태
                 .isSocial(false) // 일반 가입
-                .roleType(userDto.getRoleType())
+                .roleType(UserRoleType.USER)
                 .phone(userDto.getPhone())
                 .email(userDto.getEmail())
                 .build();
 
         // save entity to DB
         userRepository.save(user);
-
-        //
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
     //Header 방식 (Authorization: Bearer <token>)

@@ -26,10 +26,10 @@ public class User {
     private String password; // 비밀번호
 
     @Column(name = "is_lock", nullable = false)
-    private Boolean isLock;
+    private Boolean isLock = false;
 
     @Column(name = "is_social", nullable = false)
-    private Boolean isSocial;
+    private Boolean isSocial = false;
 
     @Enumerated(EnumType.STRING) // USER, ADMIN 문자열 그대로 저장
     @Column(name = "social_provider_type")

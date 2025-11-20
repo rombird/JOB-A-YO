@@ -1,34 +1,33 @@
-import {useState,useEffect} from 'react'
-import axios from 'axios'
-import "../../css/common.css";
+import {Link} from 'react-router-dom';
+import "../css/common.css";
 
 
-const Header = () => {
+const Footer = () => {
     return (
         <>
-            <footer class="">
-                <div class="mainFooter layoutCenter">
-                    <div class="footerLogo">
+            <footer className="">
+                <div className="mainFooter layoutCenter">
+                    <div className="footerLogo">
                         <h1>JOB-A-YO</h1>
                     </div>
-                    <div class="footerInfo">
-                        <div class="footerInfoL">
+                    <div className="footerInfo">
+                        <div className="footerInfoL">
                             <p>대구광역시 중구 중앙대로 366</p>
                             <p>임과 함께</p>
                             <p>admin@gmail.com</p>
                             <p>053-123-4567</p>
                         </div>
-                        <div class="footerInfoR">
-                            <ul class="site">
-                                <li><a href="javascript:void(0)">FAQ</a></li>
-                                <li><a href="javascript:void(0)">사이트맵</a></li>
+                        <div className="footerInfoR">
+                            <ul className="site">
+                                <li><Link to="/notice" />FAQ</li>
+                                <li><Link to="/sitemap" />사이트맵</li>
                             </ul>
-                            <ul class="related">
-                                <li><a href="javascript:void(0)">관련기관정보</a></li>
+                            <ul className="related">
+                                <li><Link to="/related" />관련기관정보</li>
                             </ul>
-                            <ul class="personInfo">
-                                <li><a href="javascript:void(0)">개인정보처리방침</a></li>
-                                <li><a href="javascript:void(0)">이용약관</a></li>
+                            <ul className="personInfo">
+                                <li><Link to="/personal" />개인정보처리방침</li>
+                                <li><Link to="/use" />이용약관</li>
                             </ul>
                         </div>
                     </div>
@@ -40,3 +39,4 @@ const Header = () => {
 
 
 }
+export default Footer;
