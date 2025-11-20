@@ -10,6 +10,9 @@ import { useEffect, useState, useCallback } from "react";
 
 import "../../css/common.css";
 
+import WriteBoard from "./WriteBoard";
+
+
 // 수정: 모든 로직을 Paging 함수 컴포넌트 내부에 정의합니다.
 const Paging = () => {
     
@@ -97,7 +100,7 @@ const Paging = () => {
                         <tr key={board.id}>
                             <td>{board.id}</td>
                             <td>
-                                <Link to={`/board/detail/${board.id}?page=${currentDisplayPage}`}>
+                                <Link to={`/board/Boarddetail/${board.id}?page=${currentDisplayPage}`}>
                                     {board.boardTitle}
                                 </Link>
                             </td>
