@@ -2,6 +2,7 @@
 
 
 
+
 import axios from "axios";
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import moment from 'moment';
@@ -21,7 +22,7 @@ const Paging = () => {
     // 현재 페이지 번호
     const page = searchParams.get('page') || '1';
     const pageSize = 11;
-    //  클라이언트 측에서 -1을 해서 서버(0부터 시작)로 보냅니다.
+    //  클라이언트 측에서 -1을 해서 서버(0부터 시작)로 보냄
     // const pageIndex = parseInt(page, 10) - 1; 
 
     // State 선언
@@ -51,7 +52,6 @@ const Paging = () => {
 
         }catch(error){
             console.error("게시글 목록을 불러오는데 실패했습니다.", error);
-            // totalPages의 키가 totalPages로 정확해야 합니다. (이전 totalPage 오타 수정)
             setBoardData({content : [], number : 0, totalPages: 1, first: true, last: true }); 
             setStartPage(1);
             setEndPage(1);
@@ -97,7 +97,7 @@ const Paging = () => {
                         <tr key={board.id}>
                             <td>{board.id}</td>
                             <td>
-                                <Link to={`/board/${board.id}?page=${currentDisplayPage}`}>
+                                <Link to={`/board/detail/${board.id}?page=${currentDisplayPage}`}>
                                     {board.boardTitle}
                                 </Link>
                             </td>

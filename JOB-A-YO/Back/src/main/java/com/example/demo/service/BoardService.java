@@ -52,19 +52,24 @@ public class BoardService {
     @Value("${file.dir}")       // 파일 저장 경로
     private String fileDir;
 
-    public void save(BoardDto boardDto) throws IOException {
+    @Transactional
+    public BoardDto save(BoardDto boardDto) throws IOException {
 
         // TextArea에서 SQL로 넘어갈때 HTML태그도 같이 저장되는 걸 막기 위해서
         String cleanText = Jsoup.parse(boardDto.getBoardContents()).text();
         boardDto.setBoardContents(cleanText);
 
+        BoardEntity boardEntity = null;
+        BoardEntity finalSavedEntity = null;
+
         // 파일 첨부 여부에 따라 로직 분리
-        if(boardDto.getFileUpload().isEmpty()){
+        if( boardDto.getFileUpload() == null|| boardDto.getFileUpload().isEmpty()){
             // 첨부 파일 없음
-            BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDto);
-            boardRepository.save(boardEntity);     // boardRepository는 파라미터로 entity객체만 받음. 그래서 dto <-> entity 작업이 필요
+            boardEntity = BoardEntity.toSaveEntity(boardDto);
+            finalSavedEntity = boardRepository.save(boardEntity);     // boardRepository는 파라미터로 entity객체만 받음. 그래서 dto <-> entity 작업이 필요
         }else{
             // 첨부 파일 있음
+
             // 1. DTO에 담긴 파일 꺼냄
             // 2. 파일의 이름 가져옴
             // 3. 서버 저장용 이름을 만듬 // ex: 내사진.jpg ->  123123123_내사진.jpg
@@ -72,10 +77,14 @@ public class BoardService {
             // 5. 해당 경로에 파일을 저장하는 처리
             // 6. board_table(SQL)에 해당 데이터 Save 처리
             // 7, board_file_table에 해당 데이터 save 처리
+            // 6. board_table(SQL)에 해당 데이터 Save 처리 (파일 첨부 정보 포함)
 
-            BoardEntity boardEntity = BoardEntity.toSaveFileEntity(boardDto);   // 6. board_table(SQL)에 해당 데이터 Save 처리
+            boardEntity = BoardEntity.toSaveFileEntity(boardDto);   // 6. board_table(SQL)에 해당 데이터 Save 처리
             Long saveId = boardRepository.save(boardEntity).getId();
+
+            // 저장된 게시글 엔티티를 다시 조회하여 파일을 연결할때 사용
             BoardEntity board  = boardRepository.findById(saveId).get();
+
             for(MultipartFile boardFile: boardDto.getFileUpload()){
 //                MultipartFile boardFile = boardDto.getFileUpload(); // 1. Dto에 담긴 파일 꺼냄
                 String originalFilename = boardFile.getOriginalFilename(); // 2. 파일의 이름 가져옴
@@ -83,12 +92,14 @@ public class BoardService {
                 String savePath = "c:/springboot_img/" + storedFileName; // 4. 저장 경로 설정
                 boardFile.transferTo(new File(savePath));   // 5. 해당경로에 파일 저장
 
-                // 7, board_file_table에 해당 데이터 save 처리
+                // 7. board_file_table에 해당 데이터 save 처리
                 BoardFileEntity boardFileEntity = BoardFileEntity.toBoardFileEntity(board, originalFilename, storedFileName);
                 boardFileRepository.save(boardFileEntity);
             }
+            finalSavedEntity = board;
         }
 
+        return BoardDto.toBoardDto(finalSavedEntity);
     }
 
     @Transactional
@@ -140,7 +151,7 @@ public class BoardService {
     @Transactional
     public Page<BoardDto> paging(Pageable pageable){
         int page = pageable.getPageNumber() - 1;
-        int pageLimit = 3;  // 한 페이지에 보여줄 글 개수
+        int pageLimit = 10;  // 한 페이지에 보여줄 글 개수
 
         // 한 페이지당 pageLimit만큼 글을 보여주고 정렬 기준은 id 기준으로 내림차순 정렬
         // boardEntities -> 스프링부트JPA에서 제공하는 듯

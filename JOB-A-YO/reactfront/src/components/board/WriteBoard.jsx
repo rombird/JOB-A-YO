@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import React, { Fragment, useState, useCallback, useRef, useEffect} from 'react';
-
+import React, { Fragment, useState, useCallback, useRef, useEffect } from 'react';
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import "../../css/common.css";
 import "../../css/writeBoard.css";
@@ -10,11 +11,13 @@ import "../../css/ckEditorStyle.css";
 
 
 const WriteBoard = () => {
+
     const navigate = useNavigate();
+    const [boardContents, setBoardContents] = useState("");
 
     // 1. 상태관리
     const [uploadedFiles, setUploadFiles] = useState([]);
-   
+
     // 2. DOM 요소 참조
     const uploadAreaRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -37,29 +40,29 @@ const WriteBoard = () => {
         const newFiles = Array.from(files);
         let validFiles = [];
 
-        for (const file of newFiles){
+        for (const file of newFiles) {
             const ext = file.name.split('.').pop().toLowerCase();
 
             // 1. 확장자 검사
-            if (!allowedExtensions.includes(ext)){
+            if (!allowedExtensions.includes(ext)) {
                 alert(`${file.name}: 지원하지 않는 형식입니다.`);
                 continue;
             }
 
             // 2. 파일 개수 제한 검사 (현재 파일 개수 + 추가할 파일 개수)
-            if (uploadedFiles.length + validFiles.length >= maxCount){
+            if (uploadedFiles.length + validFiles.length >= maxCount) {
                 alert("최대 5개까지 업로드 할 수 있습니다");
                 break; // 5개 넘기면 더 이상 파일을 처리하지 않음
             }
 
             // 3. 파일 크기 검사
-            if (file.size > maxSize){
+            if (file.size > maxSize) {
                 alert(`${file.name} : 20MB 초과`);
                 continue;
             }
 
             // 4. 중복 파일명 검사
-            if (uploadedFiles.some(f => f.name === file.name) || validFiles.some(f => f.name === file.name)){
+            if (uploadedFiles.some(f => f.name === file.name) || validFiles.some(f => f.name === file.name)) {
                 alert(`${file.name}은 이미 업로드 되어 있습니다.`);
                 continue;
             }
@@ -67,15 +70,15 @@ const WriteBoard = () => {
         }
 
         // 유효한 파일만 상태에 추가
-        if(validFiles.length > 0){
+        if (validFiles.length > 0) {
             setUploadFiles(prevFiles => [...prevFiles, ...validFiles]);
         }
 
         // 파일 input 초기화(같은 파일 재선택 가능하도록)
-        if(fileInputRef.current){
+        if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
-    },[uploadedFiles]);   // uploadedFiles가 변경될 때마다 함수 재생성
+    }, [uploadedFiles]);   // uploadedFiles가 변경될 때마다 함수 재생성
 
     // 파일 입력(input)의 change 이벤트 핸들러
     const onFileInputChange = (e) => {
@@ -93,7 +96,7 @@ const WriteBoard = () => {
     // 드래그 앤 드롭 이벤트(useEffect 사용해서 들어오면 하나 추가 삭제하면 하나 삭제)
     useEffect(() => {
         const uploadArea = uploadAreaRef.current;
-        if(!uploadArea) return;
+        if (!uploadArea) return;
 
         // 드래그 시 시각효과
         const handleDragOver = (e) => {
@@ -129,31 +132,58 @@ const WriteBoard = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // 추가하고 싶은 것 : 필수 입력 항목 유효성 검사 추가(제목, 글쓴이, 비밀번호, 내용 등)
+        // 필수 입력 항목 유효성 검사 (추가 필요)
+        const boardTitle = e.target.elements.boardTitle.value;
+        const boardWriter = e.target.elements.boardWriter.value;
+        const boardPass = e.target.elements.boardPass.value;
+
+        if (!boardTitle || !boardWriter || !boardPass || !boardContents) {
+            alert("제목, 글쓴이, 비밀번호, 내용을 모두 입력해주세요.");
+            return; // 유효성 검사 실패 시 전송 중단
+        }
 
         const formData = new FormData(e.target);    // 폼의 다른 입력 필드 포함
+
+        // CKEditor 내용 추가
+        formData.append("boardContents", boardContents);
 
         // 파일들을 formData에 추가
         uploadedFiles.forEach(file => {
             formData.append("fileUpload", file); // fileUpload는 서버에서 파일 받을 때 쓰는 이름
         });
 
+        console.log("폼 데이터 전송 준비 완료. 파일 개수: ", uploadedFiles.length);
+
+        // axios.post(`http://localhost:8090/api/board/writeBoard`,
+        //     {"boardTitle":boardTitle,"boardWriter":boardWriter,"boardPass":boardPass,"boardContents":boardContents,"fileUpload":fileUpload},
+        //     {"Content-Type" : "application/json"})
+        //     .then(resp=>{
+        //         console.log(resp);
+        //         setMessage(resp.data)
+        //     })
+        //     .catch(err=>{
+        //         console.log(err);
+        //         setMessage(err.response.data)
+        //     })
+
+
+
+
         // axios를 이용한 서버 전송
-        axios.post('/board/writeBoard', formData, {
+        axios.post('http://localhost:8090/api/board/writeBoard', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         })
-        .then(res => {
-            alert("게시글이 성공적으로 작성되었습니다.");
-            navigate('/board/Paging'); // 제출하면 게시글 페이지로 이동
-        })
-        .catch(error => {
-            console.error("게시글 작성 실패:", error);
-            alert("게시글 작성 중 오류가 발생했습니다.");
-        });
+            .then(res => {
+                alert("게시글이 성공적으로 작성되었습니다.");
+                navigate('/board/Paging'); // 제출하면 게시글 페이지로 이동
+            })
+            .catch(error => {
+                console.error("게시글 작성 실패:", error);
+                alert("게시글 작성 중 오류가 발생했습니다.");
+            });
 
-        console.log("폼 데이터 전송 준비 완료. 파일 개수: ", uploadedFiles.length);
     };
 
     return (
@@ -166,9 +196,9 @@ const WriteBoard = () => {
                         <div className="topList layoutCenter">
                             <ul className="topNav">
                                 <li className="topNavli">
-                                    <Link to="user/Login"><img className="imgLogin" src="@{/image/person.svg}" alt=""/>로그인</Link>
+                                    <Link to="user/Login"><img className="imgLogin" src="@{/image/person.svg}" alt="" />로그인</Link>
                                 </li>
-                                <li class="topNavli">
+                                <li className="topNavli">
                                     <Link to="user/Join">회원가입</Link>
                                 </li>
                             </ul>
@@ -240,7 +270,7 @@ const WriteBoard = () => {
                                                 <a href="#">공지사항</a>
                                             </li>
                                             <li className="subList">
-                                                <a href="/board/paging">문의사항</a>
+                                                <a href="#">문의사항</a>
                                             </li>
                                             <li className="subList">
                                                 <Link to="/user/Paging">커뮤니티</Link>
@@ -286,16 +316,16 @@ const WriteBoard = () => {
 
                         {/* <!-- 글 적는곳 --> */}
                         <div className="write-space">
-                            <form onSubmit={handleSubmit} action="/board/writeBoard" method="post" enctype="multipart/form-data">
+                            <form onSubmit={handleSubmit} action="/board/writeBoard" method="post" encType="multipart/form-data">
 
                                 {/* <!-- 제목 부분 --> */}
                                 <div className="label-and-writeArea">
                                     <div className="label-area">
                                         <div>제목</div>
-                                        <div><i style={{color: '#3A6B71'}} className="fa-solid fa-star-of-life fa-2xs"></i></div>
+                                        <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="boardTitle"/>
+                                        <input className="write-input" type="text" name="boardTitle" />
                                     </div>
                                 </div>
 
@@ -306,10 +336,10 @@ const WriteBoard = () => {
                                 <div className="label-and-writeArea">
                                     <div className="label-area">
                                         <div>글쓴이</div>
-                                        <div><i style={{color: '#3A6B71'}} className="fa-solid fa-star-of-life fa-2xs"></i></div>
+                                        <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="boardWriter"/>
+                                        <input className="write-input" type="text" name="boardWriter" />
                                     </div>
                                 </div>
 
@@ -320,10 +350,10 @@ const WriteBoard = () => {
                                 <div className="label-and-writeArea">
                                     <div className="label-area">
                                         <div>비밀번호</div>
-                                        <div><i style={{color: '#3A6B71'}} className="fa-solid fa-star-of-life fa-2xs"></i></div>
+                                        <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="boardPass"/>
+                                        <input className="write-input" type="text" name="boardPass" />
                                     </div>
                                 </div>
 
@@ -335,13 +365,21 @@ const WriteBoard = () => {
                                 <div className="label-and-writeArea">
                                     <div className="label-area content-label">
                                         <div>내용</div>
-                                        <div><i style={{color: '#3A6B71'}} className="fa-solid fa-star-of-life fa-2xs"></i></div>
+                                        <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area content-area">
                                         <div className="main-container">
                                             <div className="editor-container editor-container_classic-editor" id="editor-container">
                                                 <div className="editor-container__editor">
-                                                    <textarea className="editor" name="boardContents" id="editor"></textarea>
+                                                    {/* <textarea className="editor" name="boardContents" id="editor"></textarea> */}
+                                                    <CKEditor
+                                                        editor={ClassicEditor}
+                                                        data=""
+                                                        onChange={(event, editor) => {
+                                                            const data = editor.getData();
+                                                            setBoardContents(data);
+                                                        }}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -356,7 +394,7 @@ const WriteBoard = () => {
                                 <div className="label-and-writeArea">
                                     <div className="label-area">
                                         <div>첨부파일</div>
-                                        <div><i style={{color: '#3A6B71'}} className="fa-solid fa-star-of-life fa-2xs"></i></div>
+                                        <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
                                         <div className="file-upload-info">
@@ -364,17 +402,17 @@ const WriteBoard = () => {
                                                 <div>용량 제한 : {formatBytes(maxSize)}, 개수제한 : {maxCount}개</div>
                                                 <div>파일 형식 : {allowedExtensions.join(', ')}</div>
                                             </div>
-                                            <input 
-                                                className="file-upload-btn" 
-                                                type="file" 
-                                                id="fileUpload" 
-                                                name="fileUpload" 
+                                            <input
+                                                className="file-upload-btn"
+                                                type="file"
+                                                id="fileUpload"
+                                                name="fileUpload"
                                                 multiple
                                                 ref={fileInputRef}  // useRef 연결
-                                                onChange={onFileInputChange}/>    
-                                                <label className="upload-btn" for="fileUpload">
-                                                    <i className="fa-solid fa-upload"></i>
-                                                </label>
+                                                onChange={onFileInputChange} />
+                                            <label className="upload-btn" htmlFor="fileUpload">
+                                                <i className="fa-solid fa-upload"></i>
+                                            </label>
                                         </div>
 
                                         {/* 파일 업로드 영역 및 미리보기 */}
@@ -386,20 +424,20 @@ const WriteBoard = () => {
                                                 <div className="preview-container">
                                                     {uploadedFiles.map((file, index) => (
                                                         // key는 React가 목록 요소를 식별하는 데 도움을 줍니다.
-                                                        <React.Fragment key={file.name + file.size}> 
+                                                        <React.Fragment key={file.name + file.size}>
                                                             {/* 첫 번째 요소가 아닐 경우에만 점선 추가 */}
                                                             {index > 0 && (
                                                                 <div className="line-dotted-preview"></div>
                                                             )}
-                                                            
+
                                                             <div className="preview-box">
                                                                 <div>
                                                                     <div className="file-name">{file.name}</div>
                                                                     <div className="file-size">{formatBytes(file.size)}</div>
                                                                 </div>
-                                                                <button 
-                                                                    className="delete-btn" 
-                                                                    type="button" 
+                                                                <button
+                                                                    className="delete-btn"
+                                                                    type="button"
                                                                     onClick={() => deleteFile(file.name, file.size)}
                                                                 >
                                                                     <i className="fa-solid fa-trash fa-lg"></i>
@@ -412,19 +450,18 @@ const WriteBoard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 {/* */}
                                 <div className="under-line-dotted line-dotted"></div>
 
                                 {/* */}
                                 <div className="submit-btn-group">
-                                    <button style={{borderColor: '#3A6B71', color: '#335f64'}} type="submit" className="btn btn-outline-success btn-lg">제출</button>
-                                
-                                    <button style={{ borderColor: '#3A6B71', color: '#335f64'}} type="button" className="btn btn-outline-success btn-lg">
+                                    <button style={{ borderColor: '#3A6B71', color: '#335f64' }} type="submit" className="btn btn-outline-success btn-lg">제출</button>
+
+                                    <button style={{ borderColor: '#3A6B71', color: '#335f64' }} type="button" className="btn btn-outline-success btn-lg">
                                         <Link to="/board/paging" style={{ textDecoration: 'none', color: 'inherit' }}>목록</Link>
                                     </button>
-                                    
-                                    {/* 원본 코드의 <input className="submit-btn" type="submit" id="submitBtn"/> 및 <label for="submitBtn">는 제거하거나 정리하는 것이 좋습니다. */}
+
                                 </div>
                             </form>
                         </div>

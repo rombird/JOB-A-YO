@@ -3,6 +3,7 @@ package com.example.demo.domain.dto;
 
 import com.example.demo.domain.entity.BoardEntity;
 import com.example.demo.domain.entity.BoardFileEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,9 @@ public class BoardDto {
     private String boardTitle;
     private String boardContents;
     private int boardHits;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime boardCreateTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime boardUpdateTime;
 
     // 파일 업로드 관련
