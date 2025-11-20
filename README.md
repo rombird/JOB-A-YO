@@ -9,11 +9,21 @@
     │  │          └─demo
     │  │              ├─apiController -> api로 통신할 Controller만 모아놓은곳
     │  │              ├─config
+    │  │              │  └─auth
     │  │              ├─controller
+    │  │              │  ├─UserRestController
+    │  │              │  └─HomeController
     │  │              ├─domain
     │  │              │  ├─dto
+    │  │              │  │  └─UserDto
     │  │              │  ├─entity
+    │  │              │  │  ├─JwtToken
+    │  │              │  │  ├─Signature
+    │  │              │  │  └─User
     │  │              │  └─repository
+    │  │              │  │  ├─JwtTokenRepository
+    │  │              │  │  ├─SignatureRepository
+    │  │              │  │  └─UserRepository
     │  │              └─service
     │  └─resources
     │      ├─static
