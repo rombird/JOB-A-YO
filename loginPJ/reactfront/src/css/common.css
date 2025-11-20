@@ -1,7 +1,20 @@
-* {
-    box-sizing: border-box;
+@font-face {
+    font-family: "kopu";
+    src: url("../../public/fonts/KoPubWorld\ Dotum\ Bold.ttf");
+    font-style: normal;
+}
+@font-face {
+    font-family: 'kopume';
+    src: url('../../public/fonts/KoPubWorld\ Dotum\ Medium.ttf');
+    font-style: normal;
+}
+@font-face {
+    font-family: 'logo';
+    src: url('../../public/fonts/BitcountGridDouble-SemiBold.ttf');
+    font-style: normal;
 }
 
+* { box-sizing: border-box;}
 a,
 a:link,
 a:visited,

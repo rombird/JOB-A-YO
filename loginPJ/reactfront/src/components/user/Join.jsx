@@ -16,7 +16,7 @@ const Join  = ()=>{
         axios
             .post(
                 'http://localhost:8090/user/join',
-                 {"username":username,"password" : password, "name":name, "phone":phone, "email":email},
+                 {"username":username, "password" : password, "name":name, "phone":phone, "email":email},
                  {headers:{ 'Content-Type' : 'application/json' }}
             )
             .then(resp=>{

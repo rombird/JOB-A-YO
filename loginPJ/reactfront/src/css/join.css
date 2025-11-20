@@ -9,13 +9,13 @@ input::placeholder {
 }
 
 .box{
+    margin-top:40px;
     width: 1280px;
-    /* border:1px solid; */
 }
 .box>.title{
     display:flex;
     justify-content: center;
-    margin:30px 0;
+    margin:40px 0;
 }
 .box>.title>h1 {
     text-align: center;
