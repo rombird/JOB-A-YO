@@ -1,7 +1,9 @@
-package com.example.demo.controller;
+package com.example.demo.restController;
 
 import com.example.demo.domain.dto.NoticesDto;
 import com.example.demo.domain.service.NoticesService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/notices") //-> JSON 반환 -> React에서 화면 렌더링
 @RequiredArgsConstructor
-public class NoticesController {
+@Tag(name="NoticesController", description="This is NoticesController")
+
+public class NoticesRestController {
 
     private final NoticesService noticesService;
 
@@ -33,6 +37,7 @@ public class NoticesController {
     }
 
     //3. 작성 : POST /api/notices
+    @SecurityRequirement(name = "BearerAuth")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')") //관리자 권한을 가진 사용자만 가능
     public ResponseEntity<NoticesDto> createNoticesApi(@RequestBody NoticesDto dto){
@@ -42,6 +47,7 @@ public class NoticesController {
     }
 
     //4. 수정 : PUT /api/notices/{id}
+    @SecurityRequirement(name = "BearerAuth")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<NoticesDto> updateNotices(@PathVariable Long id, @RequestBody NoticesDto dto){
@@ -50,6 +56,7 @@ public class NoticesController {
     }
 
     //5. 삭제 : DELETE /api/notices/{id}
+    @SecurityRequirement(name = "BearerAuth")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteNoticesApi(@PathVariable Long id){

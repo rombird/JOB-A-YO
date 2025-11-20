@@ -32,13 +32,13 @@ public class NoticesService {
     //2. 상세 조회 및 조회수 증가 READ + UPDATE
     @Transactional
     public NoticesDto findNoticesDetail(Long id){
+        //조회수 증가 쿼리 호출(DB에서 1증가 처리)
+        noticesRepository.updateViews(id);
 
         //엔티티 조회( + 예외발생)
         NoticesEntity entity = noticesRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Notices not found with id : " + id));
 
-        //조회수 증가 쿼리 호출(DB에서 1증가 처리)
-        noticesRepository.updateViews(id);
 
         //조회된 Entity -> Dto 후 return
         return NoticesDto.fromEntity(entity);

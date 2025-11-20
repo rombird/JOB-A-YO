@@ -4,6 +4,8 @@ import com.example.demo.config.auth.jwt.JWTProperties; // JWT 상수 사용
 import com.example.demo.domain.dto.TokenInfo;
 import com.example.demo.domain.dto.UserDto;
 import com.example.demo.domain.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
+@Tag(name="UserController", description="This is User Controller")
+
 public class UserRestController {
 
     private final UserService userService;
@@ -62,6 +66,7 @@ public class UserRestController {
     }
 
     // --- 3. 로그아웃 (토큰 쿠키 제거 및 DB Refresh Token 삭제) ---
+    @SecurityRequirement(name = "BearerAuth")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestBody UserDto dto, HttpServletResponse response) {
         try {
@@ -88,7 +93,7 @@ public class UserRestController {
     // ---------------------------------------------------------------------------------
 
     /**
-     * Access Token을 HttpOnly 쿠키에 설정합니다.
+     * Access Token을 HttpOnly 쿠키에 설정
      */
     private void setAccessTokenCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(JWTProperties.ACCESS_TOKEN_COOKIE_NAME, token);
@@ -99,8 +104,8 @@ public class UserRestController {
         response.addCookie(cookie);
     }
 
-    /**
-     * Refresh Token을 HttpOnly 쿠키에 설정합니다.
+    /*
+     * Refresh Token을 HttpOnly 쿠키에 설정
      */
     private void setRefreshTokenCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(JWTProperties.REFRESH_TOKEN_COOKIE_NAME, token);
@@ -111,8 +116,8 @@ public class UserRestController {
         response.addCookie(cookie);
     }
 
-    /**
-     * 지정된 이름의 토큰 쿠키를 제거합니다.
+    /*
+     * 지정된 이름의 토큰 쿠키를 제거
      */
     private void removeTokenCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);

@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
@@ -97,6 +98,13 @@ public class SecurityConfig {
                                 "/api/user/login",
                                 "/login/**",
                                 "/oauth2/**"
+                        ).permitAll()
+
+                        //Swagger관련 경로 모두 허용
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/api-docs"
                         ).permitAll()
 
                         // 그 외 모든 요청은 인증 필요
