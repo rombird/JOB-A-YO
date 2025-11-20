@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,18 +23,13 @@ public class NoticesDto {
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 
-    //Entity -> Dto 변환(클라이언트 응답)
-    public static NoticesDto fromEntity(NoticesEntity noticesEntity){
-     return NoticesDto.builder()
-             .id(noticesEntity.getId())
-             .author(noticesEntity.getAuthor())
-             .noticesTitle(noticesEntity.getNoticesTitle())
-             .noticesContents(noticesEntity.getNoticesContents())
-             .noticesView(noticesEntity.getNoticesViews())
-             .createdTime(noticesEntity.getCreatedTime())
-             .updatedTime(noticesEntity.getUpdatedTime())
-             .build();
+    //첨부 파일 목록 담는 필드
+    private List<NoticesFileDto> files;
 
+    //DTO에 파일 정보 추가하는 메서드(Service에서 사용)
+    public NoticesDto addFiles(List<NoticesFileDto> fileList){
+        this.files = fileList;
+        return this;
     }
 
 }

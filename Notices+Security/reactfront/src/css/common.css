@@ -1,0 +1,277 @@
+* {
+    box-sizing: border-box;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+    text-decoration: none;
+    color: black;
+}
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.layoutCenter{
+    width:1440px;
+    margin:0 auto;
+}
+
+ /* header width:1444px */
+ 
+.header{
+    height:130px;
+    /* border-bottom: 3px solid #3A6B71; */
+    box-shadow: 0 4px 3px #bbb;
+    background-color: white;
+    position:sticky; 
+    top: 0;
+    left:0;
+    width:100vw;
+    /* border:1px solid; */
+    z-index: 1000;
+    /* 맨 위에 붙어있게 하기 위해 top, left 0 필수 */
+ }
+
+ /* 로그인, 회원가입 -> topHeader */
+.topHeader{
+    height:45px; 
+    padding:5px 0;
+    margin:10px 0;
+}
+
+.topHeader>.topList>.topNav{
+    display:flex;
+    justify-content: flex-end;
+    width:500px;
+    margin-left:auto;
+    /* border:1px solid;  */
+}
+
+.topHeader>.topList>.topNav>.topNavli a{
+    transition: color 0.3s ease;
+    /* border:1px solid; */
+    font-size:16px;
+    color:black;
+    width:130px;
+}
+.topHeader>.topList>.topNav>.topNavli>.login{
+    display:flex;
+    align-items: center;
+    gap:5px;
+    text-decoration: none;
+    margin:5px 0;
+    font-family:'kopu';
+}
+.topHeader>.topList>.topNav>.topNavli .imgLogin{
+    width:25px;
+    height:25px;
+    /* border:1px solid; */
+}
+.topHeader>.topList>.topNav>.topNavli>.join{
+    display:flex;
+    align-items: center;
+    gap:5px;
+    text-decoration: none;
+    margin:5px 0;
+    font-family:'kopu';
+}
+.topHeader>.topList>.topNav>.topNavli .imgJoin{
+    width:25px;
+    height:25px;
+    /* border:1px solid; */
+}
+
+
+/* logo, 메뉴바 -> navHeader */
+
+/* .custom .navHeader{border:1px solid;} */
+
+.detailnav {
+    display: flex;
+    position:relative;
+    height:85px;
+    margin: 0 auto;
+    justify-content:space-between;
+    align-items: center;
+    /* border:1px solid; */
+}
+.detailnav>h1{
+    /* font-style:#95BECD; */
+}
+.detailnav>h1>a{
+    font-family:'logo';
+    color:#65A3FF;
+    font-size:40px;
+}
+.wrap{
+    display:flex;
+    position: absolute;
+    /* width: calc(100% - 600px); */
+    left: 300px;
+    /* border:1px solid; */
+}
+.wrap>.mainNav {
+    display: flex;
+    justify-content: space-evenly;
+    /* border:1px solid; */
+}
+.wrap>.mainNav>.mainList {
+    /* border:1px solid; */
+    margin:0 20px;
+    position: relative; 
+    text-align:center;
+    width: 250px;
+    height:70px;
+}
+.mainMenu{
+    font-family:'kopu';
+}
+.wrap>.mainNav>.mainList>.listLine {
+    /* border:1px solid; */
+    margin:0 20px;
+    line-height: 60px;
+    font-size: 20px;
+}
+.wrap>.mainNav>.mainList>.listLine::before{
+  content: "";
+  width: 100%;
+  height: 4px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transition: 0.5s transform ease;
+  transform: scaleX(0); 
+  transform-origin: left;
+  background: #65A3FF;
+}
+.wrap>.mainNav>.mainList>.listLine:hover::before{
+  transform: scaleX(1);
+}
+.wrap>.mainNav>.mainList>.listLine:hover>.mainMenu{
+    color:#65A3FF;
+    font-weight: bold;
+}
+
+/* mainNav 호버하면 전체 서브메뉴 나옴 */
+.wrap>.mainNav>.mainList:hover .subNav {
+    display: block;
+}
+
+.wrap>.mainNav>.mainList:nth-child(1){
+    /* margin-left:30px; */
+}
+
+
+.wrap>.mainNav>.mainList>.subNav {
+    width:100%;
+    height:200px;
+    position: absolute;
+    top: 100%;
+    /* top:100px 원래 코드 */
+    left: 0;
+    background-color: white;
+    /* opacity:0; */
+    display: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 0;
+}
+.wrap>.mainNav>.mainList>.subNav>.subList{
+    /* border:1px solid; */
+    font-size:16px;
+    height:63px;
+}
+.wrap>.mainNav>.mainList>.subNav>.subList>a{
+    display:flex;
+    height: 100%; 
+    align-items: center;
+    padding:0 20px;
+    /* line-height:60px; */
+    justify-content: center;
+    font-family:'kopu';
+}
+
+/* footer */
+.custom>footer{
+    background-color:rgba(0,0,0,0.1);
+    /* #3a6b7113 */
+    height:240px;
+}
+.mainFooter{
+    /* border:1px solid; */
+    padding-top: 20px;
+    /* 여기서 마진 잡으면 X */
+}
+.footerLogo>h1{
+    margin:20px 30px;
+    font-family:'logo';
+}
+.footerInfo{
+    display:flex;
+}
+.footerInfoL{
+    margin-left:30px;
+}
+.footerInfoL>p{
+    width:700px;
+    padding:0;
+    margin:0 90px 0 0;
+}
+.footerInfoR{
+    /* border:1px solid; */
+    margin-left:220px;
+    width:500px;
+    display:flex;
+}
+.footerInfoR>.site{
+    border-right:1px solid lightgray;
+    width:120px;
+    
+}
+.footerInfoR>.site a{
+    padding:10px;
+}
+.footerInfoR li{
+    margin:10px;
+}
+.footerInfoR>.related{
+    border-right:1px solid lightgray;
+    width:140px;
+}
+.footerInfoR>.related a{
+    padding:10px;
+}
+
+
+.footerInfoR>.personInfo{
+    width:210px;
+}
+.footerInfoR>.personInfo a{
+    padding:10px;
+}
+
+/* footer font */
+.footerInfo p{
+    font-family:"kopume";
+}
+
+.footerInfo a{
+    font-family:"kopume";
+}
+
+/* @media screen and (max-width: 1500px) {
+    .detailnav {
+        width: 98%;
+        padding: 0 1%;
+    }
+} */
