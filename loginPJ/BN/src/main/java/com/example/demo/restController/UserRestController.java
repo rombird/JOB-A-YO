@@ -66,8 +66,12 @@ public class UserRestController {
         //dto -> entity
         User user = User.builder()
                 .username(userDto.getUsername())
-                .password( passwordEncoder.encode(userDto.getPassword())  )
+                .password( passwordEncoder.encode(userDto.getPassword()))
+                .isLock(false) // 기본적으로 잠금 해제 상태
+                .isSocial(false) // 일반 가입
                 .roleType(userDto.getRoleType())
+                .phone(userDto.getPhone())
+                .email(userDto.getEmail())
                 .build();
 
         // save entity to DB

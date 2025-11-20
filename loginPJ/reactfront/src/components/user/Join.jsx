@@ -47,7 +47,7 @@ const Join  = ()=>{
                     </div>
                     <form className="join-form" onSubmit={handleJoin}>
                         <div className="input-group first">
-                            <label htmlhtmlFor="id">아이디</label>
+                            <label htmlFor="id">아이디</label>
                             <input type="text" name="username" id="id" required onChange={e=>setUsername(e.target.value)} />
                         </div>
                         <div className="input-group">
