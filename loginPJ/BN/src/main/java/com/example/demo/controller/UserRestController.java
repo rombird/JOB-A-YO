@@ -1,4 +1,4 @@
-package com.example.demo.restcontroller;
+package com.example.demo.controller;
 
 import com.example.demo.config.auth.jwt.JwtProperties;
 import com.example.demo.config.auth.jwt.JwtTokenProvider;
@@ -6,8 +6,6 @@ import com.example.demo.config.auth.jwt.TokenInfo;
 import com.example.demo.config.auth.redis.RedisUtil;
 import com.example.demo.domain.dto.UserDto;
 import com.example.demo.domain.entity.User;
-import com.example.demo.domain.entity.UserRoleType;
-import com.example.demo.domain.repository.JwtTokenRepository;
 import com.example.demo.domain.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -34,7 +34,7 @@ public class UserDto {
     private String email;
     private UserRoleType roleType;
 
-	// OAUTH2 CLIENT INFO
+	// OAUTH2 CLIENT INFO : 어떤 소셜인지 provider로
 	private String provider;
 	private String providerId;
 
@@ -43,6 +43,8 @@ public class UserDto {
 		return User.builder()
 				.username(this.username)
 				.password(this.password)
+                .isLock(false)
+                .isSocial(false)
                 .email(this.email)
                 .phone(this.phone)
 				.roleType(this.roleType != null ? this.roleType : UserRoleType.USER) // roleType이 null이면 기본값으로 USER을 주겠다.

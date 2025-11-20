@@ -37,7 +37,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role_type", nullable = false)
-    private UserRoleType roleType;
+    @Builder.Default
+    private UserRoleType roleType = UserRoleType.USER; // 기본값을 USER로 설정
 
     @Column(name = "name")
     private String name;

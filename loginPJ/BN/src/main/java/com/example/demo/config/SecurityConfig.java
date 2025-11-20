@@ -59,7 +59,7 @@ public class SecurityConfig {
 //		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		//권한체크
 		http.authorizeHttpRequests((auth)->{
-			auth.requestMatchers("/","/join","/login","/validate").permitAll();
+			auth.requestMatchers("/","user/join","user/login","user/validate").permitAll();
 			auth.requestMatchers("/user").hasRole("USER");
 			auth.requestMatchers("/manager").hasRole("MANAGER");
 			auth.requestMatchers("/admin").hasRole("ADMIN");
