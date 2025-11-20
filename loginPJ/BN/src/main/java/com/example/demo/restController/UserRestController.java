@@ -6,8 +6,10 @@ import com.example.demo.config.auth.jwt.TokenInfo;
 import com.example.demo.config.auth.redis.RedisUtil;
 import com.example.demo.domain.dto.UserDto;
 import com.example.demo.domain.entity.User;
+import com.example.demo.domain.entity.UserRoleType;
 import com.example.demo.domain.repository.JwtTokenRepository;
 import com.example.demo.domain.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +27,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,7 +36,8 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
-
+@RequestMapping("/user")
+@Tag(name="UserController", description="This is User Controller")
 public class UserRestController {
     @Autowired
     private UserRepository userRepository;
@@ -55,8 +57,8 @@ public class UserRestController {
     @Autowired
     private RedisUtil redisUtil;
 
-
-    @PostMapping(value = "user/join",produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary="join", description = "JOIN")
+    @PostMapping(value = "/join",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> join_post(@RequestBody UserDto userDto){
         log.info("POST /join..."+userDto);
@@ -65,7 +67,7 @@ public class UserRestController {
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password( passwordEncoder.encode(userDto.getPassword())  )
-                .role("ROLE_USER")
+                .roleType(userDto.getRoleType())
                 .build();
 
         // save entity to DB
@@ -77,6 +79,7 @@ public class UserRestController {
     //Header 방식 (Authorization: Bearer <token>)
     // - XXS 공격에 매우취약 - LocalStorage / SessionStorage에 저장시 문제 발생
     // - 쿠키방식이 비교적 안전
+    @Operation(summary="login", description = "LOGIN")
     @PostMapping(value = "/login" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String,Object>> login(@RequestBody UserDto userDto, HttpServletResponse resp) throws IOException {
         log.info("POST /login..." + userDto);                                       // resp : 쿠키를 주기 위한 용도
@@ -144,7 +147,7 @@ public class UserRestController {
         if(userOptional.isPresent()){
             User user = userOptional.get();
             response.put("username",user.getUsername());
-            response.put("role",user.getRole());
+            response.put("role",user.getRoleType());
 
             return new ResponseEntity<>(response , HttpStatus.OK);
         }

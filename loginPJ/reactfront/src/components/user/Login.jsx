@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import "../../css/common.css";
 import "../../css/login.css";
 
-
-
 const Login = ()=>{
     const navigate = useNavigate();
 

@@ -18,7 +18,6 @@ function App() {
           <Link to="/user/join">JOIN</Link> <br/>
         </div>
         <Routes>
-          {/* Route 설정 */}
           <Route path="/main" element={<Main />} />
           <Route path="/user/login" element={<Login />} />
           <Route path="/user/join" element={<Join />} />

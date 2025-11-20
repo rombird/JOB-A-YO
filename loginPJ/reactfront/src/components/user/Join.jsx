@@ -2,21 +2,21 @@ import {useState,useEffect} from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 
-import Header from "./components/Header";
-import Header from "./components/Footer";
-
 import "../../css/common.css";
 import "../../css/join.css";
 
 const Join  = ()=>{
     const [username ,setUsername] = useState()
     const [password ,setPassword] = useState()
+    const [name ,setName] = useState()
+    const [phone, setPhone] = useState()
+    const [email, setEmail] = useState()
 
     const handleJoin = (e)=>{
         axios
             .post(
-                'http://localhost:8090/join',
-                 {"username":username,"password" : password},
+                'http://localhost:8090/user/join',
+                 {"username":username,"password" : password, "name":name, "phone":phone, "email":email},
                  {headers:{ 'Content-Type' : 'application/json' }}
             )
             .then(resp=>{
@@ -26,49 +26,49 @@ const Join  = ()=>{
     }
     return (
         <>
-            <div class="custom">
-                <div class="box layoutCenter">
-                    <div class="title">
+            <div className="custom">
+                <div className="box layoutCenter">
+                    <div className="title">
                         <h2>회원가입</h2>
                     </div>
-                    <ul class="step">
-                        <li class="on">
-                            <div class="num"><em class="done">1</em></div>
+                    <ul className="step">
+                        <li className="on">
+                            <div className="num"><em className="done">1</em></div>
                             <p>약관동의</p>
                         </li>
-                        <li class="on">
-                            <div class="num"><em class="active">2</em></div>
+                        <li className="on">
+                            <div className="num"><em className="active">2</em></div>
                             <p>회원정보</p>
                         </li>
                     </ul>
-                    <div class="provide-points">
+                    <div className="provide-points">
                         <b>회원가입 관련 정보입력시, 필수항목은 반드시 작성하셔야 회원가입이 가능합니다.</b>
                         <b>SMS, 이메일 및 카카오톡 수신 동의 여부 '아니오' 선택할 시, 맞춤형 지원사업 안내 및 지원사업 신청 상태 알림을 받을 수 없습니다.</b>
                     </div>
-                    <form class="join-form" form="post">
-                        <div class="input-group first">
-                            <label for="id">아이디</label>
-                            <input type="text" name="username" required onChange={e=>setUsername(e.target.value)} />
+                    <form className="join-form" onSubmit={handleJoin}>
+                        <div className="input-group first">
+                            <label htmlhtmlFor="id">아이디</label>
+                            <input type="text" name="username" id="id" required onChange={e=>setUsername(e.target.value)} />
                         </div>
-                        <div class="input-group">
-                            <label for="pw" name="password">비밀번호</label>
-                            <input type="password" name = "password" required onChange={e => setPassword(e.target.value)}/>
+                        <div className="input-group">
+                            <label htmlFor="pw" name="password">비밀번호</label>
+                            <input type="password" name = "password" id="pw" required onChange={e => setPassword(e.target.value)}/>
                         </div>
-                        <p class="guide"> 영문 대소문자, 숫자, 특수문자를 혼합하여 8~15자 이내로 입력해주세요</p>
+                        <p className="guide"> 영문 대소문자, 숫자, 특수문자를 혼합하여 8~15자 이내로 입력해주세요</p>
                         
-                        <div class ="input-group">
-                            <label for="pw">비밀번호 확인</label>
-                            <input type="password" name="rePassword" required />
+                        <div className ="input-group">
+                            <label htmlFor="rePw">비밀번호 확인</label>
+                            <input type="password" name="rePassword" id="rePw" required />
                         </div>
-                        <div class ="input-group">
-                            <label>이름</label>
-                            <input type="text" name="username" required />
+                        <div className ="input-group">
+                            <label htmlFor="name">이름</label>
+                            <input type="text" name="name" id="name" required onChange={e => setName(e.target.value)}/>
                         </div>
-                        <div class ="input-group">
+                        <div className ="input-group">
                             <label>생년월일</label>
-                            <div class="select-div">
-                                <select name="birthYear" id="birthYear" required>
-                                    <option value="2000" selected>2000년</option>
+                            <div className="select-div">
+                                <select name="birthYear" id="birthYear" required defaultValue="2000">
+                                    <option value="2000">2000년</option>
                                     <option value="1999">1999년</option>
                                     <option value="1998">1998년</option>
                                     <option value="1997">1997년</option>
@@ -87,8 +87,8 @@ const Join  = ()=>{
                                     <option value="1984">1984년</option>
                                     <option value="1983">1983년</option>
                                 </select>
-                                <select name="birthMonth" id="birthMonth" required>
-                                    <option value="01" selected>01월</option>
+                                <select name="birthMonth" id="birthMonth" required defaultValue="01">
+                                    <option value="01">01월</option>
                                     <option value="02">02월</option>
                                     <option value="03">03월</option>
                                     <option value="04">04월</option>
@@ -101,8 +101,8 @@ const Join  = ()=>{
                                     <option value="11">11월</option>
                                     <option value="12">12월</option>
                                 </select>
-                                <select name="birthDay" id="birthDay" required>
-                                    <option value="01" required="">01일</option>
+                                <select name="birthDay" id="birthDay" required defaultValue="01">
+                                    <option value="01">01일</option>
                                     <option value="02">02일</option>
                                     <option value="03">03일</option>
                                     <option value="04">04일</option>
@@ -136,26 +136,26 @@ const Join  = ()=>{
                                 </select>
                             </div>
                         </div>
-                        <div class ="input-group">
+                        <div className ="input-group">
                             <label>성별</label>
-                            <div class="gender-check">
-                                <label for="man">
+                            <div className="gender-check">
+                                <label htmlFor="man">
                                     <input id="man" type="radio" name="gender"  value = "man" /> 
                                     남자
                                 </label>
-                                <label for="woman">
+                                <label htmlFor="woman">
                                     <input id="woman"  type="radio" name="gender" value = "woman" />
                                     여자
                                 </label>
                             </div>
                         </div>
-                        <div class ="input-group phone">
+                        <div className ="input-group phone">
                             <label>연락처</label>
-                            <input type="text" id="phoneNumber" name = "phoneNumber" placeholder="   (- 없이 숫자만 입력)" required />
+                            <input type="text" id="phone" name = "phone" placeholder="(- 없이 숫자만 입력)" required onChange={e => setPhone(e.target.value)}/>
                         </div>
-                        <div class ="input-group email">
+                        <div className ="input-group email">
                             <label>이메일</label>
-                            <input type="text" />
+                            <input type="text" name="email" onChange={e => setEmail(e.target.value)}/>
                             <p>@</p>
                             <select>
                                 <option>naver.com</option>
@@ -164,53 +164,53 @@ const Join  = ()=>{
                                 <option>nate.com</option>
                             </select>    
                         </div>
-                        <div class ="input-group keyword-dl">
+                        <div className ="input-group keyword-dl">
                             <label>관심 요식업 아이템</label>
-                            <div class="keyword-checkbox">
-                                <label for="bigdata">
-                                    <input type="checkbox" name="keyword"  value="bigdata" id = "bigdata" />
+                            <div className="keyword-checkbox">
+                                <label htmlFor="item1">
+                                    <input type="checkbox" name="keyword" value="item1" id = "item1" />
                                     휴게음식점
                                 </label>
-                                <label for="color">
-                                    <input type="checkbox" name="keyword" value="color" id = "color" />
+                                <label htmlFor="item2">
+                                    <input type="checkbox" name="keyword" value="item2" id = "item2" />
                                     일반음식점
                                 </label>
-                                <label for="seasonTrend">
-                                    <input type="checkbox" name="keyword" value="seasonTrend" id="seasonTrend" />
+                                <label htmlFor="item3">
+                                    <input type="checkbox" name="keyword" value="item3" id="item3" />
                                     단란주점
                                 </label>
-                                <label for="style">
-                                    <input type="checkbox" name="keyword" value="style" id="style" />
+                                <label htmlFor="item4">
+                                    <input type="checkbox" name="keyword" value="item4" id="item4" />
                                     유흥주점
                                 </label>
-                                <label for="style">
-                                    <input type="checkbox" name="keyword" value="style" id="style" />
+                                <label htmlFor="item5">
+                                    <input type="checkbox" name="keyword" value="item5" id="item5" />
                                     제과점영업
                                 </label>
                             </div>
                         </div>
-                        <p class = "guide">식품위생법에 따라 분류했으며 1개 이상 선택가능합니다. </p> 
+                        <p className = "guide">식품위생법에 따라 분류했으며 1개 이상 선택가능합니다. </p> 
                                 
-                        <div class ="input-group recieve-dl">
+                        <div className ="input-group recieve-dl">
                             <label>수신여부(선택)</label>
-                            <div class = "recieve-checkbox">
-                                <label for= "recieveSms">
+                            <div className = "recieve-checkbox">
+                                <label htmlFor= "recieveSms">
                                     <input type="checkbox" name="recieve" value="recieveSms" id="recieveSms" />
                                     SMS 수신 
                                 </label>
-                                <label for="recieveEmail">
+                                <label htmlFor="recieveEmail">
                                     <input type="checkbox" name="recieve" value="recieveEmail" id="recieveEmail" />
                                     이메일 수신
                                 </label>
                             </div>
                         </div>
-                        <div class="guide">
+                        <div className="guide">
                                     수신 여부는 마이페이지 &gt; 회원정보 수정에서 변경하실 수 있습니다.
                                 </div>
-                        <div class = "line"></div>
-                        <div class = "cancel-join">
+                        <div className = "line"></div>
+                        <div className = "cancel-join">
                             <button>취소</button>
-                            <button id = "join_btn" onClick={handleJoin}>회원가입</button>
+                            <button id = "join_btn" type="submit">회원가입</button>
                         </div>
                     </form>
                 </div>

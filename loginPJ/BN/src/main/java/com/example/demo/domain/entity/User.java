@@ -1,20 +1,64 @@
 package com.example.demo.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.demo.domain.dto.UserDto;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class) // 엔티티가 저장되거나 업데이트될때 현재시간이나 로그인한 사용자 Id 자동 주입
 public class User {
-	@Id
-	private String username;
-	private String password;
-	private String role;
+
+    @Id
+    @Column(name = "username", unique = true, nullable = false, updatable = false)
+    private String username; // 아이디
+
+    @Column(name = "password", nullable = false)
+    private String password; // 비밀번호
+
+    @Column(name = "is_lock", nullable = false)
+    private Boolean isLock;
+
+    @Column(name = "is_social", nullable = false)
+    private Boolean isSocial;
+
+    @Enumerated(EnumType.STRING) // USER, ADMIN 문자열 그대로 저장
+    @Column(name = "social_provider_type")
+    private SocialProviderType socialProviderType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_type", nullable = false)
+    private UserRoleType roleType;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name ="phone")
+    private String phone;
+
+    @Column(name = "email")
+    private String email;
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    // 수정가능한 항목 - email, phone
+    public void updateUser(UserDto dto) {
+        this.email = dto.getEmail();
+        this.phone = dto.getPhone();
+    }
 }
