@@ -2,6 +2,7 @@ package com.example.demo.domain.entity;
 
 
 import com.example.demo.domain.dto.NoticesDto;
+import com.example.demo.domain.dto.NoticesFileDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 //공지사항 TBL 역할
@@ -64,8 +66,17 @@ public class NoticesEntity extends BaseEntity { //RDBMS TB 표현, JPA가 이 �
         //updatedTime은 @UpdateTimestamp를 통해 자동 갱신
     }
 
-    // 💡 [유지] Entity -> DTO 변환 (toDto()는 NoticesService에서 사용됩니다.)
+    // Entity -> DTO 변환 (toDto()는 NoticesService에서 사용됩
     public NoticesDto toDto() {
+
+        // 1. NoticesFile Entity 목록을 NoticesFile DTO 목록으로 변환
+        List<NoticesFileDto> fileDtoList = (this.noticesFiles != null && !this.noticesFiles.isEmpty()) ?
+                this.noticesFiles.stream()
+                        // NoticesFileDto의 toDto() 메서드 사용
+                        .map(NoticesFileDto::toDto)
+                        .collect(Collectors.toList()) :
+                null; // 파일이 없으면 null 반환
+
         return NoticesDto.builder()
                 .id(this.id)
                 .author(this.author)
@@ -75,6 +86,8 @@ public class NoticesEntity extends BaseEntity { //RDBMS TB 표현, JPA가 이 �
                 // BaseEntity의 필드
                 .createdTime(this.getCreatedTime())
                 .updatedTime(this.getUpdatedTime())
+//              변환된 파일 DTO 리스트를 DTO의 'attachedFiles' 필드에 삽입
+                .attachedFiles(fileDtoList)
                 .build();
     }
 

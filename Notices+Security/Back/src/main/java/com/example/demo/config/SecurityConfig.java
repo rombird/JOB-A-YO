@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.config.auth.jwt.JWTAuthorizationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,11 +78,32 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
+                //한글 깨짐 방지
+                .exceptionHandling(ex -> ex
+                        // 인증 실패 (401) 처리
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json; charset=UTF-8");
+                            response.setCharacterEncoding("UTF-8");
+                            response.getWriter().write("{\"error\":\"인증이 필요합니다.\"}");
+                        })
+                        // 권한 부족 (403) 처리
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json; charset=UTF-8");
+                            response.setCharacterEncoding("UTF-8");
+                            response.getWriter().write("{\"error\":\"권한이 없습니다.\"}");
+                        })
+                )
+
                 // 4. URL 접근 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // --- 공지사항 관련 권한 설정 시작 ---
                         // [공지사항 목록 및 내용 조회] GET 요청은 모두 허용 (permitAll)
                         .requestMatchers(HttpMethod.GET, "/api/notices/**").permitAll()
+
+                        //공지사항 내 파일 다운로드 모두 허용 (permitAll)
+                        .requestMatchers(HttpMethod.GET, "/api/notices/download/**").permitAll()
 
                         // [공지사항 수정/추가/삭제] POST, PUT, DELETE 요청은 ROLE_ADMIN만 허용
                         .requestMatchers(HttpMethod.POST, "/api/notices/**").hasRole("ADMIN")

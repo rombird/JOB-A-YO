@@ -16,12 +16,16 @@ import lombok.NoArgsConstructor;
 public class NoticesFileDto {
     private Long id; // 파일 다운로드/삭제에 사용될 파일의 고유 ID
     private String originalFileName; // 사용자에게 보여줄 파일 이름
+    private String storedFileName;
+    private Long fileSize;
 
     // Entity -> Dto 변환 메서드
-    public static NoticesFileDto fromEntity(NoticesFile entity) {
+    public static NoticesFileDto toDto(NoticesFile noticesFile) {
         return NoticesFileDto.builder()
-                .id(entity.getId())
-                .originalFileName(entity.getOriginalFileName())
+                .id(noticesFile.getId())
+                .originalFileName(noticesFile.getOriginalFileName())
+                .storedFileName(noticesFile.getStoredFileName())
+                .fileSize(noticesFile.getFileSize())
                 .build();
     }
 }

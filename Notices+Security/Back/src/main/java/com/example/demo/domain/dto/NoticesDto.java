@@ -23,13 +23,16 @@ public class NoticesDto {
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 
-    //첨부 파일 목록 담는 필드
-    private List<NoticesFileDto> files;
+    // 충돌 방지를 위해 필드 이름을 attachedFiles로 변경
+    private List<NoticesFileDto> attachedFiles;
 
-    //DTO에 파일 정보 추가하는 메서드(Service에서 사용)
+    // DTO에 파일 정보 추가하는 메서드(Service에서 사용)
     public NoticesDto addFiles(List<NoticesFileDto> fileList){
-        this.files = fileList;
+        this.attachedFiles = fileList;
         return this;
     }
+
+    //공지사항 수정 시 삭제할 파일의 ID 목록을 받기위한 필드
+    private List<Long> deletedFileIds;
 
 }

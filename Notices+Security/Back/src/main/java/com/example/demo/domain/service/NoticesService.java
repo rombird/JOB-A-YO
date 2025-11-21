@@ -87,10 +87,6 @@ public class NoticesService {
 
     /**
      * 공지사항 수정 (새 파일 추가 포함)
-     * @param id 수정할 공지사항 ID
-     * @param dto 수정 데이터
-     * @param newFiles 새로 추가할 파일 목록
-     * @return 수정된 NoticesDto
      */
     @Transactional
     public NoticesDto updateNotices(Long id, NoticesDto dto, List<MultipartFile> newFiles) throws IOException {
@@ -100,7 +96,15 @@ public class NoticesService {
         // 1. 공지사항 내용 업데이트 (Dirty Checking)
         trueEntity.updateFromDto(dto); // title(제목), contents(내용) 변경
 
-        // 2. 새 파일 추가 처리
+        // 2. 기존 파일 삭제 처리 (NoticesDto의 deletedFileIds 사용)
+        if (dto.getDeletedFileIds() != null && !dto.getDeletedFileIds().isEmpty()) {
+            for (Long fileId : dto.getDeletedFileIds()) {
+                // DB 레코드와 파일 시스템 파일을 모두 삭제합니다.
+                noticesFileService.deleteFileById(fileId);
+            }
+        }
+
+        // 3. 새 파일 추가 처리
         if (newFiles != null && !newFiles.isEmpty()) {
             for (MultipartFile file : newFiles) {
                 // FileService 호출: 새 파일을 기존 엔티티에 연결
@@ -119,6 +123,14 @@ public class NoticesService {
     //---------------------------------------------------------
     @Transactional
     public void deleteNotices(Long id){
+        //Entity 조회(파일 목록 가져오기)
+        NoticesEntity noticesEntity = noticesRepository.findById(id)
+                        .orElseThrow(()->new IllegalArgumentException("Notices not found with id : " + id));
+
+        //연결된 파일들 시스템에서 삭제
+        noticesFileService.deleteFilesByNotices(noticesEntity);
+
+        //공지사항 Entity 삭제(NoticesFile 레코드도 DB에서 CASCADE로 삭제
         noticesRepository.deleteById(id);
     }
 }
