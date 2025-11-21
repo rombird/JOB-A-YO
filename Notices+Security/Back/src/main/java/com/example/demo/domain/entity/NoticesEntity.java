@@ -8,7 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +25,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Table(name = "notices_table")
 @Builder
-public class NoticesEntity extends BaseEntity { //RDBMS TB 표현, JPA가 이 클래스를 테이블로 인식하여 관리가능
+@EntityListeners(AuditingEntityListener.class)
+public class NoticesEntity{ //RDBMS TB 표현, JPA가 이 클래스를 테이블로 인식하여 관리가능
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +44,13 @@ public class NoticesEntity extends BaseEntity { //RDBMS TB 표현, JPA가 이 �
     //조회수
     @Column(nullable= true)
     private int noticesViews;
+
+    @CreatedDate
+    @Column(updatable = false) // 최초 생성 후 업데이트 방지
+    private LocalDateTime createdTime;
+
+    @LastModifiedDate
+    private LocalDateTime updatedTime;
 
     //파일 업로드
     //1:N 관계 설정: 하나의 공지사항은 여러 파일 첨부 가능

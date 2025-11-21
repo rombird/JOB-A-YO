@@ -102,6 +102,10 @@ public class NoticesService {
                 // DB 레코드와 파일 시스템 파일을 모두 삭제합니다.
                 noticesFileService.deleteFileById(fileId);
             }
+
+            // 💡 [updatedTime 갱신 해결] 파일 삭제만 일어난 경우, Auditing 갱신을 강제하기 위해
+            // 부모 엔티티의 필드를 명시적으로 업데이트합니다. (JPA Dirty Checking 발동)
+            trueEntity.updateFromDto(dto);
         }
 
         // 3. 새 파일 추가 처리
@@ -110,6 +114,10 @@ public class NoticesService {
                 // FileService 호출: 새 파일을 기존 엔티티에 연결
                 noticesFileService.saveFile(file, trueEntity);
             }
+
+            // [updatedTime 갱신 해결] 파일 추가 후, Auditing 갱신을 강제하기 위해
+            // 부모 엔티티의 필드를 명시적으로 업데이트(JPA Dirty Checking 발동)
+            trueEntity.updateFromDto(dto);
         }
 
         // 3. 수정된 Entity를 DTO로 변환하여 반환
@@ -119,7 +127,7 @@ public class NoticesService {
 
 
     //---------------------------------------------------------
-    // 5. 삭제(Delete)
+    // 5. 삭제(Delete) - 파일 삭제 포함
     //---------------------------------------------------------
     @Transactional
     public void deleteNotices(Long id){
