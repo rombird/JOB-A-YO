@@ -2,10 +2,12 @@ import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
+// jsx 경로들(뷰로 보여줄 것들)
 import Login from "./components/user/Login";
 import WriteBoard from './components/board/WriteBoard.jsx';
 import Paging from './components/board/Paging.jsx';
 import BoardDetail from './components/board/BoardDetail.jsx';
+import BoardUpdate from './components/board/BoardUpdate.jsx'
 
 function App() {
   return (
@@ -23,8 +25,9 @@ function App() {
           <Route path="/user/login" element={<Login />} />
           <Route path="/board/WriteBoard" element={<WriteBoard />} />
           <Route path="/board/Paging" element={<Paging />} />
-          <Route path="/board/Boarddetail/:id" element={<BoardDetail />} />
-          
+          <Route path="/board/:id" element={<BoardDetail />} />
+          <Route path="/board/update/:id" element={<BoardUpdate />} />
+
         </Routes>
       </Router>
 

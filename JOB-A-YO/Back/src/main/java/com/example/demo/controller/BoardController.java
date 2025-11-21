@@ -31,7 +31,7 @@ public class BoardController {
     private final CommentService commentService;
 
     // 게시글 목록 페이지
-    @Operation(summary = "board", description = "게시판목록")
+
     @GetMapping("/board")
     public String findAll(Model model){
         // DB에서 전체 게시글 데이터를 가져와서 board.html에 보여준다
@@ -43,7 +43,7 @@ public class BoardController {
     }
 
     // 글쓰기 페이지 이동
-    @Operation(summary = "writeBoard", description = "글쓰기 페이지 이동")
+
     @GetMapping("/board/writeBoard")
     public String writeForm(){
         log.info("Get/ writeBoard 게시판 글쓰기");
@@ -52,7 +52,7 @@ public class BoardController {
     }
 
     // 글쓴거 포스팅
-    @Operation(summary = "writeBoardPost", description = "글 쓴거 DB로 보냄")
+
     @PostMapping("/board/writeBoard")
     public String write(@ModelAttribute BoardDto boardDto) throws IOException {
         System.out.println("boardDto:" +boardDto);
@@ -63,7 +63,7 @@ public class BoardController {
     }
 
     // 게시글 조회
-    @Operation(summary = "boardDetail", description = "게시글 단건 조회")
+
     @GetMapping("/board/{id}")
     public String findById(@PathVariable Long id, Model model,
                            @PageableDefault(page = 1)Pageable pageable) {
@@ -83,7 +83,7 @@ public class BoardController {
     }
 
     // 게시글 수정 (Update)
-    @Operation(summary = "boardUpdate", description = "게시글 수정 ")
+
     @GetMapping("/board/update/{id}")
     public String updateForm(@PathVariable Long id, Model model){
         BoardDto boardDto = boardService.findById(id);
@@ -104,6 +104,7 @@ public class BoardController {
         return "redirect:/board/" + boardDto.getId(); // 게시글 상세페이지로 이동
     }
 
+    // 게시글 삭제
     @Operation(summary = "boardDeleteGet", description = "게시글 삭제 Get 요청")
     @GetMapping("/board/delete/{id}")
     public String delete(@PathVariable Long id){

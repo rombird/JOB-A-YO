@@ -11,6 +11,7 @@ const BoardDetail = () => {
     const { id: boardId } = useParams(); // url경로가 /board/:id
     const navigate = useNavigate(); // 페이지 이동을 위한 함수
 
+    console.log('게시글 ID:', boardId);
     // 상태 관리
     const [board, setBoard] = useState(null); // 게시글 데이터 (BoardDto)
     const [commentList, setCommentList] = useState([]); // 댓글은 배열로
@@ -28,12 +29,14 @@ const BoardDetail = () => {
         const fetchBoardDetail = async () => {
             try{
                 // 백엔드 API 호출: GET /api/board/{id}
+                console.log("boardId",boardId);
                 const response = await axios.get(`http://localhost:8090/api/board/${boardId}`);
-
                 // 응답 데이터 구조: BoardDetailResponse {boardDto, commentDtoList}
-                const boardData = response.data.boardDto;
+
+                const boardData = response.data.board;
                 const commentsData = response.data.commentDtoList || [];
-            
+                
+
                 setBoard(boardData);
                 setCommentList(commentsData);
             }

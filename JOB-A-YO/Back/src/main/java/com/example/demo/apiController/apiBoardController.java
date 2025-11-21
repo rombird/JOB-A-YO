@@ -43,7 +43,7 @@ public class apiBoardController {
     @GetMapping("/paging")
     public ResponseEntity<?> paging(
             @PageableDefault(page = 1, size = 10) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
-        log.info("GET  /api/board/paging... 페이징처리 REST API");
+        log.info("GET  /api/board/paging... 페이징처리 apiBoardController");
         Page<BoardDto> boardList = boardService.paging(pageable);
 
         int blockLimit = 10;
@@ -96,9 +96,12 @@ public class apiBoardController {
     // 게시글 조회
     // ################################################################
 
+
     @Operation(summary = "boardDetail", description = "게시글 단건 조회")
     @GetMapping("/{id}")
     public ResponseEntity<BoardDetailResponse> findById(@PathVariable Long id) {
+        log.info("GET /api/board/{id}... 게시글 단건 조회 apiBoardController");
+        System.out.println("id:" + id);
         // 해당 게시글의 조회수를 하나 늘리고
         boardService.updateHits(id);
 
@@ -111,11 +114,62 @@ public class apiBoardController {
         // 응답 Dto에 데이터 통합
         BoardDetailResponse response = new BoardDetailResponse(boardDto, commentDtoList);
 
+        System.out.println("response:" + response);
+
         // HTTP 200 ok 상태코드와 함께 Json데이터를 반환
         return ResponseEntity.ok(response);
+    }
 
+    // ################################################################
+    // 게시글 수정
+    // ################################################################
+
+    // Put api/board/{id}
+    @Operation(summary = "게시글 수정 처리", description = "수정된 게시글 정보를 받아 DB에 반영하고, 수정된 DTO를 JSON으로 반환")
+    @PutMapping("/{id}")
+    public ResponseEntity<BoardDto> updateBoard(@PathVariable Long id, @RequestBody BoardDto boardDto){
+
+        log.info("Put /api/board/{id}... 게시글 수정 apiBoardController", id);
+
+        // 경로 변수 id와 Dto의 id가 일치하도록 강제하거나 확인
+        if(boardDto.getId() == null || !boardDto.getId().equals(id)){
+            log.warn("ID 불일치: URL ID({})와 DTO ID({})", id, boardDto.getId());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            // BoardService 계층의 Update 메서드 호출
+            BoardDto updateBoard = boardService.update(boardDto);
+
+            log.info("게시글 수정 완료, ID: ()", updateBoard.getId());
+
+            // 수정된 DTO와 200 OK상태 반환
+            return new ResponseEntity<>(updateBoard, HttpStatus.OK);
+        }catch (Exception e){
+            log.error("게시글 수정 중 오류 발생: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
+//    @GetMapping("/update/{id}")
+//    public String updateForm(@PathVariable Long id, Model model){
+//        BoardDto boardDto = boardService.findById(id);
+//        model.addAttribute("boardUpdate", boardDto);
+//
+//        return "board/update";
+//    }
+//
+//    @Operation(summary = "boardUpdatePost", description = "게시글 수정 포스팅")
+//    @PostMapping("/board/update")
+//    public String update(@ModelAttribute BoardDto boardDto, Model model){
+//        log.info("post/ board/update... 게시판 업데이트 포스팅");
+//
+//        BoardDto board = boardService.update(boardDto);
+//        model.addAttribute("board", board);
+//
+//        System.out.println("contents = " + boardDto.getBoardContents());
+//        return "redirect:/board/" + boardDto.getId(); // 게시글 상세페이지로 이동
+//    }
 
 }

@@ -154,20 +154,6 @@ const WriteBoard = () => {
 
         console.log("폼 데이터 전송 준비 완료. 파일 개수: ", uploadedFiles.length);
 
-        // axios.post(`http://localhost:8090/api/board/writeBoard`,
-        //     {"boardTitle":boardTitle,"boardWriter":boardWriter,"boardPass":boardPass,"boardContents":boardContents,"fileUpload":fileUpload},
-        //     {"Content-Type" : "application/json"})
-        //     .then(resp=>{
-        //         console.log(resp);
-        //         setMessage(resp.data)
-        //     })
-        //     .catch(err=>{
-        //         console.log(err);
-        //         setMessage(err.response.data)
-        //     })
-
-
-
 
         // axios를 이용한 서버 전송
         axios.post('http://localhost:8090/api/board/writeBoard', formData, {
