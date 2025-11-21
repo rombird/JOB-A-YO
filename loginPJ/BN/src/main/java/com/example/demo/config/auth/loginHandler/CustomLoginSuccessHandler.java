@@ -69,7 +69,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		//- DB 저장
 		//
 
-
 		//---------------------------------
 		//기존로그인(Client's AT o , DB o)
 		//---------------------------------
@@ -84,7 +83,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		//기존로그인(Client's AT x , DB o) -예외상황
 		//---------------------------------
 		//-
-
 
 		response.sendRedirect(request.getContextPath()+"/");
 

@@ -30,6 +30,7 @@ public class UserDto {
     @Size(min = 4, message="비밀번호는 4자 이상이어야 합니다.")
     private String password;
 
+    private String name;
     private String phone;
     private String email;
     private UserRoleType roleType;
@@ -45,6 +46,7 @@ public class UserDto {
 				.password(this.password)
                 .isLock(false)
                 .isSocial(false)
+                .name(this.name)
                 .email(this.email)
                 .phone(this.phone)
 				.roleType(this.roleType != null ? this.roleType : UserRoleType.USER) // roleType이 null이면 기본값으로 USER을 주겠다.

@@ -12,6 +12,6 @@ public class HomeController {
     @GetMapping("/")
     public String home(){
         log.info("GET /...");
-        return "main";
+        return "home";
     }
 }

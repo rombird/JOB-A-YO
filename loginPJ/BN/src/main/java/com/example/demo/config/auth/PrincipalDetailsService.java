@@ -21,15 +21,21 @@ public class PrincipalDetailsService implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
 		System.out.println("loadUserByUsername .. " + username);
 		Optional<User> userOption  = userRepository.findById(username);
 		if(userOption.isEmpty())
 			throw new UsernameNotFoundException(username + " 존재하지 않는 계정입니다.");
 
+        User user = userOption.get();
+
 		//entity-> dto
-		UserDto userDto = UserDto.toDto( userOption.get()    );
-		return new PrincipalDetails(userDto);
+		UserDto authDto = UserDto.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .roleType(user.getRoleType())
+                .build();
+
+		return new PrincipalDetails(authDto);
 	}
 
 }

@@ -2,7 +2,7 @@ import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 import {useState,useEffect} from 'react'
 import api from '../../api/axiosConfig'; // 새로운 api 인스턴스 임포트
-
+import {useAuth} from '../../context/AuthContext';
 import "../../css/common.css";
 import "../../css/login.css";
 
@@ -11,13 +11,15 @@ const Login = ()=>{
     const [username,setUsername] = useState()
     const [password,setPassword] = useState()
     const navigate = useNavigate();
-  // useEffect에서 API 검증 호출
+    const {login} = useAuth(); // login 함수 사용
+
+
+  // useEffect에서 API 검증 호출 - AuthContext가 수행
     useEffect(() => {
         const validateToken = async () => {
         try {
             // 토큰 유효성 검증을 위한 별도 엔드포인트 호출
             const resp = await axios.get("http://localhost:8090/validate", {
-
             withCredentials: true, 
             //★ 파라미터 옵션으로 꼭 넣어줘야 토큰전달가능★
             //쿠키형태의 토큰을 전달하는 옵션
@@ -32,22 +34,33 @@ const Login = ()=>{
         validateToken();
     }, [navigate]); // navigate를 의존성 배열에 추가
 
-    //
+ 
     // 로그인 처리 함수
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault(); // 폼 제출의 기본동작을 막음
         try {
             const resp = await api.post(
                 "/login",
                 { username, password },
                 { headers: { "Content-Type": "application/json" } }
             );
-            alert("로그인 성공:", resp.data);
+            // alert("로그인 성공:", resp.data);
+            console.log("로그인 성공 : ", resp.data)
+            login();
             navigate("/"); // 성공 시 / 경로로 이동
         } catch (error) {
+            if(error.response && error.response.status === 401){
+                // 인증 안된 상태 -> 정상
+                return;
+            }
             console.error("로그인 실패:", error.response ? error.response.data : error);
             alert("로그인 실패! 다시 시도해주세요."); // 실패 시 메시지 표시
         }
     };
+
+    // const handleKakaoLogin = () => {
+    //     window.location.href = kakaoURL;
+    // };
     
     return (
         <>
@@ -70,8 +83,8 @@ const Login = ()=>{
                                 <div className="tx_btns">
                                     <Link className="login-a-tag" to="">회원가입</Link>
                                     <div>
-                                        <Link className="login-a-tag" to="user/lookid">아이디 찾기</Link>
-                                        <Link className="login-a-tag" to="user/lookpw">비밀번호 찾기</Link>
+                                        <Link className="login-a-tag" to="">아이디 찾기</Link>
+                                        <Link className="login-a-tag" to="">비밀번호 찾기</Link>
                                     </div>
                             </div> 
                             </form>
@@ -79,9 +92,10 @@ const Login = ()=>{
                     </div>
                     <div className="social">
                         <p>SNS 계정으로 간편하게 로그인하세요</p>
-                        <Link to="/oauth2/authorization/google"><img src="/images/google_icon.png" alt="구글 로그인" /></Link>
-                        <Link to=""><img src="/images/naver_icon.png" alt="네이버 로그인" /></Link>
-                        <Link to=""><img src="/images/kakao_icon.png" alt="카카오 로그인" /></Link>
+                        <Link to="/oauth2/authorization/google" ><img src="/images/google_icon.png" alt="구글 로그인" /></Link>
+                        <Link to="/oauth2/authorization/naver" ><img src="/images/naver_icon.png" alt="네이버 로그인" /></Link>
+                        {/* <button onClick={handleKakaoLogin} className="kakaoButton"><img src="/images/kakao_icon.png" alt="카카오 로그인" /></button> */}
+                        
                     </div>  
                 </div>
             </div>

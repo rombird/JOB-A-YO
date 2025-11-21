@@ -35,7 +35,6 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
-@RequestMapping("/user")
 @Tag(name="UserController", description="This is User Controller")
 public class UserRestController {
     @Autowired
@@ -60,7 +59,7 @@ public class UserRestController {
     @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> join_post(@RequestBody UserDto userDto){
-        log.info("POST /join..."+userDto);
+        log.info("POST /join..." + userDto);
 
         //dto -> entity
         User user = User.builder()
@@ -69,6 +68,7 @@ public class UserRestController {
                 .isLock(false) // 기본적으로 잠금 해제 상태
                 .isSocial(false) // 일반 가입
                 .roleType(UserRoleType.USER)
+                .name(userDto.getName())
                 .phone(userDto.getPhone())
                 .email(userDto.getEmail())
                 .build();

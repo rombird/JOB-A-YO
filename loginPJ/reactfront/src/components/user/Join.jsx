@@ -15,7 +15,7 @@ const Join  = ()=>{
     const handleJoin = (e)=>{
         axios
             .post(
-                'http://localhost:8090/user/join',
+                'http://localhost:8090/join',
                  {"username":username, "password" : password, "name":name, "phone":phone, "email":email},
                  {headers:{ 'Content-Type' : 'application/json' }}
             )

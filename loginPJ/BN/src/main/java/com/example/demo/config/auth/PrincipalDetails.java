@@ -36,13 +36,11 @@ public class PrincipalDetails implements UserDetails,OAuth2User {
 	String access_token;
 	@Override
 	public Map<String, Object> getAttributes() {
-
         return attributes;
     }
 
 	@Override
 	public String getName() {
-
         return userDto.getUsername();
 	}
 
