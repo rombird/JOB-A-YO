@@ -58,9 +58,9 @@ const Login = ()=>{
         }
     };
 
-    // const handleKakaoLogin = () => {
-    //     window.location.href = kakaoURL;
-    // };
+    const handleKakaoLogin = () => {
+        window.location.href = 'http://localhost:8090/oauth2/authorization/kakao';
+    };
     
     return (
         <>
@@ -94,8 +94,7 @@ const Login = ()=>{
                         <p>SNS 계정으로 간편하게 로그인하세요</p>
                         <Link to="/oauth2/authorization/google" ><img src="/images/google_icon.png" alt="구글 로그인" /></Link>
                         <Link to="/oauth2/authorization/naver" ><img src="/images/naver_icon.png" alt="네이버 로그인" /></Link>
-                        {/* <button onClick={handleKakaoLogin} className="kakaoButton"><img src="/images/kakao_icon.png" alt="카카오 로그인" /></button> */}
-                        
+                        <button onClick={handleKakaoLogin} className="kakaoButton"><img src="/images/kakao_icon.png" alt="카카오 로그인" /></button>
                     </div>  
                 </div>
             </div>
