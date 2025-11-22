@@ -104,14 +104,24 @@ const BoardDetail = () => {
     };
 
     // 삭제 요청
-    const deleteReq = () => {
-        // 실제 삭제 Api 호출 로직은 여기에 추가해야 함
+    const deleteReq = async () => {
         if(window.confirm("정말 삭제하시겠습니까?")){
-            // navigate(`/board/delete/${board.id}`);
-            alert("삭제 API 호출 로직을 추가해주세요");
+            try{
+                // 1. 백엔드 API 호출 : Delete /api/board/delete/{id}
+                // axios.delete 메서드 사용
+            
+            await axios.delete(`http://localhost:8090/api/board/delete/${board.id}`);
+            
+            // 2. 성공 시 알림 및 목록으로 이동
+            alert("게시글이 삭제되었습니다");
+            navigate(`/board/Paging`);
+        
+        }catch(error){
+            console.error("삭제 실패: ", error);
+            alert("삭제 중 오류가 발생했습니다");
         }
-    };
-
+    }
+};
     // 로딩 처리
     if (!board){
         return <div>게시글 데이터를 불러오는 중입니다...</div>

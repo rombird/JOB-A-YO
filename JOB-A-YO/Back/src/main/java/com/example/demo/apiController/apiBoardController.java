@@ -177,7 +177,16 @@ public class apiBoardController {
         }
     }
 
+    @Operation(summary = "boardDelete", description = "게시글 삭제")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        log.info("Delete /api/board/delete/{id} ... 게시글 삭제 요청, apiBoardController", id);
 
+        // 서비스의 삭제 로직 호출
+        boardService.delete(id);
+
+        return ResponseEntity.ok("삭제 성공");
+    }
 
 
 

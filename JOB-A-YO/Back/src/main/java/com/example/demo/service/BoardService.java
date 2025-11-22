@@ -210,6 +210,7 @@ public class BoardService {
         return BoardDto.toBoardDto(boardEntity);
     }
     // 삭제 기능
+    @Transactional
     public void delete(Long id){
         boardRepository.deleteById(id);
     }
