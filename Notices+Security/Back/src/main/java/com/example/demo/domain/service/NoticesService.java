@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class NoticesService {
         }
 
         // 💡 Page 객체의 map() 메서드를 사용하여 DTO로 변환
-        return entityPage.map(NoticesDto::toDto);
+        return entityPage.map(NoticesEntity::toDto);
     }
 
     //---------------------------------------------------------
