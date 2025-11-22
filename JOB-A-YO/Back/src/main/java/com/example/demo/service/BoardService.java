@@ -243,9 +243,13 @@ public class BoardService {
     }
 
     // 첨부파일 다운로드
-    public ResponseEntity<Resource> fileDownloadByIndex(Long boardId, int fileIndex){
+    @Transactional
+    public BoardFileDto fileDownloadByIndex(Long boardId, int fileIndex){
+
+        // 게시글 조회
         BoardDto boardDto = findById(boardId);
 
+        // 2. 유효성 검사
         if(boardDto == null || boardDto.getFileAttached() != 1 ||
             boardDto.getBoardFileDtoList() == null ||
                 boardDto.getBoardFileDtoList().size() <= fileIndex
@@ -253,28 +257,33 @@ public class BoardService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다");
         }
 
-        BoardFileDto targetFile = boardDto.getBoardFileDtoList().get(fileIndex);
+        // 3. 해당 인덱스의 파일 DTO 반환
+        return boardDto.getBoardFileDtoList().get(fileIndex);
 
-        String storedFilename = targetFile.getStoredFilename();
-        String originalFilename = targetFile.getOriginalFilename();
 
-        Path filePath = Paths.get(fileDir, storedFilename);
-
-        try{
-            Resource resource = new UrlResource(filePath.toUri());
-            if(!resource.exists() || !resource.isReadable()){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "파일 없음");
-            }
-            String encodedFileName = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
-            String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                    .body(resource);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        // 수정 전
+//        BoardFileDto targetFile = boardDto.getBoardFileDtoList().get(fileIndex);
+//
+//        String storedFilename = targetFile.getStoredFilename();
+//        String originalFilename = targetFile.getOriginalFilename();
+//
+//        Path filePath = Paths.get(fileDir, storedFilename);
+//
+//        try{
+//            Resource resource = new UrlResource(filePath.toUri());
+//            if(!resource.exists() || !resource.isReadable()){
+//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "파일 없음");
+//            }
+//            String encodedFileName = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
+//            String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
+//
+//            return ResponseEntity.ok()
+//                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+//                    .body(resource);
+//        } catch (MalformedURLException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 }

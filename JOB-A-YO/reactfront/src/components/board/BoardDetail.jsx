@@ -140,7 +140,7 @@ const BoardDetail = () => {
                                     {board.boardFileDtoList.map((file, index) => (
                                         <div key={index}>
                                             <a 
-                                                href="{`/board/download/${board.id}/${index}`}"
+                                                href={`http://localhost:8090/api/board/download/${board.id}/${index}`}
                                                 target="_blank" rel="noopener noreferrer"
                                             >
                                                 {file.originalFilename}

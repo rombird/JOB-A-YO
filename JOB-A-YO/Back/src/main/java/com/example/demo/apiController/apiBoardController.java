@@ -2,6 +2,7 @@ package com.example.demo.apiController;
 
 import com.example.demo.domain.dto.BoardDetailResponse;
 import com.example.demo.domain.dto.BoardDto;
+import com.example.demo.domain.dto.BoardFileDto;
 import com.example.demo.domain.dto.CommentDto;
 import com.example.demo.service.BoardService;
 import com.example.demo.service.CommentService;
@@ -9,17 +10,25 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +43,10 @@ public class apiBoardController {
 
     private final BoardService boardService;
     private final CommentService commentService;
+
+    // 파일 저장 경로
+    @Value("${file.dir}")       // 파일 저장 경로
+    private String fileDir;
 
 // ################################################################
     // 게시판 목록 데이터 보내기
@@ -87,14 +100,9 @@ public class apiBoardController {
         return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
     }
 
-
-
-
-
     // ################################################################
     // 게시글 조회
     // ################################################################
-
 
     @Operation(summary = "boardDetail", description = "게시글 단건 조회")
     @GetMapping("/{id}")
@@ -118,6 +126,84 @@ public class apiBoardController {
         // HTTP 200 ok 상태코드와 함께 Json데이터를 반환
         return ResponseEntity.ok(response);
     }
+
+    // ################################################################
+    // 첨부 파일 다운로드
+    // ################################################################
+
+    @Operation(summary = "fileDownload", description = "첨부파일 다운로드")
+    @GetMapping("/download/{boardId}/{fileIndex}")
+    public ResponseEntity<Resource> fileDownload(@PathVariable Long boardId,
+                                                 @PathVariable int fileIndex){
+        log.info("get /api/board/download/{boardId}/{fileIndex}... 첨부파일 다운로드, apiBoardController");
+
+        try{
+            // 1. 서비스에서 해당 파일 정보(Dto) 가져오기
+            BoardFileDto boardFileDto = boardService.fileDownloadByIndex(boardId, fileIndex);
+
+            String originalFilename = boardFileDto.getOriginalFilename();
+            String storedFilename = boardFileDto.getStoredFilename();
+
+            System.out.println("오리지널파일이름, 저장파일이름: " + originalFilename +  ", " + storedFilename);
+            // 2. 파일 경로 생성
+            if(originalFilename == null || storedFilename == null){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "DB에 파일 정보를 찾을 수 없습니다");
+            }
+
+            Path filePath = Paths.get(fileDir, storedFilename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            // 3. 실제 파일 존재 여부 확인
+        if(!resource.exists() || !resource.isReadable()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+            // 파일 다운로드 시 파일이 깨지는 거 해결해준 ContentDisposition
+        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+            .filename(originalFilename, StandardCharsets.UTF_8)
+                .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM) // 바이너리 데이터
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                .body(resource);
+
+        } catch (MalformedURLException e) {
+            log.error("파일 경로 오류", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 경로가 잘못되었습니다");
+        } catch(IllegalArgumentException e){
+            log.error("파일 정보 조회 실패", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // ################################################################
     // 게시글 수정
