@@ -134,7 +134,7 @@ public class SecurityConfig {
                 )
 
                 // 5. JWT 필터 등록
-                // 모든 요청 전에 JWTAuthorizationFilter를 실행하여 토큰을 검증합니다.
+                // 모든 요청 전에 JWTAuthorizationFilter를 실행하여 토큰을 검증
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

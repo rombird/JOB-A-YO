@@ -14,10 +14,10 @@ public class KeyGenerator {
     //@return 생성된 키의 바이트 배열
 
     public static byte[] keyGen() {
-        // JWT 표준에 맞춰 HS256 알고리즘에 적합한 강력한 키를 생성합니다.
+        // JWT 표준에 맞춰 HS256 알고리즘에 적합한 강력한 키를 생성
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-        // 생성된 키를 Base64로 인코딩하여 로깅합니다.
+        // 생성된 키를 Base64로 인코딩하여 로깅
         String base64EncodedKey = Encoders.BASE64.encode(key.getEncoded());
         log.warn("새로 생성된 JWT 서명 키 (Base64 인코딩): {}", base64EncodedKey);
 

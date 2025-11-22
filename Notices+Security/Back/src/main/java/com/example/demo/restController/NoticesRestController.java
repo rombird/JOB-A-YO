@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,21 +30,30 @@ import java.util.Locale;
 @RequestMapping("/api/notices") //-> JSON 반환 -> React에서 화면 렌더링
 @RequiredArgsConstructor
 @Tag(name="NoticesRestController", description="This is NoticesRestController")
+@CrossOrigin(origins = "http://localhost:3000") // CORS 설정 추가
 
 public class NoticesRestController {
 
     private final NoticesService noticesService;
     private final NoticesFileService noticesFileService;
 
-    //1. 공지사항 목록 조회: GET /api/notices
+    //1. 공지사항 목록 조회 + 검색 + 페이지네이션: GET /api/notices
+    // GET /api/notices?page=0&size=10&keyword=검색어
     @GetMapping
-    public ResponseEntity<List<NoticesDto>> getAllNotices(){
-        List<NoticesDto> notices = noticesService.findAllNotices();
-        return ResponseEntity.ok(notices);
+    // 💡 반환 타입을 List<NoticesDto>에서 Page<NoticesDto>로 변경
+    public ResponseEntity<Page<NoticesDto>> getAllNotices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword
+    ){
+        // 💡 Service 메서드 이름 및 파라미터 변경
+        Page<NoticesDto> noticesPage = noticesService.findNoticesWithPagingAndSearch(page, size, keyword);
+        // 💡 List<NoticesDto> 대신 Page<NoticesDto> 반환
+        return ResponseEntity.ok(noticesPage);
     }
 
     //2. 상세 조회 및 조회수 증가 READ + UPDATE : GET /api/notices/{id}
-    @GetMapping("/{id}")
+    @GetMapping("/{id}")//‼️‼️
     public ResponseEntity<NoticesDto> getNoticesByIdApi(@PathVariable Long id){
         NoticesDto notice = noticesService.findNoticesDetail(id);
         return ResponseEntity.ok(notice); //JSON 데이터 반환
@@ -73,7 +83,7 @@ public class NoticesRestController {
 
     //4. 수정 : PUT /api/notices/{id} - 파일 업로드 포함
     @SecurityRequirement(name = "BearerAuth")
-    @PutMapping("/{id}")
+    @PutMapping("/{id}")//‼️‼️
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<NoticesDto> updateNoticesApi(
             @PathVariable Long id,
@@ -94,14 +104,14 @@ public class NoticesRestController {
     }
 
     //---------------------------------------------------------
-    // 6. 파일 다운로드 API (새로 추가)
+    // 5. 파일 다운로드 API (새로 추가)
     //---------------------------------------------------------
     /**
      * [최종] 파일 다운로드 API - 사용자님의 견고한 로직을 유지하고 MIME Type 설정을 통합
      * @param fileId 다운로드할 파일 ID
      * @return 다운로드 응답 (Resource 포함)
      */
-    @GetMapping("/download/{fileId}")
+    @GetMapping("/download/{fileId}")//‼️‼️
     // IOException을 던지도록 선언하여 Resource.contentLength() 호출 가능하도록 합니다.
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) throws IOException {
 
@@ -133,7 +143,7 @@ public class NoticesRestController {
 
         headers.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
 
-        // 💡 UX 개선 핵심: DB에 저장된 MIME Type을 헤더에 설정
+        // UX 개선 핵심: DB에 저장된 MIME Type을 헤더에 설정
         headers.setContentType(MediaType.parseMediaType(fileInfo.getMimeType()));
 
         log.info("Downloading file: {}, Content-Type: {}", originalFileName, fileInfo.getMimeType());
@@ -148,9 +158,9 @@ public class NoticesRestController {
     }
 
 
-    //5. 삭제 : DELETE /api/notices/{id}
+    //6. 삭제 : DELETE /api/notices/{id}
     @SecurityRequirement(name = "BearerAuth")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")//‼️‼️
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteNoticesApi(@PathVariable Long id){
         noticesService.deleteNotices(id);

@@ -32,7 +32,7 @@ public class JwtTokenProvider {
 
     private Key key; // @PostConstruct에서 초기화하므로 final 제거
 
-    // 🌟 수정 1: Filter에서 JWT 서명 키를 가져갈 수 있도록 getKey() 메서드 추가 🌟
+    // Filter에서 JWT 서명 키를 가져갈 수 있도록 getKey() 메서드 추가
     public Key getKey() {
         return key;
     }

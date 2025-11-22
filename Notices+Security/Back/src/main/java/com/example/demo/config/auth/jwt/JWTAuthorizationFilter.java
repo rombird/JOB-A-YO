@@ -65,7 +65,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     //--------------------------------------------------------------------------------
 
     /**
-     * Access Token이 만료되었을 때 Refresh Token을 확인하고 재발급합니다.
+     * Access Token이 만료되었을 때 Refresh Token을 확인하고 재발급
      */
     private void handleExpiredAccessToken(String expiredUsername, HttpServletResponse response) {
         log.info("AccessToken Expired. Attempting to renew token for user: {}", expiredUsername);

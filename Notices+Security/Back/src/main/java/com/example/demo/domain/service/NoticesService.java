@@ -4,6 +4,10 @@ import com.example.demo.domain.dto.NoticesDto;
 import com.example.demo.domain.entity.NoticesEntity;
 import com.example.demo.domain.repository.NoticesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +26,27 @@ public class NoticesService {
     private final NoticesFileService noticesFileService;
 
     //---------------------------------------------------------
-    // 1. 공지사항 목록조회
+    // 1. 검색 + 페이지네이션 적용 목록조회
     //---------------------------------------------------------
     @Transactional(readOnly = true)
-    public List<NoticesDto> findAllNotices(){
-        return noticesRepository.findAll().stream()
-                // 💡 NoticesEntity의 toDto() 메서드 사용
-                .map(NoticesEntity::toDto)
-                .collect(Collectors.toList());
+    public Page<NoticesDto> findNoticesWithPagingAndSearch(int page, int size, String keyword) {
+
+        // 💡 Pageable 생성 시 정렬 기준(예: id 내림차순) 추가
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+        Page<NoticesEntity> entityPage;
+
+        if (keyword != null && !keyword.isBlank()) {
+            // 검색어가 있을 경우
+            // Repository는 Page<NoticesEntity>를 반환하도록 변경됨 (아래 3번 참고)
+            entityPage = noticesRepository.findByNoticesTitleContainingOrNoticesContentsContaining(keyword, keyword, pageable);
+        } else {
+            // 검색어 없으면 전체 조회 (Page<NoticesEntity> 반환)
+            entityPage = noticesRepository.findAll(pageable);
+        }
+
+        // 💡 Page 객체의 map() 메서드를 사용하여 DTO로 변환
+        return entityPage.map(NoticesDto::toDto);
     }
 
     //---------------------------------------------------------
