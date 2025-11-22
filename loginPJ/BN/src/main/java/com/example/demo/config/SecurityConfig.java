@@ -59,7 +59,7 @@ public class SecurityConfig {
 //		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		//권한체크
 		http.authorizeHttpRequests((auth)->{
-			auth.requestMatchers("/","/join","/login","/validate","/oauth2/**", "/login/oauth2/**").permitAll();
+			auth.requestMatchers("/","/join","/login","/validate","/oauth2/**", "/login/oauth2/**","/v3/api-docs").permitAll();
             // 내가 주석처리함 user 경로를 이미 사용중이기 때문에
 //			auth.requestMatchers("/user").hasRole("USER");
 //			auth.requestMatchers("/manager").hasRole("MANAGER");
