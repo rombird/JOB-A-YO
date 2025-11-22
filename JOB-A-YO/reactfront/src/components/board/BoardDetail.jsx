@@ -36,6 +36,7 @@ const BoardDetail = () => {
                 const boardData = response.data.board;
                 const commentsData = response.data.commentDtoList || [];
                 
+                console.log("게시글 정보:" , boardData);
 
                 setBoard(boardData);
                 setCommentList(commentsData);
@@ -132,17 +133,17 @@ const BoardDetail = () => {
                         <tr><th>내용</th><td>{board.boardContents}</td></tr>
                     
                         {/* 파일 첨부 */}
-                        {board.fileAttached === 1 && board.originalFilename && board.originalFilename.length > 0 && (
+                        {board.fileAttached === 1 && board.boardFileDtoList && board.boardFileDtoList.length > 0 && (
                             <tr>
                                 <th>업로드한 파일</th>
                                 <td>
-                                    {board.originalFilename.map((filename, index) => (
+                                    {board.boardFileDtoList.map((file, index) => (
                                         <div key={index}>
                                             <a 
                                                 href="{`/board/download/${board.id}/${index}`}"
                                                 target="_blank" rel="noopener noreferrer"
                                             >
-                                                {filename}
+                                                {file.originalFilename}
                                             </a>
                                         </div>
                                     ))}

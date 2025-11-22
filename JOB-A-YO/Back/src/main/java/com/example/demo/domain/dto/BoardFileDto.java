@@ -10,18 +10,29 @@ import lombok.*;
 @AllArgsConstructor
 public class BoardFileDto {
     private Long id;
-    private String originalFileName;
-    private String storedFileName;
+    private String originalFilename;
+    private String storedFilename;
 
     // Entity -> Dto 변환 메서드
-    public BoardFileDto toBoardFileDto(BoardFileEntity boardFileEntity){
+    public static BoardFileDto toBoardFileDto(BoardFileEntity boardFileEntity){
         BoardFileDto boardFileDto = new BoardFileDto();
 
         boardFileDto.setId(boardFileEntity.getId());
-        boardFileDto.setOriginalFileName(boardFileEntity.getOriginalFileName());
-        boardFileDto.setStoredFileName(boardFileEntity.getStoredFileName());
+        boardFileDto.setOriginalFilename(boardFileEntity.getOriginalFilename());
+        boardFileDto.setStoredFilename(boardFileEntity.getStoredFilename());
 
         return boardFileDto;
     }
+
+//    // Entity -> Dto 변환 메서드
+//    public BoardFileDto toBoardFileDto(BoardFileEntity boardFileEntity){
+//        BoardFileDto boardFileDto = new BoardFileDto();
+//
+//        boardFileDto.setId(boardFileEntity.getId());
+//        boardFileDto.setOriginalFileName(boardFileEntity.getOriginalFileName());
+//        boardFileDto.setStoredFileName(boardFileEntity.getStoredFileName());
+//
+//        return boardFileDto;
+//    }
 
 }

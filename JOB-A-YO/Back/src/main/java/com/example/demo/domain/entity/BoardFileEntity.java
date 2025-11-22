@@ -49,11 +49,11 @@ public class BoardFileEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String originalFileName;
+    @Column(name = "original_file_name")
+    private String originalFilename;
 
-    @Column
-    private String storedFileName;
+    @Column(name = "stored_file_name")
+    private String storedFilename;
 
     // N:1관계(board_file_table입장에서)
     @ManyToOne(fetch = FetchType.LAZY) // Eager -> 부모테이블 조회시 자식 테이블도 같이 다 조회, Lazy -> 부모테이블 조회 시 필요한 상황에만 호출
@@ -64,12 +64,12 @@ public class BoardFileEntity extends BaseEntity{
 
     public static BoardFileEntity toBoardFileEntity
                                                     (BoardEntity boardEntity,
-                                                     String originalFileName,
-                                                    String storedFileName)
+                                                     String originalFilename,
+                                                    String storedFilename)
     {
         BoardFileEntity boardFileEntity = new BoardFileEntity();
-        boardFileEntity.setOriginalFileName(originalFileName);
-        boardFileEntity.setStoredFileName(storedFileName);
+        boardFileEntity.setOriginalFilename(originalFilename);
+        boardFileEntity.setStoredFilename(storedFilename);
         boardFileEntity.setBoardEntity(boardEntity);
         return boardFileEntity;
     }

@@ -69,11 +69,10 @@ public class apiBoardController {
     public ResponseEntity<BoardDto> write(
             // 1. 폼 데이터 (제목, 글쓴이, 내용 등)를 DTO에 바인딩
             @ModelAttribute BoardDto boardDto,
-
             // 2. 파일 데이터를 "fileUpload" 키로 명시적으로 받음
             @RequestPart(value = "fileUpload", required = false) List<MultipartFile> fileUploads) throws IOException {
 
-        log.info("POST /api/board 게시글 작성 요청: {}", boardDto.getBoardTitle());
+        log.info("POST /api/board/writeBoard 게시글 작성 요청: {}", boardDto.getBoardTitle());
 
         // 💡 3. 수신한 파일을 DTO의 필드에 수동으로 설정
         // DTO에 List<MultipartFile> fileUpload; 필드가 있으므로 사용 가능
@@ -114,7 +113,7 @@ public class apiBoardController {
         // 응답 Dto에 데이터 통합
         BoardDetailResponse response = new BoardDetailResponse(boardDto, commentDtoList);
 
-        System.out.println("response:" + response);
+        System.out.println("response:" + response + "...apiBoardController의 findById");
 
         // HTTP 200 ok 상태코드와 함께 Json데이터를 반환
         return ResponseEntity.ok(response);
@@ -127,19 +126,27 @@ public class apiBoardController {
     // Put api/board/{id}
     @Operation(summary = "게시글 수정 처리", description = "수정된 게시글 정보를 받아 DB에 반영하고, 수정된 DTO를 JSON으로 반환")
     @PutMapping("/{id}")
-    public ResponseEntity<BoardDto> updateBoard(@PathVariable Long id, @RequestBody BoardDto boardDto){
-
+    public ResponseEntity<BoardDto> updateBoard(
+            @PathVariable Long id,
+            @RequestBody BoardDto boardDto,
+            @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles, // 2. 새 파일들
+            @RequestParam(value = "deleteFileIds", required = false) List<Long> deleteFileIds   // 삭제할 파일들
+    ){
         log.info("Put /api/board/{id}... 게시글 수정 apiBoardController", id);
 
-        // 경로 변수 id와 Dto의 id가 일치하도록 강제하거나 확인
-        if(boardDto.getId() == null || !boardDto.getId().equals(id)){
-            log.warn("ID 불일치: URL ID({})와 DTO ID({})", id, boardDto.getId());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(boardDto.getId() == null){
+            boardDto.setId(id);
         }
 
+//        // 경로 변수 id와 Dto의 id가 일치하도록 강제하거나 확인
+//        if(boardDto.getId() == null || !boardDto.getId().equals(id)){
+//            log.warn("ID 불일치: URL ID({})와 DTO ID({})", id, boardDto.getId());
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+
         try{
-            // BoardService 계층의 Update 메서드 호출
-            BoardDto updateBoard = boardService.update(boardDto);
+            // BoardService에 텍스트, 새 파일, 삭제할 ID 목록을 전달
+            BoardDto updateBoard = boardService.update(boardDto, uploadFiles, deleteFileIds);
 
             log.info("게시글 수정 완료, ID: ()", updateBoard.getId());
 
@@ -150,6 +157,18 @@ public class apiBoardController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //    @GetMapping("/update/{id}")

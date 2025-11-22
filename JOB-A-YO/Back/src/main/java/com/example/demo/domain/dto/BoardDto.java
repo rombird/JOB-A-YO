@@ -30,8 +30,8 @@ public class BoardDto {
 
     // 파일 업로드 관련
     private List<MultipartFile> fileUpload; // 파일 담는 용도
-    private List<String> originalFilename; // 원본 파일 이름
-    private List<String> storedFilename; // 서버 저장용 파일 이름
+    private List<BoardFileDto> boardFileDtoList;
+
     private int fileAttached;   // 파일 첨부 여부(첨부 1, 미첨부 0)
 
     public BoardDto(Long id, String boardWriter, String boardTitle, int boardHits, LocalDateTime boardCreateTime) {
@@ -47,6 +47,7 @@ public class BoardDto {
     public static BoardDto toBoardDto(BoardEntity boardEntity){
         BoardDto boardDto = new BoardDto();
 
+        // 텍스트 영역
         boardDto.setId(boardEntity.getId());
         boardDto.setBoardWriter(boardEntity.getBoardWriter());
         boardDto.setBoardPass(boardEntity.getBoardPass());
@@ -56,28 +57,23 @@ public class BoardDto {
         boardDto.setBoardCreateTime(boardEntity.getCreatedTime());
         boardDto.setBoardUpdateTime(boardEntity.getUpdatedTime());
 
-        Integer fileAttached = boardEntity.getFileAttached();   // 파일 유무 감지기
-        int fileAttachStatus = (fileAttached == null)? 0 : fileAttached.intValue();
-        boardDto.setFileAttached(fileAttachStatus);         // 없으면 0 또는 있으면 1
+        // 첨부파일 유무 체크
+        if (boardEntity.getFileAttached() == 0) {
+            boardDto.setFileAttached(0);
+        } else {
+            // 첨부파일이 있으면
+            boardDto.setFileAttached(1);
 
-        List<String> originalFileNameList = new ArrayList<>();
-        List<String> storedFileNameList = new ArrayList<>();
-
-        if(fileAttachStatus == 1){  // 파일이 첨부된 경우
+            // 파일 정보 변환 (Entity -> DTO List)
             List<BoardFileEntity> fileEntities = boardEntity.getBoardFileEntityList();
+            List<BoardFileDto> fileDtoList = new ArrayList<>();
 
-            if(fileEntities != null && !fileEntities.isEmpty()){
-                // 파일 엔티티 목록이 존재하고 비어있지 않은 경우에만 처리
-                for(BoardFileEntity boardFileEntity : fileEntities){
-                    originalFileNameList.add(boardFileEntity.getOriginalFileName());
-                    storedFileNameList.add(boardFileEntity.getStoredFileName());
-                }
+            for (BoardFileEntity fileEntity : fileEntities) {
+                // BoardFileDto 생성하고 리스트 추가
+                fileDtoList.add(BoardFileDto.toBoardFileDto(fileEntity));
             }
-
+            boardDto.setBoardFileDtoList(fileDtoList);
         }
-
-        boardDto.setOriginalFilename(originalFileNameList);
-        boardDto.setStoredFilename(storedFileNameList);
 
         return boardDto;
     }
