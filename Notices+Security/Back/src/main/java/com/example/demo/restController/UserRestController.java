@@ -1,8 +1,10 @@
 package com.example.demo.restController;
 
 import com.example.demo.config.auth.jwt.JWTProperties; // JWT 상수 사용
+import com.example.demo.domain.dto.CustomUserDetails;
 import com.example.demo.domain.dto.TokenInfo;
 import com.example.demo.domain.dto.UserDto;
+import com.example.demo.domain.dto.UserResponseDto;
 import com.example.demo.domain.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -25,7 +28,7 @@ public class UserRestController {
     private final UserService userService;
 
     // --- 1. 회원가입 (자체 로그인) ---
-    @PostMapping("/signup")
+    @PostMapping("/signup") //‼️‼️
     public ResponseEntity<String> signup(@RequestBody UserDto dto) {
         try {
             userService.addUser(dto);
@@ -40,7 +43,7 @@ public class UserRestController {
     }
 
     // --- 2. 로그인 (Access/Refresh Token 발행 및 쿠키 설정) ---
-    @PostMapping("/login")
+    @PostMapping("/login") //‼️‼️
     public ResponseEntity<String> login(@RequestBody UserDto dto, HttpServletResponse response) {
         try {
             // 1. UserService를 통해 인증 및 Token 생성
@@ -67,7 +70,7 @@ public class UserRestController {
 
     // --- 3. 로그아웃 (토큰 쿠키 제거 및 DB Refresh Token 삭제) ---
     @SecurityRequirement(name = "BearerAuth")
-    @PostMapping("/logout")
+    @PostMapping("/logout") //‼️‼️
     public ResponseEntity<String> logout(@RequestBody UserDto dto, HttpServletResponse response) {
         try {
             // 1. DB에서 Refresh Token 정보 삭제 (UserService에 구현된 deleteUser가 이 역할을 겸함)
@@ -86,6 +89,38 @@ public class UserRestController {
             log.error("로그아웃 중 오류 발생", e);
             return new ResponseEntity<>("로그아웃 처리 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // --- 4. 현재 로그인된 사용자 정보 조회 (권한 체크용) ---
+    // GET /api/user/me
+    // 현재 로그인된 사용자의 프로필 정보와 권한(Role)을 반환
+    // FE는 이 응답을 통해 'role' 정보를 얻어 관리자 여부 판단
+    @GetMapping("/me") //‼️‼️
+    public ResponseEntity<UserResponseDto> getMyProfile(
+            // @AuthenticationPrincipal로 인증된 CustomUserDetails 객체를 주입받음
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        if (userDetails == null) {
+            // 인증 정보가 없거나 세션 만료 시 401 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // 1. 권한 정보를 문자열로 변환 (예: "ROLE_ADMIN" -> "ADMIN")
+        //
+        String authorityString = userDetails.getAuthorities().iterator().next().getAuthority();
+        String userRole = authorityString.replace("ROLE_", "");
+
+        // 2. CustomUserDetails 내부의 UserEntity 게터(getUsername, getEmail 등)를 활용하여 DTO를 구성합니다.
+        // ⚠️ 주의: CustomUserDetails 클래스에 UserEntity의 필드를 반환하는 다음 게터들이 정의되어 있어야 합니다.
+        UserResponseDto responseDto = new UserResponseDto(
+                userDetails.getUsername(),             // UserDetails의 메소드 (username)
+                userDetails.getIsSocial(),                // is_social (예: getIsSocial() 또는 isSocial())
+                userDetails.getNickname(),             // nickname (예: getNickname())
+                userDetails.getEmail(),                // email (예: getEmail())
+                userRole                               // ⭐️ 최종 권한 값
+        );
+
+        return ResponseEntity.ok(responseDto);
     }
 
     // ---------------------------------------------------------------------------------

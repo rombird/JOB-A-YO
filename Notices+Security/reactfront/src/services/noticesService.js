@@ -1,7 +1,8 @@
 import apiClient from "../utils/apiClient";
 
-
-
+// 데이터를 가져오고 보내는 방법에 대한 메뉴얼
+// 백엔드의 특정 엔드포인트(URL)에 데이터를 어떤 방식으로(GET, POST, DELETE) 보낼지를 정확하게 약속하는 것
+// 백엔드 API 통신과 관련된 모든 역할을 모아둔 곳
 
 
 

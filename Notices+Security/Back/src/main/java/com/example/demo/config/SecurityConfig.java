@@ -105,6 +105,10 @@ public class SecurityConfig {
                         //공지사항 내 파일 다운로드 모두 허용 (permitAll)
                         .requestMatchers(HttpMethod.GET, "/api/notices/download/**").permitAll()
 
+
+                        // /api/user/me 는 인증만 되면 허용 (Authenticated)
+                        .requestMatchers("/api/user/me").authenticated()
+
                         // [공지사항 수정/추가/삭제] POST, PUT, DELETE 요청은 ROLE_ADMIN만 허용
                         .requestMatchers(HttpMethod.POST, "/api/notices/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/notices/**").hasRole("ADMIN")

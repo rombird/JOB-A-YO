@@ -202,6 +202,16 @@ public class UserService extends DefaultOAuth2UserService {
         UserEntity entity = userRepository.findByUsernameAndIsLock(username, false)
                 .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다: " + username));
 
-        return new UserResponseDto(username, entity.getIsSocial(), entity.getNickname(), entity.getEmail());
+        // DTO 생성자에 roleType을 문자열로 변환하여 5번째 인자로 추가
+        // UserEntity의 RoleType을 문자열로 변환 (예: USER)
+        String userRole = entity.getRoleType().name();
+
+        return new UserResponseDto(
+                username,
+                entity.getIsSocial(),
+                entity.getNickname(),
+                entity.getEmail(),
+                userRole // 5번째 인자, role 추가
+        );
     }
 }
