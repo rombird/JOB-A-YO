@@ -79,7 +79,7 @@ public class NoticesFileService {
         fileEntity.setStoredFileName(storedFileName);
         fileEntity.setFilePath(savePath);
         fileEntity.setFileSize(file.getSize());
-        fileEntity.setMimeType(mimeType); // 💡 MIME Type 저장
+        fileEntity.setMimeType(mimeType); // MIME Type 저장
         fileEntity.setNotices(notices); // 커스텀 setNotices() 메서드 (양방향 연결) 호출
 
         return noticesFileRepository.save(fileEntity);
