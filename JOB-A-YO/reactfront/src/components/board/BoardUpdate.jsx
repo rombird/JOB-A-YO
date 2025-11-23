@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useNavigate, Link, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import React, { Fragment, useState, useCallback, useRef, useEffect } from 'react';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -9,167 +10,194 @@ import "../../css/writeBoard.css";
 import "../../css/ckEditorStyle.css";
 
 
+class MyUploadAdapter{
+    constructor(loader){
+        // 파일 정보 로더
+        this.loader = loader;
+        // 서버의 이미지 업로드 API 엔드포인트
+        this.url = 'http://localhost:8090/api/board/image/upload';
+    }
+
+    // 파일 전송 메서드
+    upload(){
+        return this.loader.file
+                .then(file => {
+                    const data = new FormData();
+                    // 서버 컨트롤러에서 받는 파라미터 이름이 upload(RequestParam)로 일치하여야함
+                data.append('upload', file);
+
+                return axios.post(this.url, data, {
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                })
+                .then(res => {
+                    // 서버 응답: {uploaded: 1, url: "http://localhost:8090/images/..."}
+                    // CKEditor 형식에 맞게 변환하여 반환
+                    if (res.data.uploaded){     // uploaded는 CKEditor가 요구하는 Header에 맞춘거
+                        return{
+                            default: res.data.url
+                        };
+                    }else{
+                        throw new Error('Image upload failed');
+                    }
+                })
+                .catch(error => {
+                    console.error("CKEditor 이미지 업로드 에러:", error);
+                });
+            });
+    }
+    // 어댑터가 취소될 때 호출 (필수)
+    abort(){
+        // 업로드 취소 로직
+    }
+}
+
+// 커스텀 업로드 어댑터를 CKEditor 플러그인으로 등록하는 함수
+function MyCustomUploadAdapterPlugin(editor){
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+        return new MyUploadAdapter(loader);
+    };
+}
+
+
+
 const BoardUpdate = () => {
 
-    const {id: boardId} = useParams();
     const navigate = useNavigate();
+    const {boardId} = useParams();  // URL에서 게시글 ID 가져오기
 
-    // 1. 상태 관리
-    const [boardTitle, setBoardTitle] = useState("");
-    const [boardWriter, setBoardWriter] = useState("");
+    // 텍스트 영역 상태관리
     const [boardContents, setBoardContents] = useState("");
-    const [inputPass, setInputPass] = useState("");
-    const [serverPass, setServerPass] = useState("");
-    const [boardHits, setBoardHits] = useState("0");
-    const [loading, setLoading] = useState("true");
+    const [title, setTitle] = useState("");
+    const [writer, setWriter] = useState("");   
+    const [password, setPassword] = useState("");
 
-    // 첨부파일 관리를 위한 상태 분리
-    const [existingFiles, setExistingFiles] = useState([]);     // 서버에 이미 있는 파일들
-    const [newFiles, setNewFiles] = useState([]);   // 새로 추가할 파일들
-    const [deleteFileIds, setDeleteFileIds] = useState([]);
-   
+    // 파일 관련 상태
+    const [uploadedFiles, setUploadedFiles] = useState([]); // 새로 추가할 파일(File 객체)
+    // 기존 파일 목록
+    const [existingFiles, setExistingFiles] = useState([]);
+    // 서버에 삭제 요청할 기존 파일 ID 목록
+    const [filesToDeleteIds, setFilesToDeleteIds] = useState([]);
+
+    // DOM 요소 참조
     const uploadAreaRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    // 2. 페이지 입장시 초기 데이터 로드
-    useEffect (() => {
-        const fetchBoard = async () => {
-
-            try{
-            const response = await axios.get(`http://localhost:8090/api/board/${boardId}`);
-            const data = response.data
-        
-            setBoardTitle(data.boardTitle);
-            setBoardWriter(data.boardWriter);
-            setBoardContents(data.boardContents);
-            setServerPass(data.boardPass || "");
-            setBoardHits(data.boardHits || 0);
-            
-            // 기존 첨부파일 목록 가져오기
-            if(data.fileUpload){
-                setExistingFiles(data.fileUpload)
-            }
-            
-            setLoading(false);
-            }catch (error){
-                console.error("게시글 정보 로드 실패: ", error);
-                alert("게시글 정보를 불러오는데 실패했습니다");
-                
-                // 테스트용 더미 데이터
-                setBoardTitle("테스트 게시글");
-                setBoardWriter("홍길동");
-                setBoardContents("내용");
-                setServerPass("1234");
-                // 테스트용 기존 파일 더미
-                setExistingFiles([
-                    { id: 1, originalFileName: "existing_image.png", storedFileName: "uuid_img.png", size: 10240 },
-                    { id: 2, originalFileName: "old_report.pdf", storedFileName: "uuid_pdf.pdf", size: 20480 }
-                ]);
-                
-                navigate('/board/Paging');
-                setLoading(false);
-            }
-        };
-
-        // boardId가 있을때만 실행
-        if(boardId){
-            fetchBoard();
-        }else{
-            setLoading(false);   // Id가 없으면 로딩 해제(테스트용)
-        }
-    }, [boardId, navigate]);
-
-    // 3. 파일 처리 로직
+    // 파일 처리 로직
     const formatBytes = (bytes) => {
-
-        if(bytes === 0) return '0 Bytes';
+        if (bytes === 0) return '0 Bytes';
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB']
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes/ Math.pow(k, i).toFixed(1)) + ' ' + sizes[i]);
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i]
     }
 
+    // 파일 유효성 검사 및 추가하는 함수
     const allowedExtensions = ['xlsx', 'pptx', 'txt', 'pdf', 'jpg', 'jpeg', 'png', 'hwp'];
     const maxCount = 5;
-    const maxSize = 20 * 1024 * 1024;
+    const maxSize = 20 * 1024 * 1024; // 6MB
 
-    // 4. 새 파일 추가 핸들러
+    // CKEditor 설정 객체 정의
+    const editorConfig = {
+        image: {
+            upload: {
+                types: ['png', 'jpeg', 'gif', 'bmp', 'webp'],
+                withCredentials: true,
+            }
+        },
+        // 1. 커스텀 업로드 어댑터 플러그인 등록
+        extraPlugins: [MyCustomUploadAdapterPlugin],
+
+        // 2. 툴바 버튼 설정(imageUploade 버튼 포함)
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertImage', 'mediaEmbed', 'undo', 'redo' ]
+    };
+
+
+
+    // 파일 유효성 검사 및 추가하는 함수
     const handleFiles = useCallback((files) => {
-        const incomingFiles = Array.from(files);
+        const newFiles = Array.from(files);
         let validFiles = [];
 
-        for(const file of incomingFiles){
+        for (const file of newFiles) {
             const ext = file.name.split('.').pop().toLowerCase();
 
-            if (!allowedExtensions.includes(ext)){
-                alert(`${file.name}은 지원하지 않는 형식의 파일입니다.`);
-                continue;
-            }
-            
-            // 개수 제한 체크 (기존 파일 - 삭제 예정 파일) + (현재 대기중인 새 파일) + (추가될 파일)
-            const currentCount = existingFiles.length + newFiles.length + validFiles.length;
-            if (currentCount.length > maxCount){
-                alert("최대 5개까지 업로드 할 수 있습니다.");
-                break;
-            }
-
-            // 파일 사이즈 체크 
-            if(file.size > maxSize){
-                alert(`${file.name}은 20MB 초과합니다.`);
+            // 1. 확장자 검사
+            if (!allowedExtensions.includes(ext)) {
+                alert(`${file.name}: 지원하지 않는 형식입니다.`);
                 continue;
             }
 
-            // 중복 체크
-            const isDuplicateNew = newFiles.some(f => f.name === file.name) || validFiles.some(f => f.name === file.name);
-            const isDuplicateOld = existingFiles.some(f => f.originalFileName === file.name);
+            // 2. 파일 개수 제한 검사 (현재 파일 개수 + 추가할 파일 개수)
+            if (uploadedFiles.length + validFiles.length >= maxCount) {
+                alert("최대 5개까지 업로드 할 수 있습니다");
+                break; // 5개 넘기면 더 이상 파일을 처리하지 않음
+            }
 
-            if(isDuplicateNew || isDuplicateOld){
-                alert(`${file.name}은 이미 목록에 있습니다`);
+            // 3. 파일 크기 검사
+            if (file.size > maxSize) {
+                alert(`${file.name} : 20MB 초과`);
+                continue;
+            }
+
+            // 4. 중복 파일명 검사
+            if (uploadedFiles.some(f => f.name === file.name) || validFiles.some(f => f.name === file.name)) {
+                alert(`${file.name}은 이미 업로드 되어 있습니다.`);
                 continue;
             }
             validFiles.push(file);
-
-        }
-        if(validFiles.length > 0){
-            setNewFiles(prev => [...prev, ...validFiles]);
         }
 
-        if(fileInputRef.current){
+        // 유효한 파일만 상태에 추가
+        if (validFiles.length > 0) {
+            setUploadedFiles(prevFiles => [...prevFiles, ...validFiles]);
+        }
+
+        // 파일 input 초기화(같은 파일 재선택 가능하도록)
+        if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
-    }, [existingFiles, newFiles]);
+    }, [uploadedFiles, existingFiles, filesToDeleteIds]);   // uploadedFiles가 변경될 때마다 함수 재생성
 
+    // 파일 입력(input)의 change 이벤트 핸들러
     const onFileInputChange = (e) => {
         handleFiles(e.target.files);
     };
 
-    // 파일 삭제 핸들러(기존 파일과 새 파일 구분)
-    const deleteFile = (type, identifier) => {
-        if(type === 'existing'){
-            // 기존 파일 삭제 -> 화면에서 제거 후 deleteFileIds에 Id 추가
-            const fileToDelete = existingFiles.find(f => f.id === identifier);
-            if(fileToDelete){
-                setExistingFiles(prev => prev.filter(f => f.id !== identifier));
-                setDeleteFileIds(prev => [...prev, identifier]); // Id 저장
-            }
-        }else{
-            // 새 파일 삭제 -> 그냥 배열에서 제거 
-            setNewFiles(prev => prev.filter((_, index) => index !== identifier));
+    // 새로 업로드 된 파일 삭제 함수
+    const deleteFile = (fileName, fileSize) => {
+        setUploadedFiles(prevFiles => {
+            const updatedFiles = prevFiles.filter(f => !(f.name === fileName && f.size === fileSize));
+            return updatedFiles;
+        });
+    };
+
+    // 기존 파일 삭제 함수(서버에 파일 ID 전송 대기)
+    const deleteExistingFile = (fileId) => {
+        // existingFiles 목록에서만 시각적으로 제거하고, fileToDeleteIds에 Id를 추가
+        if(!filesToDeleteIds.includes(fileId)){
+            setFilesToDeleteIds(prevIds => [...prevIds, fileId]);
         }
     };
 
-    // 드래그 앤 드롭
+    // 드래그 앤 드롭 이벤트(useEffect 사용해서 들어오면 하나 추가 삭제하면 하나 삭제)
     useEffect(() => {
         const uploadArea = uploadAreaRef.current;
-        if(!uploadArea) return;
+        if (!uploadArea) return;
 
+        // 드래그 시 시각효과
         const handleDragOver = (e) => {
             e.preventDefault();
             uploadArea.classList.add("dragover");
         }
-        const handleDragLeave = (e) => {
+
+        // 드래그 해온 거 빠지면 dragover 시각효과 사라짐
+        const handleDragLeave = () => {
             uploadArea.classList.remove("dragover");
         }
+
+        // 파일 드롭 시 처리
         const handleDrop = (e) => {
             e.preventDefault();
             uploadArea.classList.remove("dragover");
@@ -180,84 +208,134 @@ const BoardUpdate = () => {
         uploadArea.addEventListener("dragleave", handleDragLeave);
         uploadArea.addEventListener("drop", handleDrop);
 
+        // 컴포넌트 언마운트 시 이벤트 제거
         return () => {
             uploadArea.removeEventListener("dragover", handleDragOver);
             uploadArea.removeEventListener("dragleave", handleDragLeave);
             uploadArea.removeEventListener("drop", handleDrop);
-        }
-    }, [handleFiles]);
+        };
+    }, [handleFiles]);      // handleFiles(즉 uploadFiles)가 변경될 때마다 useEffect 재실행
 
-    // 4. 수정 제출 핸들러
-    const handleUpdate = async (e) => {
-        e.preventDefault();
 
-        if (!boardTitle || !boardWriter || !inputPass || !boardContents){
-            alert("제목, 비밀번호, 내용을 모두 입력해 주세요.");
-            return;
-        }
+    // 기존 게시글 데이터 로딩
+    useEffect(() => {
 
-        if(inputPass !== serverPass){
-            alert("비밀번호가 일치하지 않습니다.");
-            return;
-        }
+        // boardId가 없으면 API 호출을 건너뜁니다.
+    if (!boardId) return; 
+    
+    // 이 부분이 실제 GET 요청 로직입니다.
+    const getBoardDetail = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8090/api/board/${boardId}`);
+            const data = response.data.board; // 응답 데이터 구조에 따라 수정 필요
+            
+            // 1. 텍스트 상태 설정
+            setTitle(data.boardTitle);
+            setWriter(data.boardWriter);
+            setBoardContents(data.boardContents);
 
-        // FormData 객체 생성
-        const formData = new FormData();
-
-        // 1. 게시글 정보 (text)
-        formData.append("id", boardId);
-        formData.append("boardTitle", boardTitle);
-        formData.append("boardWriter", boardWriter);
-        formData.append("boardPass", serverPass);
-        formData.append("boardContents", boardContents);
-        formData.append("boardHits", boardHits);
-
-        // 2. 삭제할 파일 Id들
-        // 백엔드에서 @RequestParam(value="deleteFileIds", required=false) List<Long> deleteFileIds 로 받음
-        deleteFileIds.forEach(id => {
-            formData.append("deleteFileIds", id);
-        });
-
-        // 3. 새로 추가할 파일들
-        // 백엔드에서 @RequestParam("uploadFiles") List<MultipartFile> uploadFiles 로 받음
-        newFiles.forEach(file => {
-            formData.append("uploadFiles", file);
-        });
-
-        // PUT 메서드로 FormData 전송
-        try{
-            await axios.put(`http://localhost:8090/api/board/${boardId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            alert("게시글이 성공적으로 수정되었습니다");
-            navigate(`/board/BoardDetail/${boardId}`);
-        }catch(error){
-            console.error("게시글 수정 실패: ", error);
-            alert("게시글 수정 중 오류가 발생했습니다.");
+            // 2. 기존 파일 상태 설정 (파일 목록이 Board DTO 안에 있어야 함)
+            setExistingFiles(data.fileList || []); // 이 부분이 핵심
+            
+        } catch (error) {
+            console.error("게시글 로딩 실패:", error);
+            // 에러 처리
         }
     };
-
-    const allFiles = [
-        ...existingFiles.map(f => ({
-            ...f,
-            origin: "existing",
-            name: f.originalFileName,   // 이름 통일
-            size: f.size
-        })),
-        ...newFiles.map(f => ({
-            fileObj: f,  // 원본 파일 객체(삭제용)
-            origin: "new",
-            name: f.name,
-            size: f.size
-        }))
-    ]
+    
+    getBoardDetail();
+}, [boardId]); // boardId가 변경될 때마다 실행 (보통 한 번)
+        
 
 
-    if (loading) return <div>데이터 로딩 중...</div>;
 
 
+        
+        // if (boardId){
+            // 게시글 상세 정보와 첨부파일을 가져오는 API 호출(GET / api/board/{id})
+            // axios.get(`http://localhost:8090/api/board/${boardId}`)
+            //     .then(response => {
+            //         const data = response.data.board;   // BoardDto가 포함된 BoardDetailResponse에서 추출
+            //         if(!data) throw new Error("게시글 데이터가 없습니다");
+                    
+            //         setTitle(data.boardTitle);
+            //         setWriter(data.boardWriter);
+            //         setBoardContents(data.boardContents);
+
+            //         // 기존 첨부파일 설정(파일목록은 boardFileDtoList)
+            //         if(data.boardFileDtoList){
+            //             setExistingFiles(data.boardFileDtoList);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         console.error("게시글 로딩 실패: ", error);
+            //         alert("게시글 정보를 불러오는데 실패하였습니다");
+            //         navigate('/board/paging');
+            //     });
+    //     }
+    // }, [boardId, navigate]);
+
+
+    // 수정 제출 버튼 핸들러(API 호출 로직)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // 필수 입력 항목 유효성 검사 (추가 필요)
+        // const boardTitle = e.target.elements.boardTitle.value;
+        // const boardWriter = e.target.elements.boardWriter.value;
+        // const boardPass = e.target.elements.boardPass.value;
+
+        if (!title || !writer || !password || !boardContents) {
+            alert("제목, 글쓴이, 비밀번호, 내용을 모두 입력해주세요.");
+            return; // 유효성 검사 실패 시 전송 중단
+        }
+
+        const formData = new FormData();    
+
+        // 폼 데이터 추가
+        // boardId는 URL에서 가져와 사용하며 서버에서는 @PathVariable로 받음
+        formData.append("boardTitle", title);   // 수정된 제목
+        formData.append("boardWriter", writer); // 작성자
+        formData.append("boardPass", password); // 비밀번호
+        
+        // CKEditor 내용 추가
+        formData.append("boardContents", boardContents);
+
+        // 파일들을 formData에 추가
+        uploadedFiles.forEach(file => {
+            formData.append("uploadFiles", file); // 서버 컨트롤러의 @RequestParam은 "uploadFiles"
+        });
+
+        // 삭제할 기존 파일 ID 목록을 formData에 추가
+        filesToDeleteIds.forEach(id => {
+            formData.append("deleteFileIds", id);   // 서버 컨트롤러의 @RequestParam은 "deleteFileIds"
+        })
+
+        console.log("폼 데이터 전송 준비 완료. 파일 개수: ", uploadedFiles.length);
+
+
+        // axios를 이용한 서버 전송
+        axios.put(`http://localhost:8090/api/board/update/${boardId}`, formData, {
+            headers: {
+                // 'Content-Type': 'multipart/form-data'
+                // 명시하지 않으면 브라우저가 boundary를 자동으로 설정하는 듯?
+            }
+        })
+            .then(res => {
+                alert("게시글이 성공적으로 작성되었습니다.");
+                navigate(`/board/${boardId}`); // 수정된 상세 게시글 페이지로 이동
+            })
+            .catch(error => {
+                const status = error.response?.status;
+                if (status === 401){
+                    alert("비밀번호가 일치하지 않아 수정을 완료할 수 없습니다");
+                }else{
+                    console.error("게시글 작성 실패: ", error.response?.data || error);
+                    alert("게시글 작성 중 오류가 발생했습니다.");
+                }
+            });
+
+    };
 
     return (
         <>
@@ -357,7 +435,7 @@ const BoardUpdate = () => {
                 </header>
 
 
-                {/* <!-- 게시글 작성 공간 --> */}
+                {/* <!-- 게시글 수정 공간 --> */}
                 <main>
                     <div className="layoutCenter">
 
@@ -365,7 +443,7 @@ const BoardUpdate = () => {
                         <div className="sub-title">
                             {/* <!-- 문의사항, 아이콘 --> */}
                             <div className="inquiry">
-                                <h3>문의사항</h3>
+                                <h3>게시글 수정</h3>
                                 <div className="question-mark-container">
                                     <div className="question-mark"><i className="fa-solid fa-question fa-lg"></i></div>
                                     <div className="question-mark-hidden">문의사항</div>
@@ -389,7 +467,7 @@ const BoardUpdate = () => {
 
                         {/* <!-- 글 적는곳 --> */}
                         <div className="write-space">
-                            <form onSubmit={handleUpdate}>
+                            <form onSubmit={handleSubmit} method="post" encType="multipart/form-data">
 
                                 {/* <!-- 제목 부분 --> */}
                                 <div className="label-and-writeArea">
@@ -398,35 +476,45 @@ const BoardUpdate = () => {
                                         <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="boardTitle" />
+                                        <input className="write-input" type="text" name="boardTitle"
+                                                value={title}
+                                                onChange={(e) => setTitle(e.target.value)}
+                                        />
                                     </div>
                                 </div>
 
                                 {/* <!-- 점선 --> */}
                                 <div className="line-dotted"></div>
 
-                                {/* <!-- 글쓴이 부분, 수정 불가 --> */}
+                                {/* <!-- 글쓴이 부분 --> */}
                                 <div className="label-and-writeArea">
                                     <div className="label-area">
                                         <div>글쓴이</div>
                                         <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="boardWriter" value={boardWriter} readOnly />
+                                        <input className="write-input" type="text" name="boardWriter" 
+                                                value={writer}
+                                                readOnly
+                                                style={{backgroundColor: '#f0f0f0', cursor:'not-allowed'}}
+                                        />
                                     </div>
                                 </div>
 
                                 {/* <!-- 점선 --> */}
                                 <div className="line-dotted"></div>
 
-                                {/* <!-- 비밀번호 확인 --> */}
+                                {/* <!-- 비밀번호 부분 --> */}
                                 <div className="label-and-writeArea">
                                     <div className="label-area">
                                         <div>비밀번호</div>
                                         <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="inputPass" value={inputPass} onChange={(e) => setInputPass(e.target.value)} placeholder="비밀번호를 입력하세요" />
+                                        <input className="write-input" type="text" name="boardPass"
+                                                value={password}
+                                                onChange={(e) => {setPassword(e.target.value)}}
+                                        />
                                     </div>
                                 </div>
 
@@ -444,15 +532,15 @@ const BoardUpdate = () => {
                                         <div className="main-container">
                                             <div className="editor-container editor-container_classic-editor" id="editor-container">
                                                 <div className="editor-container__editor">
-                                                    {/* <textarea className="editor" name="boardContents" id="editor"></textarea> */}
                                                     <CKEditor
                                                         editor={ClassicEditor}
-                                                        data={boardContents}
+                                                        data={boardContents}    // 불러온 내용으로 초기화
+                                                        config={editorConfig}
                                                         onChange={(event, editor) => {
                                                             const data = editor.getData();
                                                             setBoardContents(data);
                                                         }}
-                                                    /> 
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -491,19 +579,43 @@ const BoardUpdate = () => {
                                         {/* 파일 업로드 영역 및 미리보기 */}
                                         <div className="upload" id="upload" ref={uploadAreaRef}>
                                             {/* 조건부 렌더링 */}
-                                            {allFiles.length === 0 ? (
+                                            {/* 기존 파일과 새 파일 모두 없다면 '파일을 드래그하여 첨부할 수 있습니다' 보여줘야지 */}
+                                            {(existingFiles.length - filesToDeleteIds.length === 0) && uploadedFiles.length === 0 ? (
                                                 <p>파일을 드래그하여 첨부할 수 있습니다</p>
                                             ) : (
                                                 <div className="preview-container">
-
-                                                    {allFiles.map((file, index) => (
+                                                    {/* 기존 첨부파일 목록 렌더링 */}
+                                                    {existingFiles
+                                                        .filter(file => !filesToDeleteIds.includes(file.fileId))    // 삭제 예정이 아닌 파일들만 필터링 
+                                                        .map((file, index) => (
                                                         // key는 React가 목록 요소를 식별하는 데 도움을 줍니다.
-                                                        <React.Fragment key={file.name + file.size}>
+                                                        <React.Fragment key={`existing-${file.fileId}`}>
                                                             {/* 첫 번째 요소가 아닐 경우에만 점선 추가 */}
                                                             {index > 0 && (
                                                                 <div className="line-dotted-preview"></div>
                                                             )}
 
+                                                            <div className="preview-box">
+                                                                <div>
+                                                                    <div className="file-name">{file.originalFilename}</div>
+                                                                    <div className="file-size">{formatBytes(file.fileSize)}</div>
+                                                                </div>
+                                                                <button
+                                                                    className="delete-btn"
+                                                                    type="button"
+                                                                    onClick={() => deleteExistingFile(file.fileId)}
+                                                                >
+                                                                    <i className="fa-solid fa-trash fa-lg"></i>
+                                                                </button>
+                                                            </div>
+                                                        </React.Fragment>
+                                                    ))}
+
+                                                    {/* 새로 업로드 된 파일 목록 렌더링 */}
+                                                    {uploadedFiles.map((file, index) =>
+                                                        <React.Fragment key={`new-${file.name + file.size}`}>
+                                                            {/* 파일이 있을때만 점선 보이기 */}
+                                                            {((existingFiles.length - filesToDeleteIds.length > 0) || index > 0) && <div className="line-dotted-preview"></div>}
                                                             <div className="preview-box">
                                                                 <div>
                                                                     <div className="file-name">{file.name}</div>
@@ -517,8 +629,9 @@ const BoardUpdate = () => {
                                                                     <i className="fa-solid fa-trash fa-lg"></i>
                                                                 </button>
                                                             </div>
+                                                            
                                                         </React.Fragment>
-                                                    ))}
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -578,203 +691,5 @@ const BoardUpdate = () => {
 }
 
 export default BoardUpdate;
-
-
-
-
-
-
-
-// import axios from "axios";
-// import {useState, useEffect} from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-
-// const BoardUpdate = () => {
-//     // 1. URL에서 게시글 ID(id) 가져오기
-
-//     const {id : boardId} = useParams();     // id는 boardId라는 이름
-//     const navigate = useNavigate();
-
-//     // 2. 게시글 데이터 및 비밀번호 상태 관리
-//     const [board, setBoard] = useState({
-//         id: boardId,
-//         boardTitle: '',
-//         boardWriter: '',
-//         boardContents: '',
-//         boardPass: '',  // 맨 처음 글 작성할 시 설정하는 게시글 비밀번호
-//         inputPass: '',  // 수정시 사용자가 누를 비밀번호
-//     });
-//     const [loading, setLoading] = useState(true);   //  기본 로딩값 true
-
-//     // 3. 초기 데이터 로드
-//     useEffect(() => {
-//         const fetchBoard = async () => {
-//             try{
-//                 // Get /api/board/{id} 호출해서 기존 데이터 가져오기
-//                 const response = await axios.get(`http://localhost:8090/api/board/${boardId}`);
-
-//                 console.log("정보 확인:", response);
-
-//                 setBoard(prev => ({
-//                     ... prev,
-//                     id: response.data.id,
-//                     boardTitle: response.data.boardTitle,
-//                     boardWriter: response.data.boardWriter,
-//                     boardContents: response.data.boardContents,
-//                     boardPass: response.data.boardPass,
-//                 }));
-//                 setLoading(false);
-//             }catch(error){
-//                 console.error("게시글 로드 실패: ", error);
-//                 alert("게시글 정보를 불러오는데 실패했습니다.");
-//                 navigate("/board/Paging");
-//             }
-//         };
-//         if(boardId){
-//             fetchBoard();
-//         }
-//     }, [boardId, navigate]);
-
-//     // 4. 입력 필드 변경 핸들러
-//     const handleChange = (e) => {
-//         const {name, value} = e.target;
-//         setBoard(prev => ({
-//             ...prev,
-//             [name]: value
-//         }));
-//     };
-
-//     // 5. 게시글 수정 처리 함수(PUT 요청)
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-
-//         // 비밀번호 검증 
-//         if(board.boardPass !== board.inputPass){    // 원래 비밀번호와 입력받은 비밀번호가 !== 하다면
-//             alert("비밀번호가 일치하지 않습니다"); 
-//             return;
-//         }
-
-//         if(!board.boardTitle || !board.boardContents){
-//             // 제목과 내용이 입려되어 있지않다면
-//             alert("제목과 내용을 모두 입력해주세요.");
-//             return;
-//         }   
-
-//         try{
-//             // PUT /api/board/{id} 호출 (수정된 데이터를 JSON으로 전송)
-//             await axios.put(`http://localhost:8090/api/board/${boardId}`, {
-//                 id: board.id,
-//                 boardTitle: board.boardTitle,
-//                 boardContents: board.boardContents,
-//                 boardWriter: board.boardWriter,
-//                 boardPass: board.boardPass,
-//                 boardHits: board.boardHits || 0
-//             });
-
-//             // 수정 성공 후 상세 페이지로 리다이렉트
-//             alert("게시글이 성공적으로 수정되었습니다.") // alert 사용
-//             navigate(`/board/${boardId}`);        
-//         }catch(error){
-//             console.error("게시글 수정 실패: ", error);
-//             alert("게시글 수정 중 오류가 발생했습니다");
-//         }
-//     };
-
-//     if (loading){
-//         // 로딩 중일 때 메시지
-//         return <div>게시글 정보를 불러오는 중입니다...</div>
-//     }
-
-//     return(
-
-    
-
-
-        
-//         <div>
-//             <h2>게시글 수정 페이지</h2>            
-//             <form onSubmit={handleSubmit}> 
-//                 {/* 글쓴이 */}
-//                 <div>
-//                     <label>작성자: </label>
-//                     <input
-//                         type="text"
-//                         name="boardWriter"
-//                         value={board.boardWriter}
-//                         readOnly
-//                         style={{backgroundColor: '#eee'}} />
-//                 </div>
-//                 <br />
-
-//                 {/* 패스워드 */}
-//                 <div>
-//                     <label htmlFor="inputPass">비밀번호 확인: </label>
-//                     <input 
-//                     type="password" 
-//                     id="inputPass" 
-//                     value={board.inputPass} 
-//                     onChange={handleChange} 
-//                     placeholder="수정을 위해 비밀번호를 입력하세요" 
-//                     required />
-//                 </div>
-//                 <br />
-
-//                 {/* Title */}
-//                 <div>
-//                     <label htmlFor="boardTitle">제목: </label>
-//                     <input 
-//                         type="text"
-//                         id="boardTitle"
-//                         name="boardTitle"
-//                         value={board.boardTitle}
-//                         onChange={handleChange}
-//                         required
-//                     />
-//                 </div>
-//                 <br />
-
-//                 {/* 내용 */}
-//               <div>
-//                     <label htmlFor="boardContents">내용: </label><br/>
-//                     <textarea
-//                         id="boardContents"
-//                         name="boardContents"
-//                         value={board.boardContents}
-//                         onChange={handleChange}
-//                         rows="10"
-//                         cols="50"
-//                         required
-//                     ></textarea>
-//                 </div>
-//                 <br />
-
-//                 {/* <input type="button" value="글 수정" onclick="boardUpdate()"> */}
-//                 {/* React: type="submit"으로 변경하여 form 제출 시 handleSubmit 호출 */}
-//                 <button type="submit">글 수정</button>
-
-//                 <button
-//                     type="button"
-//                     onClick={() => navigate(`/board/${boardId}`)}       // 상세페이지로 가세요
-//                     style={{ marginLeft: '10px' }}
-//                 >
-//                     취소
-//                 </button>
-//             </form>
-//         </div>
-//     );
-// };
-
-
-// export default BoardUpdate;
-
-
-
-
-
-
-
-
-
-
 
 
