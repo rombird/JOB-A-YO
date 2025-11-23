@@ -1,7 +1,7 @@
 import apiClient from "../utils/apiClient";
-//apiClient에서
-// 모든 API 요청의 기본 URL
-// const API_BASE_URL = 'http://localhost:8090';
+
+
+
 
 
 
@@ -23,9 +23,16 @@ export const fetchNotices = (page = 0, keyword = "", size = 10) => {
 
 
 
+
+
+
 // 공지사항 상세 조회(GET /api/notices/{id}, 공개 API)
 // @param {number} id - 공지사항 ID
 export const fetchNotice = (id) => apiClient.get(`/api/notices/${id}`);
+
+
+
+
 
 
 
@@ -35,6 +42,8 @@ export const fetchNotice = (id) => apiClient.get(`/api/notices/${id}`);
 //  * @param {FormData} formData - 공지사항 데이터 및 파일
 export const createNotice = (formData) =>
     apiClient.post("/api/notices", formData);
+
+
 
 
 
@@ -67,7 +76,7 @@ export const downloadFile = (fileId) =>
 
 
 
-  
+
   
 /**
  * [삭제] 공지사항 삭제 (DELETE /api/notices/{id}, ADMIN 권한)
