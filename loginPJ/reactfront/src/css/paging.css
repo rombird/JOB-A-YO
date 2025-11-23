@@ -1,0 +1,82 @@
+.community{
+    margin-top:100px;
+}
+.community-box{
+    width:1000px;
+}
+.community-title h1{
+    font-family: "kopu";
+}
+.community-title p{
+    font-family: "kopume";
+}
+
+.community-box{
+    margin-bottom:150px;
+}
+.community-box button{
+    border:none;
+    background-color: transparent;
+}
+.community-box input{
+    width:280px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    margin:10px 0 10px 500px;
+}
+.article-box{
+    margin-bottom:50px;
+}
+.article{
+    border-bottom: 1px solid rgb(228, 232, 232);
+    padding: 24px 0px;
+    height:210px;
+    width:1000px;
+}
+.article-main{
+    /* border:1px solid; */
+}
+.article-main p{
+    text-align:left;
+}
+.article-main p:first-child{
+    font-size:16px;
+    font-weight: bold;
+    font-family: "kopu";
+}
+
+.article-response{
+    display:flex;
+    align-items: center;
+}
+.article-response>div{
+    margin:10px;
+}
+.response-img{
+    width:13px;
+    height:12px;
+}
+.community-bottom{
+    display:flex;
+    height: 50px;
+}
+.paging{
+    margin:5px 0;
+    width:400px;
+    height:40px;
+    background-color:gray;
+    margin-left:300px;
+}
+.createbtn{
+    
+}
+.community-bottom .board-create{
+    width:170px;
+    height:50px;
+    margin-left:100px;
+    color: white;
+    font-size: 20px;
+    background-color: #65A3FF;
+    border-radius: 4px;
+    font-family: "kopu";
+}

@@ -59,7 +59,21 @@ public class SecurityConfig {
 //		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		//권한체크
 		http.authorizeHttpRequests((auth)->{
-			auth.requestMatchers("/","/join","/login","/validate","/oauth2/**", "/login/oauth2/**").permitAll();
+			auth.requestMatchers("/",
+                                        "/join",
+                                        "/login",
+                                        "/validate",
+                                        "/oauth2/**",
+                                        "/login/oauth2/**").permitAll();
+
+            // 2. Swagger 관련 경로 전체 허용 추가!
+            auth.requestMatchers(
+                    "/v3/api-docs",                // v3/api-docs 경로 (JSON)
+                    "/v3/api-docs/**",             // v3/api-docs 이하 모든 경로 (JSON)
+                    "/swagger-ui.html",            // 기본 UI HTML 파일
+                    "/swagger-ui/**"               // Swagger UI 내부 리소스 (JS, CSS, Images)
+            ).permitAll();
+
             // 내가 주석처리함 user 경로를 이미 사용중이기 때문에
 //			auth.requestMatchers("/user").hasRole("USER");
 //			auth.requestMatchers("/manager").hasRole("MANAGER");

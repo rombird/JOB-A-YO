@@ -22,7 +22,7 @@ const Header = () => {
                                         <Link to="" ><img className="imgJoin" src="/images/join.svg" alt="로그아웃"/>로그아웃</Link>
                                     </li>
                                 </>
-                            ) : (
+                            ) : ( 
                                 // 로그아웃 상태
                                 <>
                                     <li className="topNavli">
@@ -36,7 +36,6 @@ const Header = () => {
                         </ul>
                     </div>
                 </div>
-
                 <div className="navHeader">
                     <div className="detailnav layoutCenter"> 
                         <Link className="logo" to="/" >JOB-A-YO</ Link>
@@ -63,13 +62,13 @@ const Header = () => {
                                     </div>
                                     <ul className="subNav">
                                         <li className="subList">
-                                            <Link to="/notice" >공지사항</Link>
+                                            <Link to="api/notices" >공지사항</Link>
                                         </li>
                                         <li className="subList">
                                             <Link to="/inquiry" >문의사항</Link>
                                         </li>
                                         <li className="subList">
-                                            <Link to="/community" >커뮤니티</Link>
+                                            <Link to="/api/board/paging" >Community</Link>
                                         </li>
                                     </ul>
                                 </li>
@@ -83,7 +82,6 @@ const Header = () => {
                     </div>
                 </div>
             </header>
-        
         </>
     )
 }

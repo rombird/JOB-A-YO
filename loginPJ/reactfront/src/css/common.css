@@ -213,12 +213,10 @@ body {
 
 /* footer */
 footer{
-    background-color:green;
-    /* #3a6b7113 */
+    background-color:#cfcfcf13;
     height:240px;
 }
 .mainFooter{
-    border:1px solid;
     padding-top: 20px;
     display:flex;
     flex-direction: column
@@ -226,6 +224,7 @@ footer{
 }
 .footerLogo{
     width:220px; 
+    margin-bottom:10px;
 }
 .footerLogo>h1{
     font-family:'logo';
@@ -236,19 +235,20 @@ footer{
 .footerInfo{
     display:flex;
     text-align: left;
-    border:1px solid white;
 }
 .footerInfoL{
-    border:1px solid white;
     margin-left:10px;
+    
 }
 .footerInfoL>p{
     width:700px;
     padding:0;
     margin:0 90px 0 0;
+    font-family: "kopume";
+    font-size:13px;
+    margin:5px 0;
 }
 .footerInfoR{
-    /* border:1px solid; */
     margin-left:220px;
     width:500px;
     display:flex;
@@ -256,17 +256,21 @@ footer{
 .footerInfoR>.site{
     border-right:1px solid lightgray;
     width:120px;
+    height:60px;
     
 }
-.footerInfoR>.site a{
+.footerInfoR .footer-p{
     padding:10px;
+    font-family: "kopume";
+    font-size:13px;
 }
 .footerInfoR li{
-    margin:10px;
+    /* margin:10px; */
 }
 .footerInfoR>.related{
     border-right:1px solid lightgray;
-    width:140px;
+    width:130px;
+    height:60px;
 }
 .footerInfoR>.related a{
     padding:10px;
@@ -280,14 +284,6 @@ footer{
     padding:10px;
 }
 
-/* footer font */
-.footerInfo p{
-    font-family:"kopume";
-}
-
-.footerInfo a{
-    font-family:"kopume";
-}
 
 /* @media screen and (max-width: 1500px) {
     .detailnav {
