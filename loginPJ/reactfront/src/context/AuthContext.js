@@ -7,6 +7,7 @@ const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
+// 전역적인 인증상태 관리하는 파일
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true); // 로딩상태
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                await axios.get('/validate', { // axios를 사용하면 로그인 안된 상태(401)이라도 로그인 페이지로 튕기지 X
+                await axios.get('http://localhost:8090/validate', { // axios를 사용하면 로그인 안된 상태(401)이라도 로그인 페이지로 튕기지 X
                     withCredentials:true
                 });  // 쿠키 기반 토큰 자동 전달
                 setIsLoggedIn(true);

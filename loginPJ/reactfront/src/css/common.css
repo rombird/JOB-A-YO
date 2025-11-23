@@ -98,6 +98,28 @@ body {
     height:25px;
     margin:0 5px;
 }
+.topNavli>.mypage{
+    margin-right:20px;
+    font-size:17px;
+    font-family:'kopu';
+}
+.mypage>.imgMypage{
+    width:25px;
+    height:23px;
+    margin:0 5px;
+}
+.topNavli>.logout{
+    margin-right:20px;
+    font-size:17px;
+    font-family:'kopu';
+    cursor: pointer;
+}
+.logout>.imgLogout{
+    width:25px;
+    height:23px;
+    margin:0 5px;
+}
+
 .navHeader{
     height:90px;
 }

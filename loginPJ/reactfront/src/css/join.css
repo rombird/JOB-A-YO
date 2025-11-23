@@ -9,27 +9,17 @@ input::placeholder {
 }
 
 .box{
-    margin-top:40px;
-    width: 1280px;
+    margin-top:100px;
+    width:1000px;
 }
 .box>.title{
-    display:flex;
     justify-content: center;
-    margin:40px 0;
+    margin-bottom:30px;
 }
 .box>.title>h1 {
-    text-align: center;
-    font-family: "logo";
-    font-size:50px;
-    /* border:1px solid; */
-    margin-right:30px;
-}
-.box>.title>h2 {
-    /* border:1px solid; */
     font-family:"kopu";
-    font-size:45px;
-    text-align: center;
 }
+
 
 .step {
     display: flex;
@@ -37,32 +27,24 @@ input::placeholder {
     height: 40px;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 50px;
-
+    margin-bottom: 20px;
 }
 .step>.on{
     display:flex;
-    /* border:1px solid; */
     text-align: center;
     padding:10px;
-}
-.step>.on>.num{
-    line-height:60px;
-    /* border:1px solid; */
+    height:40px;
 }
 .step>.on>.num>em {
-    /* 1, 2, 3 숫자  */
     display: inline-block;
-    width: 37px;
-    height: 37px;
+    width: 30px;
+    height: 30px;
     font-family: "kopume";
-    /* color: #3A6B71; */
     text-align: center;
-    line-height: 37px;
+    line-height: 30px;
     margin-right: 15px;
     border-radius: 50%;
 }
-
 .step>.on::after {
     content: "...";
     display: inline-block;
@@ -70,7 +52,6 @@ input::placeholder {
     letter-spacing: 3px;
     width: 37px;
     height: 37px;
-    line-height: 60px;
 }
 
 .step>.on:last-child::after {
@@ -90,59 +71,51 @@ input::placeholder {
     color: white;
 }
 .step>.on>p{
-    font-family:"nexonLight";
+    font-family:"kopu";
     font-size:20px;
     /* border:1px solid; */
 }
+
 .provide-points {
     width: 100%;
-    height: 104px;
-    margin-right: 0 0 30px;
-    padding: 25px 0;
+    height: 105px;
     background-color: #65A3FF;
-    color: #A5A5A5;
-    font: 14px;
-    font-family:"nexonRegular";
     border-radius: 1%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
     text-align: center;
 }
 
 .provide-points>b {
     width: 100%;
     height: 26px;
-    font-size: 18px;
+    font-size: 17px;
     font-family: "kopume";
     color: white;
-    margin: 0 0 8px;
+    margin:5px 0;
 }
 
 /* 회원가입폼 */
 .join-form {
-    /* 아이디나 이름 생년월일 적을 칸들이 있는 공간 */
     display: flex;
     justify-content:center;
     align-items: center;
     flex-direction: column;
     /* gap: 25px; */
     /* padding: 0 10px; */
-    /* margin-top: 30px; */
-    /* margin: 30px auto; */
     width: 100%; 
 }
 
 .join-form>.input-group {
     width:90%;
     max-width:900px;
+    height:62px;
     display: flex;
     line-height: 50px;
     position: relative;
     justify-content: space-between;
-    margin: 0 0 30px;
     align-items: flex-start;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -150,89 +123,97 @@ input::placeholder {
 
 .input-group>label {
     width: 200px;
+    height:60px;
     flex-shrink: 0;
     background-color: #eef2f3;
-    padding: 12px;
+    /* padding: 12px; */
     font-weight: bold;
     font-size:20px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-right: 1px solid #ddd;
+    border-radius: 8px;
     font-family: "kopu";
 }
 
 .input-group>input {
     /* 오른쪽의 사용자가 입력하는 공간 */
-    /* width: 1000px;
-    height: 50px; */
+    font-family: "kopume";
+    height: 60px; 
     border: 1px solid #d8d8d8;
     flex-grow: 1;
-    padding: 12px;
     border: none;
     outline: none;
-    font-size: 20px;
-    margin:12px;
+    font-size: 18px;
 }
 
 .join-form .first{
-    margin-top:30px;
+    margin:30px 0;
+}
+.join-form .second{
+    margin-bottom:30px;
 }
 
 .guide{
-    height: 20px;
-    width: 100%;
-    /* text-align:center; */
-    /* padding-top: 2px; */
+    height:20px;
+    /* width: 100%; */
     color: #a7a7a7;
     font-size: 15px;
-    margin-top:-15px;
-    line-height:10px;
-    margin-left:800px;
+    margin:10px 0 20px 0;
 }
 
-/* 생년월일 */
-.select-div {
-    display: flex;
-    gap: 10px;
-    width:700px;
+.birth{
+    display:flex;
     align-items: center;
     justify-content: center;
+}
+.select-div {
+    height: 60px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width:690px;
 }
 
 .select-div>select {
     margin: 12px 10px;
     border-style: none;
-    font-size:15px;
+    font-size:18px;
+    font-family: "kopume";
 }
-
 .select-div>:nth-child(1) {
     flex: 3;
 }
-
 .select-div>:nth-child(2) {
     flex: 2;
 }
-
 .select-div>:nth-child(3) {
     flex: 2;
 }
 
 /* 성별 */
+.gender{
+    display:flex;
+    align-items: center;
+    text-align: center;
+}
 .gender-check{
     display:flex;
-    width:100%;
+    width:680px;
     align-items: center;
+    height:60px;
+    padding:5px 0 5px 10px;
 }
 .gender-check>label{
     display:flex;
     align-items: center;
     font-size: 18px;
-    padding: 10px 15px;
+    font-family: "kopume";
     cursor: pointer;
-    margin-right:15px;
+    margin-right:100px;
 }
-
 .gender-check>label>input[type="radio"] {
     appearance: none;
     width: 20px;
@@ -250,7 +231,7 @@ input::placeholder {
 }
 
 .gender-check>label>input[type="radio"]:checked {
-    border-color: #1e90ff; /* 체크 시 테두리 색상 변경 */
+    border-color: #65A3FF; /* 체크 시 테두리 색상 변경 */
     background-color: #fff; /* 체크 시 배경색 유지 */
 }
 
@@ -279,26 +260,33 @@ input::placeholder {
 
 .gender-check>label>input[type="radio"]:hover{
     box-shadow: 0 0 0 max(4px, 1px) lightgray;
-    /* cursor: pointer; */
 }
 
 /* 연락처 */
 .phone>input[type="text"]::placeholder{
-    font-size: 15px; /* 기본 입력 폰트(16px)보다 작게 설정 */
-    color: #aaa; /* 색상도 약간 흐리게 */
+    font-size: 15px;
+    color: #aaa; 
 }
 
 /* 이메일 */
 .email>p{
     margin:12px;
 }
+.email>p{
+    width:30px;
+    font-size:18px;
+    font-family: "kopu";
+    margin:5px 0;
+    font-style: bold;
+}
 .email>select{
     width:300px;
     align-items: center;
     justify-content: center;
     border-style: none;
-    margin:12px;
-    font-size:15px;
+    font-size:18px;
+    font-family: "kopume";
+    margin:5px 0;
 }
 
 /* 관심 창업 아이템 체크박스들 */
@@ -311,20 +299,27 @@ input::placeholder {
     grid-template-columns: repeat(5,auto);
     align-items: center;
     text-align: center;
-    margin:10px auto;
-    width: fit-content;
+    margin:7px auto;
 }
 
 .keyword-checkbox>label{
     height:100%;
-    font-size: 13px;
+    font-size: 18px;
+    font-family: "kopume";
     display:flex;
     align-items: center;
     cursor: pointer;
-    margin:0 10px;
-    width:100px;
+    margin:0 15px;
 }
-
+.guide-check{
+    height:20px;
+    /* width: 100%; */
+    color: #a7a7a7;
+    font-size: 15px;
+    margin:10px 0 20px 150px;
+    text-align: left;
+    width:600px;
+}
 .keyword-checkbox>label>input[type="checkbox"] {
     appearance: none;
     width: 20px;
@@ -376,29 +371,31 @@ input::placeholder {
     white-space: pre-line;
 }
 
-/* 수신여부 */
-.recieve-dl{
-    /* height: 100px; */
-}
-
 .recieve-checkbox{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
     align-items: center;
     text-align: center;
-    margin:10px auto;
-    width: fit-content;
+    width:600px;
 }
 
 .recieve-checkbox>label{
-    height:100%;
     font-size: 13px;
     display:flex;
     align-items: center;
+    text-align: center;
     cursor: pointer;
-    margin-right:30px;
+    margin:5px 70px;
+    font-size: 18px;
+    font-family: "kopume";
 }
-
+.guide-recieve{
+    height:20px;
+    color: #a7a7a7;
+    font-size: 15px;
+    margin:10px 0 20px 150px;
+    text-align: left;
+    width:600px;
+}
 .recieve-checkbox>label>input[type="checkbox"]{
     appearance: none;
     width: 20px;
@@ -408,7 +405,6 @@ input::placeholder {
     cursor: pointer;
     margin-right: 8px;
 }
-
 .recieve-checkbox>label>input[type="checkbox"]:checked {
     border-color: #1e90ff; /* 체크 시 테두리 색상 변경 */
     background-color: #fff; /* 체크 시 배경색 유지 */
@@ -440,10 +436,12 @@ input::placeholder {
     box-shadow: 0 0 0 max(4px, 1px) lightgray;
     cursor: pointer;
 }
-.line{
-    margin:30px;
-}
 
+.bottom-border{
+    height: 20px;
+    margin-bottom: 40px;
+    border-bottom: 5px solid #65A3FF;
+}
 /* 버튼 */
 .cancel-join{
     margin-bottom:100px;
@@ -452,23 +450,17 @@ input::placeholder {
     gap: 40px;
 }
 
-.cancel-join a{
-    width: 230px;
-    height: 70px;
-
+.cancel-join button{
+    width: 180px;
+    height: 50px;
     text-decoration: none;
+    border:none;
     color: #FFF;
-
-    font-family: sans-serif;
+    font-family: "kopu";
     font-size: 20px;
     margin: 0 10px;
-
     text-align: center;
-
-    line-height: 70px;
-
-    border-radius: 1%;
-
+    border-radius: 4px;
     background-color: #c4c4c4;
 }
 

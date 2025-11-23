@@ -1,26 +1,37 @@
-import {useState,useEffect} from 'react'
+import {useState} from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import "../../css/common.css";
 import "../../css/join.css";
 
 const Join  = ()=>{
+    const navigate = useNavigate();
     const [username ,setUsername] = useState()
     const [password ,setPassword] = useState()
-    const [name ,setName] = useState()
+    const [name, setName] = useState()
     const [phone, setPhone] = useState()
-    const [email, setEmail] = useState()
+    // 이메일
+    const [emailPrefix, setEmailPrefix] = useState(''); 
+    const [emailDomain, setEmailDomain] = useState('naver.com'); // 초기값 설정
 
     const handleJoin = (e)=>{
+        e.preventDefault();
+        const fullEmail = `${emailPrefix}@${emailDomain}`;
+
         axios
             .post(
                 'http://localhost:8090/join',
-                 {"username":username, "password" : password, "name":name, "phone":phone, "email":email},
+                 {"username":username, "password" : password, "name":name, "phone":phone, "email": fullEmail,},
                  {headers:{ 'Content-Type' : 'application/json' }}
             )
             .then(resp=>{
                 console.log(resp) // 요청을 해서 정상적인 응답이 오면 console에 반응
+                // 응답이 성공(status 200)일 경우 후처리 로직 추가
+                if (resp.data === "success" && resp.status === 200) {
+                    alert("회원가입이 성공적으로 완료되었습니다!"); // 사용자 알림
+                    navigate('/login');  // 3. 로그인 페이지로 이동 (예시: /login 경로로)
+                }
             })
             .catch(err=>{console.log(err)})
     }
@@ -29,7 +40,7 @@ const Join  = ()=>{
             <div className="custom">
                 <div className="box layoutCenter">
                     <div className="title">
-                        <h2>회원가입</h2>
+                        <h1>회원가입</h1>
                     </div>
                     <ul className="step">
                         <li className="on">
@@ -56,15 +67,15 @@ const Join  = ()=>{
                         </div>
                         <p className="guide"> 영문 대소문자, 숫자, 특수문자를 혼합하여 8~15자 이내로 입력해주세요</p>
                         
-                        <div className ="input-group">
+                        <div className ="input-group second">
                             <label htmlFor="rePw">비밀번호 확인</label>
                             <input type="password" name="rePassword" id="rePw" required />
                         </div>
-                        <div className ="input-group">
+                        <div className ="input-group second">
                             <label htmlFor="name">이름</label>
                             <input type="text" name="name" id="name" required onChange={e => setName(e.target.value)}/>
                         </div>
-                        <div className ="input-group">
+                        <div className ="input-group second birth">
                             <label>생년월일</label>
                             <div className="select-div">
                                 <select name="birthYear" id="birthYear" required defaultValue="2000">
@@ -136,7 +147,7 @@ const Join  = ()=>{
                                 </select>
                             </div>
                         </div>
-                        <div className ="input-group">
+                        <div className ="input-group gender second">
                             <label>성별</label>
                             <div className="gender-check">
                                 <label htmlFor="man">
@@ -149,15 +160,15 @@ const Join  = ()=>{
                                 </label>
                             </div>
                         </div>
-                        <div className ="input-group phone">
+                        <div className ="input-group phone second">
                             <label>연락처</label>
                             <input type="text" id="phone" name = "phone" placeholder="(- 없이 숫자만 입력)" required onChange={e => setPhone(e.target.value)}/>
                         </div>
-                        <div className ="input-group email">
+                        <div className ="input-group email second">
                             <label>이메일</label>
-                            <input type="text" name="email" onChange={e => setEmail(e.target.value)}/>
+                            <input type="text" name="email" onChange={e => setEmailPrefix(e.target.value)} value={emailPrefix}/>
                             <p>@</p>
-                            <select>
+                            <select onChange={e => setEmailDomain(e.target.value)} value={emailDomain} >
                                 <option>naver.com</option>
                                 <option>gmail.com</option>
                                 <option>daum.net</option>
@@ -189,7 +200,7 @@ const Join  = ()=>{
                                 </label>
                             </div>
                         </div>
-                        <p className = "guide">식품위생법에 따라 분류했으며 1개 이상 선택가능합니다. </p> 
+                        <p className = "guide-check">식품위생법에 따라 분류했으며 1개 이상 선택가능합니다. </p> 
                                 
                         <div className ="input-group recieve-dl">
                             <label>수신여부(선택)</label>
@@ -204,10 +215,9 @@ const Join  = ()=>{
                                 </label>
                             </div>
                         </div>
-                        <div className="guide">
-                                    수신 여부는 마이페이지 &gt; 회원정보 수정에서 변경하실 수 있습니다.
-                                </div>
-                        <div className = "line"></div>
+                        <p className="guide-recieve">수신 여부는 마이페이지에서 변경하실 수 있습니다.</p>
+                        
+                        <div className="bottom-border"></div>
                         <div className = "cancel-join">
                             <button>취소</button>
                             <button id = "join_btn" type="submit">회원가입</button>

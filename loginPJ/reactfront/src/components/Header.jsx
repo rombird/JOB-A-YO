@@ -1,11 +1,22 @@
 import React, {useState,useEffect} from 'react'
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import "../css/common.css";
 
 
 const Header = () => {
     const { isLoggedIn, logout } = useAuth(); 
+    const navigate = useNavigate(); // useNavigate 훅 초기화
+
+    // 로그아웃 처리 함수
+    const handleLogout = async (e) => {
+        // 폼의 기본 동작 방지 (Link 대신 button/onClick을 사용할 경우 불필요하지만 습관적으로 체크)
+        e.preventDefault(); 
+        await logout(); // AuthContext의 logout 함수 실행 (서버 측 로그아웃 처리)
+        alert("로그아웃이 완료되었습니다."); // 알림창 표시
+        navigate('/'); // 메인 페이지로 이동 (경로가 메인 페이지인 / 로 가정)
+    };
+
     return(
         <>
             <header className="header">
@@ -16,10 +27,10 @@ const Header = () => {
                                 // 로그인 상태
                                 <>
                                     <li className="topNavli">
-                                        <Link to="/mypage" ><img className="imgLogin" src="/images/login.svg" alt="마이페이지"/>마이페이지</Link>
+                                        <Link className="mypage" to="/mypage" ><img className="imgMypage" src="/images/login.svg" alt="마이페이지"/>마이페이지</Link>
                                     </li>
                                     <li className="topNavli">
-                                        <Link to="" ><img className="imgJoin" src="/images/join.svg" alt="로그아웃"/>로그아웃</Link>
+                                        <a className="logout" to="/logout" onClick={handleLogout}><img className="imgLogout" src="/images/join.svg" alt="로그아웃"/>로그아웃</a>
                                     </li>
                                 </>
                             ) : ( 
