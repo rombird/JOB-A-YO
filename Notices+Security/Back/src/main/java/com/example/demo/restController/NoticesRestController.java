@@ -37,7 +37,7 @@ public class NoticesRestController {
     private final NoticesService noticesService;
     private final NoticesFileService noticesFileService;
 
-    //1. 공지사항 목록 조회 + 검색 + 페이지네이션: GET /api/notices
+    //1. 공지사항 목록 조회 + 검색 + 페이징: GET /api/notices
     // GET /api/notices?page=0&size=10&keyword=검색어
     @GetMapping
     // 💡 반환 타입을 List<NoticesDto>에서 Page<NoticesDto>로 변경
@@ -81,7 +81,7 @@ public class NoticesRestController {
         }
     }
 
-    //4. 수정 : PUT /api/notices/{id} - 파일 업로드 포함
+    //4. 수정 : PUT /api/notices/{id} - 파일 업로드, 삭제 포함
     @SecurityRequirement(name = "BearerAuth")
     @PutMapping("/{id}")//‼️‼️
     @PreAuthorize("hasRole('ADMIN')")

@@ -1,20 +1,89 @@
 import axios from 'axios';
+//axios 기본 설정(JWT(로그인 상태)가 필요한 모든 API요청 원활히 처리)
 
-//axios 기본 설정 모아둔 파일
-//공지사항 API, 로그인 API, 유저 정보 API 등이 모두 같은 방식으로 백엔드와 통신하도록 만들어줌
+// 모든 API 요청의 기본 URL
+const API_BASE_URL = 'http://localhost:8090';
 
-const API_BASE_URL = 'http://localhost:8090/api'; //모든 API 요청의 기본 URL
-
-// 모든 파일에서 동일한 설정 가능해짐
+// 공통 설정 적용한 axios 인스턴스 생성
 const apiClient = axios.create({
-    baseURL: API_BASE_URL,
-    withCredentials: true, //로그인 시 서버가 발급한 JWT 쿠키(accessToken...)를 axios 요청마다 알아서 포함시켜줌
-    
-    //요청 기본 헤더 : 백엔드에 JSON을 보낸다고 알려주는 설정
+    baseURL: API_BASE_URL.replace(/\/+$/, ""), // URL 끝의 / 중복 제거
+    withCredentials: true, // 쿠키 자동 포함
+    timeout: 10000, // 10초 타임아웃
+
     headers: {
-        'Content-Type' : 'application/json',
+        "Content-Type": "application/json",
     },
 });
 
-//다른 서비스 파일에서 import해서 사용 가능
+/* 
+   요청 인터셉터 (Request Interceptor)
+   - FormData일 경우 Content-Type을 제거하여 axios가 자동 처리하도록 함
+*/
+apiClient.interceptors.request.use(
+    (config) => {
+        // FormData일 경우 Content-Type을 삭제하여 boundary 자동 처리
+        if (config.data instanceof FormData) {
+            delete config.headers["Content-Type"];
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+/*
+   응답 인터셉터 (Response Interceptor)
+   - 응답 성공/실패 처리
+*/
+apiClient.interceptors.response.use(
+    (response) => response, // 성공 시 그대로 반환
+
+    (error) => {
+        // 응답은 왔지만 HTTP 에러 상태인 경우
+        if (error.response) {
+            const status = error.response.status;
+
+            switch (status) {
+                case 400:
+                    console.error("잘못된 요청 (400):", error.response.data);
+                    break;
+
+                case 401:
+                    console.error("인증 실패 (401): 토큰 만료 또는 로그인 필요");
+                    // 자동 로그아웃 처리
+                    window.location.href = "/user/login";
+                    break;
+
+                case 403:
+                    console.error("권한 없음 (403): ADMIN 권한 필요");
+                    break;
+
+                case 404:
+                    console.error("요청한 리소스를 찾을 수 없음 (404)");
+                    break;
+
+                case 500:
+                    console.error("서버 내부 에러 (500)");
+                    break;
+
+                default:
+                    console.error(`API Error ${status}:`, error.response.data);
+            }
+        }
+        // 요청은 보냈지만 응답이 없는 경우 (네트워크, 서버 다운 등)
+        else if (error.request) {
+            if (error.code === "ECONNABORTED") {
+                console.error("요청 시간 초과 (timeout)");
+            } else {
+                console.error("서버 응답 없음 또는 네트워크 오류:", error.message);
+            }
+        }
+        // 요청 자체가 잘못된 경우
+        else {
+            console.error("요청 설정 오류:", error.message);
+        }
+
+        return Promise.reject(error);
+    }
+);
+
 export default apiClient;

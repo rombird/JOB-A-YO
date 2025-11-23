@@ -1,5 +1,5 @@
 
-import axios from "axios";
+import apiClient from "../utils/apiClient";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 

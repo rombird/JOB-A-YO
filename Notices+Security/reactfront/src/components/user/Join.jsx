@@ -1,5 +1,5 @@
 import {useState,useEffect} from 'react'
-import axios from 'axios'
+import apiClient from "../utils/apiClient";
 import { Link } from 'react-router-dom';
 
 
