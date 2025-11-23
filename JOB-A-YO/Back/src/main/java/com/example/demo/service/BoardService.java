@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -65,8 +66,17 @@ public class BoardService {
     public BoardDto save(BoardDto boardDto) throws IOException {
 
         // 1. HTML 태그 제거 (Jsoup 사용)
-        if (boardDto.getBoardContents() != null) {
-            String cleanText = Jsoup.parse(boardDto.getBoardContents()).text();
+//        if (boardDto.getBoardContents() != null) {
+//            String cleanText = Jsoup.parse(boardDto.getBoardContents()).text();
+//            boardDto.setBoardContents(cleanText);
+//        }
+
+        // 1. HTML 태그 클리닝 및 정리(IMG태그를 포함한 서식 태그 허용)
+        if(boardDto.getBoardContents() != null){
+
+            // 텍스트 서식 태그와 img태그를 허용하고 나머지는 제거
+            String cleanText = Jsoup.clean(boardDto.getBoardContents(), Safelist.basicWithImages());
+
             boardDto.setBoardContents(cleanText);
         }
 
@@ -144,6 +154,10 @@ public class BoardService {
         }
     }
 
+    // ################################################################
+    // 게시글 수정하고싶다
+    // ################################################################
+
     @Transactional
     public BoardDto update(BoardDto boardDto, List<MultipartFile> newFiles, List<Long> deleteFileIds) throws IOException {
         // 1. 기존 게시글 조회
@@ -151,13 +165,11 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         // 2. 텍스트 정보 업데이트 (제목, 내용)
-        // HTML 태그 제거
+        // 불필요한 HTML 태그 제거
         if(boardDto.getBoardContents() != null) {
-            String cleanText = Jsoup.parse(boardDto.getBoardContents()).text();
-            // BoardEntity에 update 메서드가 있다면 그것을 사용하는 것이 좋음 (Setter 대신)
-            boardEntity.setBoardTitle(boardDto.getBoardTitle());
-            boardEntity.setBoardContents(cleanText);
-            // 작성자나 비밀번호는 수정 정책에 따라 결정
+            String cleanText = Jsoup.clean(boardDto.getBoardContents(), Safelist.basicWithImages());
+
+            boardEntity.updateText(boardDto.getBoardTitle(), cleanText);
         }
 
         // 3. 파일 삭제 처리
@@ -199,13 +211,10 @@ public class BoardService {
         // 현재 이 게시글에 연결된 파일 개수 확인
         List<BoardFileEntity> currentFiles = boardFileRepository.findAllByBoardEntityId(boardEntity.getId()); // Repository에 메서드 필요할 수 있음
         if (currentFiles.isEmpty()) {
-            boardEntity.setFileAttached(0);
+            boardEntity.updateFileAttached(0);
         } else {
-            boardEntity.setFileAttached(1);
+            boardEntity.updateFileAttached(1);
         }
-
-        // 변경된 엔티티 저장 (JPA 변경 감지로 인해 save 호출 안 해도 되지만 명시적으로 호출)
-        boardRepository.save(boardEntity);
 
         return BoardDto.toBoardDto(boardEntity);
     }
@@ -288,6 +297,11 @@ public class BoardService {
 
     }
 }
+
+
+
+
+
 
 
 

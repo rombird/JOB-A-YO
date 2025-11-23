@@ -24,15 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -47,6 +45,9 @@ public class apiBoardController {
     // 파일 저장 경로
     @Value("${file.dir}")       // 파일 저장 경로
     private String fileDir;
+
+    @Value("${CKEditor.image}")
+    private String CKEditorImageDir;
 
 // ################################################################
     // 게시판 목록 데이터 보내기
@@ -188,6 +189,42 @@ public class apiBoardController {
         return ResponseEntity.ok("삭제 성공");
     }
 
+
+    // CKEditor의 이미지 업로드 처리를 위한 API
+    @PostMapping("/image/upload")
+    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("upload") MultipartFile file){
+
+        Map<String, Object> response = new HashMap<>();
+
+        try{
+            // 1. 파일 이름 생성 및 경로 설정
+            String originalImageName = file.getOriginalFilename();
+
+            // 2. 고유한 파일명 생성(CKEditor 이미지용)
+            String storedImageName = UUID.randomUUID().toString() + "_" + originalImageName;
+
+            // 3. 파일이 저장될 경로
+            String CKEditorImageSavePath = CKEditorImageDir + storedImageName;
+
+            // 4. 파일 시스템에 저장
+            File saveFile = new File(CKEditorImageSavePath); // 🟢 변경된 변수 사용
+            file.transferTo(saveFile);
+
+            // 5. CKEditor에 반환할 응답 생성
+            // accessUrl은 WebConfig의 정적 리소스 핸들러와 일치해야 함
+            String accessUrl = "/images/" + storedImageName; //
+
+            response.put("uploaded", 1);
+            response.put("url", "http://localhost:8090" + accessUrl); // 클라이언트가 접근할 수 있는 전체 URL
+
+            System.out.println("CKEedior 이미지 업로드 하고싶다: " + response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.put("uploaded", 0);
+            response.put("error", Map.of("message", "파일 업로드 실패"));
+        }
+        return ResponseEntity.ok(response);
+    }
 
 
 

@@ -46,9 +46,9 @@ public class BoardEntity extends BaseEntity{
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
 
-    public void setBoardFileEntityList(List<BoardFileEntity> boardFileEntityList) {
-        this.boardFileEntityList = boardFileEntityList;
-    }
+//    public void setBoardFileEntityList(List<BoardFileEntity> boardFileEntityList) {
+//        this.boardFileEntityList = boardFileEntityList;
+//    }
 
     @OneToMany(mappedBy = "boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList = new ArrayList<>();
@@ -92,4 +92,16 @@ public class BoardEntity extends BaseEntity{
 
         return boardEntity;
     }
+
+    // 게시글 텍스트 내용을 업데이트하는 메서드
+    public void updateText(String boardTitle, String boardContents){
+        this.boardTitle = boardTitle;
+        this.boardContents = boardContents;
+    }
+
+    // 게시글 파일 첨부 상태를 업데이트하는 메서드 추가
+    public void updateFileAttached(Integer fileAttached){
+        this.fileAttached = fileAttached;
+    }
+
 }

@@ -10,6 +10,58 @@ import "../../css/writeBoard.css";
 import "../../css/ckEditorStyle.css";
 
 
+class MyUploadAdapter{
+    constructor(loader){
+        // 파일 정보 로더
+        this.loader = loader;
+        // 서버의 이미지 업로드 API 엔드포인트
+        this.url = 'http://localhost:8090/api/board/image/upload';
+    }
+
+    // 파일 전송 메서드
+    upload(){
+        return this.loader.file
+                .then(file => {
+                    const data = new FormData();
+                    // 서버 컨트롤러에서 받는 파라미터 이름이 upload(RequestParam)로 일치하여야함
+                data.append('upload', file);
+
+                return axios.post(this.url, data, {
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                })
+                .then(res => {
+                    // 서버 응답: {uploaded: 1, url: "http://localhost:8090/images/..."}
+                    // CKEditor 형식에 맞게 변환하여 반환
+                    if (res.data.uploaded){     // uploaded는 CKEditor가 요구하는 Header에 맞춘거
+                        return{
+                            default: res.data.url
+                        };
+                    }else{
+                        throw new Error('Image upload failed');
+                    }
+                })
+                .catch(error => {
+                    console.error("CKEditor 이미지 업로드 에러:", error);
+                });
+            });
+    }
+    // 어댑터가 취소될 때 호출 (필수)
+    abort(){
+        // 업로드 취소 로직
+    }
+}
+
+// 커스텀 업로드 어댑터를 CKEditor 플러그인으로 등록하는 함수
+function MyCustomUploadAdapterPlugin(editor){
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+        return new MyUploadAdapter(loader);
+    };
+}
+
+
+
 const WriteBoard = () => {
 
     const navigate = useNavigate();
@@ -35,6 +87,27 @@ const WriteBoard = () => {
     const allowedExtensions = ['xlsx', 'pptx', 'txt', 'pdf', 'jpg', 'jpeg', 'png', 'hwp'];
     const maxCount = 5;
     const maxSize = 20 * 1024 * 1024; // 6MB
+
+    // CKEditor 설정 객체 정의
+    const editorConfig = {
+
+        image: {
+            upload: {
+                types: ['png', 'jpeg', 'gif', 'bmp', 'webp'],
+                // 서버 업로드 api 경로
+            withCredentials: true,
+            }
+        },
+
+        // 1. 커스텀 업로드 어댑터 플러그인 등록
+        extraPlugins: [MyCustomUploadAdapterPlugin],
+
+        // 2. 툴바 버튼 설정(imageUploade 버튼 포함)
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertImage', 'mediaEmbed', 'undo', 'redo' ]
+    };
+
+
+
 
     const handleFiles = useCallback((files) => {
         const newFiles = Array.from(files);
@@ -361,6 +434,7 @@ const WriteBoard = () => {
                                                     <CKEditor
                                                         editor={ClassicEditor}
                                                         data=""
+                                                        config={editorConfig}
                                                         onChange={(event, editor) => {
                                                             const data = editor.getData();
                                                             setBoardContents(data);

@@ -55,7 +55,7 @@ const BoardDetail = () => {
     // 댓글 입력 필드 변경 핸들러
     const handleCommentInputChange = (e) => {
         const{id, value} = e.target;
-        const stateKey = id === "commentWriter" ? "writer" : "content";
+        const stateKey = id === "comment-writer" ? "writer" : "content";
 
         setCommentInput(prev => ({
             ...prev,
@@ -73,8 +73,9 @@ const BoardDetail = () => {
         }
 
         try{
-            // 백엔드 API 호출: Post /comment/save
-            const res = await axios.post("http://localhost:8090/comment/save",{
+            // 백엔드 API 호출: Post api/comment/save
+            const res = await axios.post("http://localhost:8090/api/comment/save",{
+                // CommentDto의 필드에 값 넣어주기
                 commentWriter : writer,
                 commentContents: content,
                 boardId: board.id   // 현재 게시글의 Id
@@ -89,6 +90,13 @@ const BoardDetail = () => {
             alert("댓글 작성 중 오류가 발생했습니다.");
         }
     };
+
+    // 댓글 작성시 Enter 키 입력 처리 함수
+    const handleEnterKey = (e) => {
+        if(e.key === 'Enter' || e.keyCode === 13){
+            commentWrite();
+        }
+    }
 
     // 4. 페이지 이동 핸들러
 
@@ -140,7 +148,11 @@ const BoardDetail = () => {
                         <tr><th>제목</th><td>{board.boardTitle}</td></tr>
                         <tr><th>작성일</th><td>{board.boardCreateTime}</td></tr>
                         <tr><th>조회수</th><td>{board.boardHits}</td></tr>
-                        <tr><th>내용</th><td>{board.boardContents}</td></tr>
+                        <tr><th>내용</th>
+                            <td
+                                dangerouslySetInnerHTML={{ __html: board.boardContents }}
+                            ></td>
+                        </tr>
                     
                         {/* 파일 첨부 */}
                         {board.fileAttached === 1 && board.boardFileDtoList && board.boardFileDtoList.length > 0 && (
@@ -181,13 +193,17 @@ const BoardDetail = () => {
                 <input 
                     type="text" id="comment-writer" placeholder="작성자 이름"
                     value={commentInput.writer} onChange={handleCommentInputChange}
+                    onKeyPress={handleEnterKey}
                 />
                 <input 
                     type="text" id="comment-contents" placeholder="내용"
                     value={commentInput.content} onChange={handleCommentInputChange}
+                    onKeyPress={handleEnterKey}
                 />
                 <button onClick={commentWrite}>댓글 작성</button>
             </section>
+
+
 
             <hr />
 

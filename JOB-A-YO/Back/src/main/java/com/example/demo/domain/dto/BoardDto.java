@@ -34,6 +34,7 @@ public class BoardDto {
 
     private int fileAttached;   // 파일 첨부 여부(첨부 1, 미첨부 0)
 
+
     public BoardDto(Long id, String boardWriter, String boardTitle, int boardHits, LocalDateTime boardCreateTime) {
         this.id = id;
         this.boardWriter = boardWriter;
