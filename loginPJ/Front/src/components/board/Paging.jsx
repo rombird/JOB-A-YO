@@ -17,7 +17,7 @@ const Paging = () => {
     const navigate = useNavigate(); // useNavigate 를 사용하여 이동함수 가져옴
     const [searchParams] = useSearchParams(); // url에서 'page' 쿼리 파라미터를 가져와 현재 페이지를 결정
     const page = searchParams.get('page') || '1';
-    const pageSize = 5; // 한 페이지당 게시글 수
+    const pageSize = 10; // 한 페이지당 게시글 수
 
     // State 선언 (두 번째 코드 블록의 State)
     const [boardData, setBoardData] = useState({
@@ -86,12 +86,11 @@ const Paging = () => {
                     <Link to={`/board/${board.id}?page=${currentDisplayPage}`}>
                         {/* 이 부분은 실제 데이터를 보여주는 항목으로 교체합니다. */}
                         {/* {board.boardTitle} 이 부분이 기존 <p>게시글 제목</p>을 대체 */}
-                        <p className="article-no">NO.</p>
+                        <p className="article-no">NO. {board.id}</p>
                         <p className="article-title">{board.boardTitle}</p>
                         <p className="article-writer">글쓴이: {board.boardWriter}</p>
                         <p className="article-date">날짜: {moment(board.boardCreateTime).format('YYYY-MM-DD HH:mm:ss')}</p>
-                        
-                        <p className="article-content">내용</p>
+                        <p className="article-content">조회수</p>
                     </Link>
                 </div>
                 <div className="article-response">
@@ -99,9 +98,6 @@ const Paging = () => {
                         <img className="response-img" src="../images/read.png" alt="조회" />
                         <span>{board.boardHits}</span> {/* 실제 조회수 데이터 사용 */}
                     </div>
-                    {/* 댓글, 좋아요 데이터는 API에 따라 board 객체에 포함되어 있다면 사용 가능 */}
-                    {/* <div className="comment">...</div> */}
-                    {/* <div className="heart">...</div> */}
                 </div>
             </div>
         ))
@@ -119,7 +115,7 @@ const Paging = () => {
         <>
            <div className="community">
             <div className="community-title layoutCenter">
-                <h1>전체 게시글</h1>
+                <h1>Community</h1>
                 <p> HOME &gt; 이용안내 &gt; Community </p>
             </div>
             <div className="community-box layoutCenter">
@@ -159,8 +155,7 @@ const Paging = () => {
                                                 <span className="disabled-page-number">{pageNum}</span>
                                             ) : (
                                                 <Link to={getPageLink(pageNum)}>{pageNum}</Link>
-                                            )
-                                            }
+                                            )}
                                         </React.Fragment>
                                     );
                                 })}
