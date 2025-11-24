@@ -220,7 +220,7 @@ const Join  = ()=>{
                         <div className="bottom-border"></div>
                         <div className = "cancel-join">
                             <button>취소</button>
-                            <button id = "join_btn" type="submit">회원가입</button>
+                            <button id="join_btn" type="submit">회원가입</button>
                         </div>
                     </form>
                 </div>

@@ -1,3 +1,0 @@
-netstat -a -o
-
-taskkill /f /pid 프로세스id
