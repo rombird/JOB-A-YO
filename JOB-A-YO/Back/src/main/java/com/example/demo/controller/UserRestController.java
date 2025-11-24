@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-
 @RestController
 @Slf4j
 @Tag(name="UserController", description="This is User Controller")
@@ -55,7 +54,7 @@ public class UserRestController {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Operation(summary="join", description = "JOIN")
+//    @Operation(summary="join", description = "JOIN")
     @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> join_post(@RequestBody UserDto userDto){
@@ -65,7 +64,6 @@ public class UserRestController {
         User user = User.builder()
                 .username(userDto.getUsername())
                 .password( passwordEncoder.encode(userDto.getPassword()))
-                .isLock(false) // 기본적으로 잠금 해제 상태
                 .isSocial(false) // 일반 가입
                 .roleType(UserRoleType.USER)
                 .name(userDto.getName())
@@ -80,7 +78,7 @@ public class UserRestController {
     //Header 방식 (Authorization: Bearer <token>)
     // - XXS 공격에 매우취약 - LocalStorage / SessionStorage에 저장시 문제 발생
     // - 쿠키방식이 비교적 안전
-    @Operation(summary="login", description = "LOGIN")
+//    @Operation(summary="login", description = "LOGIN")
     @PostMapping(value = "/login" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String,Object>> login(@RequestBody UserDto userDto, HttpServletResponse resp) throws IOException {
         log.info("POST /login..." + userDto);                                       // resp : 쿠키를 주기 위한 용도
@@ -137,6 +135,7 @@ public class UserRestController {
         return new ResponseEntity(response,HttpStatus.OK);
     }
 
+//    @Operation(summary="user", description = "USER")
     @GetMapping("/user")
     public ResponseEntity< Map<String,Object> > user(HttpServletRequest request, Authentication authentication) {
         log.info("GET /user..." + authentication);
@@ -156,6 +155,7 @@ public class UserRestController {
     }
 
     // FN Login.jsx에서 토큰 유효성 검증과 관련
+//    @Operation(summary="validate", description = "VALIDATE")
     @GetMapping("/validate")
     public ResponseEntity<String> validateToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -175,5 +175,4 @@ public class UserRestController {
     }
 
 
-    // endpoint 추가 : @Operation(summary="join", description = "JOIN")
 }

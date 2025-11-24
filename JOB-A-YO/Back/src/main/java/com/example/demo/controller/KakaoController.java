@@ -38,7 +38,6 @@ public class KakaoController {
     private String REDIRECT_URI="http://localhost:8090/kakao/getCode";
     private String LOGOUT_REDIRECT_URI="http://localhost:8099/kakao";
 
-
     private String code; // code는 getCode에서
 //    private KakaoTokenResponse kakaoTokenResponse; // 받은 response 보관 -> 여러가지로 꺼내서 써야하기 때문에
 //    private KakaoFriendsResponse kakaoFriendsResponse; // 다른 함수에서 사용하기 위해 필드추가
