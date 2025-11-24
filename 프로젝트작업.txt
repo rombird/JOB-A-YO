@@ -1,7 +1,0 @@
-react_springboot -> redis 파트 잘보기!!!!!!!
-react로 할때는 getmapping 할 필요 X
-jwtAuthorizationFilter 는 똑같이 사용
-
-securityconfig의 로그아웃 사용 하기
-logoutsuccesshandler redis에서 사용하는 작업부터 마지막 response... 처리는 작업안될것
-userRestcontroller 에서 중요한 부분 체크
