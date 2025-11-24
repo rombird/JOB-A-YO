@@ -10,8 +10,8 @@ import "../../css/writeBoard.css";
 import "../../css/ckEditorStyle.css";
 
 
-class MyUploadAdapter{
-    constructor(loader){
+class MyUploadAdapter {
+    constructor(loader) {
         // 파일 정보 로더
         this.loader = loader;
         // 서버의 이미지 업로드 API 엔드포인트
@@ -19,42 +19,42 @@ class MyUploadAdapter{
     }
 
     // 파일 전송 메서드
-    upload(){
+    upload() {
         return this.loader.file
-                .then(file => {
-                    const data = new FormData();
-                    // 서버 컨트롤러에서 받는 파라미터 이름이 upload(RequestParam)로 일치하여야함
+            .then(file => {
+                const data = new FormData();
+                // 서버 컨트롤러에서 받는 파라미터 이름이 upload(RequestParam)로 일치하여야함
                 data.append('upload', file);
 
                 return axios.post(this.url, data, {
                     headers: {
-                        'Content-Type' : 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data'
                     }
                 })
-                .then(res => {
-                    // 서버 응답: {uploaded: 1, url: "http://localhost:8090/images/..."}
-                    // CKEditor 형식에 맞게 변환하여 반환
-                    if (res.data.uploaded){     // uploaded는 CKEditor가 요구하는 Header에 맞춘거
-                        return{
-                            default: res.data.url
-                        };
-                    }else{
-                        throw new Error('Image upload failed');
-                    }
-                })
-                .catch(error => {
-                    console.error("CKEditor 이미지 업로드 에러:", error);
-                });
+                    .then(res => {
+                        // 서버 응답: {uploaded: 1, url: "http://localhost:8090/images/..."}
+                        // CKEditor 형식에 맞게 변환하여 반환
+                        if (res.data.uploaded) {     // uploaded는 CKEditor가 요구하는 Header에 맞춘거
+                            return {
+                                default: res.data.url
+                            };
+                        } else {
+                            throw new Error('Image upload failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("CKEditor 이미지 업로드 에러:", error);
+                    });
             });
     }
     // 어댑터가 취소될 때 호출 (필수)
-    abort(){
+    abort() {
         // 업로드 취소 로직
     }
 }
 
 // 커스텀 업로드 어댑터를 CKEditor 플러그인으로 등록하는 함수
-function MyCustomUploadAdapterPlugin(editor){
+function MyCustomUploadAdapterPlugin(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
         return new MyUploadAdapter(loader);
     };
@@ -65,12 +65,12 @@ function MyCustomUploadAdapterPlugin(editor){
 const BoardUpdate = () => {
 
     const navigate = useNavigate();
-    const {boardId} = useParams();  // URL에서 게시글 ID 가져오기
+    const { id: boardId } = useParams();  // URL에서 게시글 ID 가져오기
 
     // 텍스트 영역 상태관리
     const [boardContents, setBoardContents] = useState("");
     const [title, setTitle] = useState("");
-    const [writer, setWriter] = useState("");   
+    const [writer, setWriter] = useState("");
     const [password, setPassword] = useState("");
 
     // 파일 관련 상태
@@ -110,7 +110,7 @@ const BoardUpdate = () => {
         extraPlugins: [MyCustomUploadAdapterPlugin],
 
         // 2. 툴바 버튼 설정(imageUploade 버튼 포함)
-        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertImage', 'mediaEmbed', 'undo', 'redo' ]
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertImage', 'mediaEmbed', 'undo', 'redo']
     };
 
 
@@ -176,7 +176,7 @@ const BoardUpdate = () => {
     // 기존 파일 삭제 함수(서버에 파일 ID 전송 대기)
     const deleteExistingFile = (fileId) => {
         // existingFiles 목록에서만 시각적으로 제거하고, fileToDeleteIds에 Id를 추가
-        if(!filesToDeleteIds.includes(fileId)){
+        if (!filesToDeleteIds.includes(fileId)) {
             setFilesToDeleteIds(prevIds => [...prevIds, fileId]);
         }
     };
@@ -220,61 +220,70 @@ const BoardUpdate = () => {
     // 기존 게시글 데이터 로딩
     useEffect(() => {
 
-        // boardId가 없으면 API 호출을 건너뜁니다.
-    if (!boardId) return; 
-    
-    // 이 부분이 실제 GET 요청 로직입니다.
-    const getBoardDetail = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8090/api/board/${boardId}`);
-            const data = response.data.board; // 응답 데이터 구조에 따라 수정 필요
-            
-            // 1. 텍스트 상태 설정
-            setTitle(data.boardTitle);
-            setWriter(data.boardWriter);
-            setBoardContents(data.boardContents);
+        console.log("!", boardId)
 
-            // 2. 기존 파일 상태 설정 (파일 목록이 Board DTO 안에 있어야 함)
-            setExistingFiles(data.fileList || []); // 이 부분이 핵심
-            
-        } catch (error) {
-            console.error("게시글 로딩 실패:", error);
-            // 에러 처리
-        }
-    };
-    
-    getBoardDetail();
-}, [boardId]); // boardId가 변경될 때마다 실행 (보통 한 번)
-        
-
-
-
-
-        
-        // if (boardId){
+        if (boardId) {
             // 게시글 상세 정보와 첨부파일을 가져오는 API 호출(GET / api/board/{id})
-            // axios.get(`http://localhost:8090/api/board/${boardId}`)
-            //     .then(response => {
-            //         const data = response.data.board;   // BoardDto가 포함된 BoardDetailResponse에서 추출
-            //         if(!data) throw new Error("게시글 데이터가 없습니다");
-                    
-            //         setTitle(data.boardTitle);
-            //         setWriter(data.boardWriter);
-            //         setBoardContents(data.boardContents);
+            axios.get(`http://localhost:8090/api/board/${boardId}`)
+                .then(response => {
+                    const data = response.data.board;   // BoardDto가 포함된 BoardDetailResponse에서 추출
+                    if (!data) throw new Error("게시글 데이터가 없습니다");
 
-            //         // 기존 첨부파일 설정(파일목록은 boardFileDtoList)
-            //         if(data.boardFileDtoList){
-            //             setExistingFiles(data.boardFileDtoList);
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.error("게시글 로딩 실패: ", error);
-            //         alert("게시글 정보를 불러오는데 실패하였습니다");
-            //         navigate('/board/paging');
-            //     });
-    //     }
-    // }, [boardId, navigate]);
+                    setTitle(data.boardTitle);
+                    setWriter(data.boardWriter);
+                    setBoardContents(data.boardContents);
 
+                    // 기존 첨부파일 설정(파일목록은 boardFileDtoList)
+                    if (data.boardFileDtoList) {
+                        setExistingFiles(data.boardFileDtoList);
+                    }
+                })
+                
+                .catch(error => {
+                    console.error("게시글 로딩 실패: ", error);
+                    alert("게시글 정보를 불러오는데 실패하였습니다");
+                    navigate('/board/paging');
+                });
+        }
+    }, [boardId, navigate]);
+
+
+
+
+
+    // boardId가 없으면 API 호출을 건너뜁니다.
+    //     if (!boardId) return; 
+
+    //     // 이 부분이 실제 GET 요청 로직
+    //     const getBoardDetail = async () => {
+    //         console.log("쓰고 있니?");
+    //         try {
+    //             const response = await axios.get(`http://localhost:8090/api/board/${boardId}`);
+    //                                         // 1. 텍스트 상태 설정
+
+    //             console.log("뭐가 들어오냐? ", response);
+    //             const data = response.data.board;
+    //             console.log("뭐가 들어오냐? data ", data);
+    //             // 1. 텍스트 상태 설정
+    //             setTitle(data.boardTitle);
+    //             setWriter(data.boardWriter);
+    //             setBoardContents(data.boardContents);
+
+    //             // 2. 기존 파일 상태 설정 (파일 목록이 Board DTO 안에 있어야 함)
+    //             setExistingFiles(data.boardFileDtoList || []); // 이 부분이 핵심
+
+    //         } catch (error) {
+    //             console.error("게시글 로딩 실패:", error);
+    //             // 에러 처리
+    //         }
+    //     };
+
+    //     getBoardDetail();
+    // }, [boardId]); // boardId가 변경될 때마다 실행 (보통 한 번)
+
+
+
+  
 
     // 수정 제출 버튼 핸들러(API 호출 로직)
     const handleSubmit = (e) => {
@@ -290,14 +299,15 @@ const BoardUpdate = () => {
             return; // 유효성 검사 실패 시 전송 중단
         }
 
-        const formData = new FormData();    
+        const formData = new FormData();
+
 
         // 폼 데이터 추가
         // boardId는 URL에서 가져와 사용하며 서버에서는 @PathVariable로 받음
         formData.append("boardTitle", title);   // 수정된 제목
         formData.append("boardWriter", writer); // 작성자
         formData.append("boardPass", password); // 비밀번호
-        
+
         // CKEditor 내용 추가
         formData.append("boardContents", boardContents);
 
@@ -307,11 +317,15 @@ const BoardUpdate = () => {
         });
 
         // 삭제할 기존 파일 ID 목록을 formData에 추가
-        filesToDeleteIds.forEach(id => {
+        filesToDeleteIds
+            .filter(id => id !== undefined && id !== null && id !=="")                
+            .forEach(id => {
             formData.append("deleteFileIds", id);   // 서버 컨트롤러의 @RequestParam은 "deleteFileIds"
         })
 
         console.log("폼 데이터 전송 준비 완료. 파일 개수: ", uploadedFiles.length);
+
+        console.log("삭제파일들:", filesToDeleteIds);
 
 
         // axios를 이용한 서버 전송
@@ -327,9 +341,9 @@ const BoardUpdate = () => {
             })
             .catch(error => {
                 const status = error.response?.status;
-                if (status === 401){
+                if (status === 401) {
                     alert("비밀번호가 일치하지 않아 수정을 완료할 수 없습니다");
-                }else{
+                } else {
                     console.error("게시글 작성 실패: ", error.response?.data || error);
                     alert("게시글 작성 중 오류가 발생했습니다.");
                 }
@@ -477,8 +491,8 @@ const BoardUpdate = () => {
                                     </div>
                                     <div className="write-area">
                                         <input className="write-input" type="text" name="boardTitle"
-                                                value={title}
-                                                onChange={(e) => setTitle(e.target.value)}
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
                                         />
                                     </div>
                                 </div>
@@ -493,10 +507,10 @@ const BoardUpdate = () => {
                                         <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                                     </div>
                                     <div className="write-area">
-                                        <input className="write-input" type="text" name="boardWriter" 
-                                                value={writer}
-                                                readOnly
-                                                style={{backgroundColor: '#f0f0f0', cursor:'not-allowed'}}
+                                        <input className="write-input" type="text" name="boardWriter"
+                                            value={writer}
+                                            readOnly
+                                            style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }}
                                         />
                                     </div>
                                 </div>
@@ -512,8 +526,8 @@ const BoardUpdate = () => {
                                     </div>
                                     <div className="write-area">
                                         <input className="write-input" type="text" name="boardPass"
-                                                value={password}
-                                                onChange={(e) => {setPassword(e.target.value)}}
+                                            value={password}
+                                            onChange={(e) => { setPassword(e.target.value) }}
                                         />
                                     </div>
                                 </div>
@@ -586,30 +600,30 @@ const BoardUpdate = () => {
                                                 <div className="preview-container">
                                                     {/* 기존 첨부파일 목록 렌더링 */}
                                                     {existingFiles
-                                                        .filter(file => !filesToDeleteIds.includes(file.fileId))    // 삭제 예정이 아닌 파일들만 필터링 
+                                                        .filter(file => !filesToDeleteIds.includes(file.id))    // 삭제 예정이 아닌 파일들만 필터링 
                                                         .map((file, index) => (
-                                                        // key는 React가 목록 요소를 식별하는 데 도움을 줍니다.
-                                                        <React.Fragment key={`existing-${file.fileId}`}>
-                                                            {/* 첫 번째 요소가 아닐 경우에만 점선 추가 */}
-                                                            {index > 0 && (
-                                                                <div className="line-dotted-preview"></div>
-                                                            )}
+                                                            // key는 React가 목록 요소를 식별하는 데 도움을 줍니다.
+                                                            <React.Fragment key={`existing-${file.id}`}>
+                                                                {/* 첫 번째 요소가 아닐 경우에만 점선 추가 */}
+                                                                {index > 0 && (
+                                                                    <div className="line-dotted-preview"></div>
+                                                                )}
 
-                                                            <div className="preview-box">
-                                                                <div>
-                                                                    <div className="file-name">{file.originalFilename}</div>
-                                                                    <div className="file-size">{formatBytes(file.fileSize)}</div>
+                                                                <div className="preview-box">
+                                                                    <div>
+                                                                        <div className="file-name">{file.originalFilename}</div>
+                                                                        <div className="file-size">{formatBytes(file.fileSize)}</div>
+                                                                    </div>
+                                                                    <button
+                                                                        className="delete-btn"
+                                                                        type="button"
+                                                                        onClick={() => deleteExistingFile(file.id)}
+                                                                    >
+                                                                        <i className="fa-solid fa-trash fa-lg"></i>
+                                                                    </button>
                                                                 </div>
-                                                                <button
-                                                                    className="delete-btn"
-                                                                    type="button"
-                                                                    onClick={() => deleteExistingFile(file.fileId)}
-                                                                >
-                                                                    <i className="fa-solid fa-trash fa-lg"></i>
-                                                                </button>
-                                                            </div>
-                                                        </React.Fragment>
-                                                    ))}
+                                                            </React.Fragment>
+                                                        ))}
 
                                                     {/* 새로 업로드 된 파일 목록 렌더링 */}
                                                     {uploadedFiles.map((file, index) =>
@@ -629,7 +643,7 @@ const BoardUpdate = () => {
                                                                     <i className="fa-solid fa-trash fa-lg"></i>
                                                                 </button>
                                                             </div>
-                                                            
+
                                                         </React.Fragment>
                                                     )}
                                                 </div>
