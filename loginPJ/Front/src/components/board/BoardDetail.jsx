@@ -4,7 +4,7 @@
 // import api from '../../api/axiosConfig';
 // import "../../css/boardDetail";
 
-// const BoardDetail = () => {
+const BoardDetail = () => {
 //     const { id } = useParams(); // URL에서 게시글 ID (예: 5) 가져오기
 //     const navigate = useNavigate(); // 페이지 이동을 위한 함수
 //     const [board, setBoard] = useState(null); // 게시글 데이터(BoardDto)
@@ -88,6 +88,6 @@
 //             </div>
 //         </main>
 //     );
-// };
+};
 
-// export default BoardDetail;
+export default BoardDetail;

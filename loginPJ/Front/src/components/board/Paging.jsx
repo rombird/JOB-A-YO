@@ -4,13 +4,15 @@ import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment'; // moment 추가 (날짜 포맷용)
 import axios from 'axios';
 
+import api from "../../api/axiosConfig";
+
 import "../../css/paging.css"
 import "../../css/common.css"
 
 
 const Paging = () => {
-    const API_BASE_URL = 'http://localhost:8090/api/board/paging';
-    // const { isLoggedIn, logout } = useAuth(); 
+
+    const API_ENDPOINT = '/api/board/paging';
     
     const navigate = useNavigate(); // useNavigate 를 사용하여 이동함수 가져옴
     const [searchParams] = useSearchParams(); // url에서 'page' 쿼리 파라미터를 가져와 현재 페이지를 결정
@@ -37,7 +39,7 @@ const Paging = () => {
             // page=1 로 요청 시 서버에서 0번 페이지를 가져올 수도 있습니다.
             // 서버 설정에 따라 page=${page - 1} 또는 page=${page}를 사용해야 합니다.
             // 현재는 URL의 page를 그대로 사용하겠습니다.
-            const response = await axios.get(`${API_BASE_URL}?page=${page}&size=${pageSize}`);
+            const response = await api.get(`${API_ENDPOINT}?page=${page}&size=${pageSize}`);
             const data = response.data;
             
             setBoardData(data.boardList);
@@ -84,9 +86,12 @@ const Paging = () => {
                     <Link to={`/board/${board.id}?page=${currentDisplayPage}`}>
                         {/* 이 부분은 실제 데이터를 보여주는 항목으로 교체합니다. */}
                         {/* {board.boardTitle} 이 부분이 기존 <p>게시글 제목</p>을 대체 */}
+                        <p className="article-no">NO.</p>
                         <p className="article-title">{board.boardTitle}</p>
                         <p className="article-writer">글쓴이: {board.boardWriter}</p>
                         <p className="article-date">날짜: {moment(board.boardCreateTime).format('YYYY-MM-DD HH:mm:ss')}</p>
+                        
+                        <p className="article-content">내용</p>
                     </Link>
                 </div>
                 <div className="article-response">
