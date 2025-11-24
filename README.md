@@ -2,8 +2,9 @@
 > 핵심 기능 : 사용자가 원하는 소비층, 사용할 수 있는 자금, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
 >   
 > 필수 기능 : 로그인·회원가입, 게시판글쓰기·글목록
-> → 백엔드 작업으로 구현 (**11월 3일까지**) 
+> → 백엔드 작업으로 구현 (**11월 3일까지**)
 
+---
 [서울시 상권분석 서비스 데이터](https://data.seoul.go.kr/dataList/datasetList.do)
 
 ```
@@ -71,8 +72,12 @@
 직장인구 - 행정동
 ```
 
+<img width="434" height="784" alt="image" src="https://github.com/user-attachments/assets/b704dd4f-a920-4735-a9e9-798652497da8" />
+
+---
+
 [서울시 상권분석 서비스 사이트](https://golmok.seoul.go.kr/main.do)
-<img width="1657" height="537" alt="{321D9C66-5B05-490F-93B0-0A2E9A97992B}" src="https://github.com/user-attachments/assets/e67a58a7-f83b-4bd0-ab10-9a2363e600e6" />
+
 
 
 - 각자 이름으로 브랜치 만들어서 작업 - main : JOB-A-YO 그대로 이어 작업
