@@ -199,14 +199,17 @@ const WriteBoard = () => {
         const boardTitle = form.elements.boardTitle ? form.elements.boardTitle.value : '';
         const boardWriter = form.elements.boardWriter ? form.elements.boardWriter.value : ''; // 비회원 작성자 필드가 없는 경우 대비
         const boardPass = form.elements.boardPass ? form.elements.boardPass.value : ''; // 비밀번호 필드가 없는 경우 대비
+        console.log("submit target:", form);
+        console.log("elements:", form.elements);
+
 
         // 필수 입력 항목 유효성 검사 (기존 로직 유지)
         if (!boardTitle || !boardWriter || !boardPass || !boardContents) {
-            alert("제목, 글쓴이, 비밀번호, 내용을 모두 입력해주세요.");
+            alert("모든 항목을 입력해주세요.");
             return;
         }
 
-        const formData = new FormData(form);
+        const formData = new FormData(); // form 추가?
 
         // CKEditor 내용 추가
         formData.append("boardTitle", boardTitle);
@@ -232,7 +235,6 @@ const WriteBoard = () => {
                         formData.append("deleteFileIds", fileId); // 서버 컨트롤러의 @RequestParam 이름
                     });
             }
-
             let response;
             if(method === 'post'){
                 response = await api.post('/api/board/writeBoard', formData, {
@@ -245,8 +247,8 @@ const WriteBoard = () => {
             }
             
             if (response.status === 200 || response.status === 201) {
-                alert(isEditMode ? "게시글이 작성되었습니다." : "게시글이 작성되었습니다.");
-                navigate(isEditMode ? `/board/${id}` : '/board/paging');  // 게시글 목록 페이지로 이동
+                alert(isEditMode ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");
+                navigate(isEditMode ? `/api/board/${id}` : '/api/board/paging');  // 게시글 목록 페이지로 이동
             }
         } catch (error) {
             console.error("글 작성 실패:", error);
@@ -266,7 +268,7 @@ const WriteBoard = () => {
             <div className="write layoutCenter">
                 <div className="sub-title">
                     <div className="inquiry">
-                        <h3>커뮤니티 글쓰기{isEditMode ? '수정' : '쓰기'}</h3>
+                        <h3>커뮤니티 글{isEditMode ? '수정' : '쓰기'}</h3>
                         <img src="../images/writing.png" alt="게시글 작성" />
                     </div>
                     <div className="path">
@@ -280,10 +282,14 @@ const WriteBoard = () => {
                         <div className="label-and-writeArea">
                             <div className="label-area">
                                 <div>제목</div>
-                                <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                             </div>
                             <div className="write-area">
-                                <input className="write-input" type="text" name="boardTitle" />
+                                <input 
+                                    className="write-input" 
+                                    type="text" 
+                                    name="boardTitle" 
+                                    value={boardTitle} 
+                                    onChange={(e) => setBoardTitle(e.target.value)} />
                             </div>
                         </div>
 
@@ -294,10 +300,14 @@ const WriteBoard = () => {
                         <div className="label-and-writeArea">
                             <div className="label-area">
                                 <div>글쓴이</div>
-                                <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                             </div>
                             <div className="write-area">
-                                <input className="write-input" type="text" name="boardWriter" />
+                                <input 
+                                className="write-input" 
+                                type="text" 
+                                name="boardWriter"
+                                value={boardWriter}
+                                onChange={(e) => setBoardWriter(e.target.value)} />
                             </div>
                         </div>
                         
@@ -308,10 +318,10 @@ const WriteBoard = () => {
                         <div className="label-and-writeArea">
                             <div className="label-area">
                                 <div>비밀번호</div>
-                                <div><i className="fa-solid fa-star-of-life fa-2xs"></i></div>
                             </div>
                             <div className="write-area">
-                                <input className="write-input" type="text" name="boardPass" value={boardPass}
+                                <input className="write-input" type="text" name="boardPass" 
+                                value={boardPass}
                                     onChange={(e) => setBoardPass(e.target.value)}
                                     placeholder={isEditMode ? "수정을 위해 비밀번호를 입력해주세요." : "비밀번호를 입력해주세요."} />
                             </div>
@@ -407,7 +417,6 @@ const WriteBoard = () => {
                         <div className="label-and-writeArea">
                             <div className="label-area content-label">
                                 <div>내용</div>
-                                <div><i style={{ color: '#3A6B71' }} className="fa-solid fa-star-of-life fa-2xs"></i></div>
                             </div>
                             <div className="write-area content-area">
                                 <div className="main-container">
@@ -428,14 +437,15 @@ const WriteBoard = () => {
                             </div>
                         </div>
                         <div className="under-line-dotted line-dotted"></div>
+                        {/* <!-- 제출 버튼 있는 줄 --> */}
+                        <div className="submit-box layoutCenter">
+                            <button type="button" className="list-btn">
+                                <Link to="/api/board/paging" className="list">목록</Link>
+                            </button>
+                            <button type="submit" className="submit-btn" >{isEditMode ? "수정" : "등록"}</button>
+                        </div>
                     </form>
-                    {/* <!-- 제출 버튼 있는 줄 --> */}
-                    <div className="submit-box layoutCenter">
-                        <button type="button" className="list-btn">
-                            <Link to="/api/board/paging" className="list">목록</Link>
-                        </button>
-                        <button className="submit-btn" onClick={handleSubmit} >{isEditMode ? "수정" : "등록"}</button>
-                    </div>
+                    
                 </div>
             </div>
             

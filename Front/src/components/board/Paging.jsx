@@ -88,14 +88,13 @@ const Paging = () => {
                         {/* {board.boardTitle} 이 부분이 기존 <p>게시글 제목</p>을 대체 */}
                         <p className="article-no">NO. {board.id}</p>
                         <p className="article-title">{board.boardTitle}</p>
-                        <p className="article-writer">글쓴이: {board.boardWriter}</p>
-                        <p className="article-date">날짜: {moment(board.boardCreateTime).format('YYYY-MM-DD HH:mm:ss')}</p>
-                        <p className="article-content">조회수</p>
+                        <p className="article-writer">{board.boardWriter}</p>
+                        <p className="article-date">{moment(board.boardCreateTime).format('YYYY-MM-DD HH:mm:ss')}</p>
                     </Link>
                 </div>
                 <div className="article-response">
                     <div className="read">
-                        <img className="response-img" src="../images/read.png" alt="조회" />
+                        <img className="response-img" src="../../images/read.png" alt="조회" />
                         <span>{board.boardHits}</span> {/* 실제 조회수 데이터 사용 */}
                     </div>
                 </div>
@@ -119,11 +118,15 @@ const Paging = () => {
                 <p> HOME &gt; 이용안내 &gt; Community </p>
             </div>
             <div className="community-box layoutCenter">
-                <div>
+                <div className="etc">
                     <button className="community-filter">최신글</button>
                     <button className="community-filter">인기글</button>
                     <button className="community-filter">댓글 많은 글</button>
-                    <input type="text" placeholder='제목, 내용, 작성자, 태그 검색' />
+                    <div className="etc-search">
+                        <input type="text" placeholder='제목, 내용, 작성자, 태그 검색' />
+                        <button type="submit" className="magnifier"><img src="../../images/search2.png" alt="돋보기" /></button>
+                    </div>
+                    
                 </div>
                 <div className="article-box">
                     {articleList}
