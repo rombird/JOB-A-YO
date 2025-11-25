@@ -1,0 +1,128 @@
+/* src/css/SalesAnalysis.css */
+
+.analysis-widget-container {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    max-width: 800px;
+    margin: 40px auto; /* 중앙에 여백을 두고 배치 */
+}
+
+/* 오류 및 로딩 상태 */
+.error-state {
+    border-color: red;
+    color: #cc0000;
+}
+.loading-state {
+    text-align: center;
+    color: #666;
+    min-height: 200px; /* 로딩 중에도 형태 유지 */
+}
+
+.analysis-widget-container h2 {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.dropdown-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.dropdown-row select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: white;
+}
+
+.sales-card-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.card-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.card-header-info h3 {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #1a1a1a;
+    border-bottom: none;
+}
+.card-header-info p {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.card-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.change-card {
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    width: 28%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.change-card p {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+.change-card h2 {
+    font-size: 1.8em;
+    margin: 0;
+}
+
+.current-sales-card {
+    width: 35%;
+    padding: 20px;
+
+}
+
+.current-sales-card p {
+    font-size: 1em;
+    color: #888;
+}
+.current-sales-card h1 {
+    font-size: 3.5em;
+    font-weight: 800;
+    color: #007bff; /* 중앙 값 강조 색상 */
+    margin: 5px 0 0 0;
+}
+
+/* 증감에 따른 색상 */
+.change-positive {
+    background-color: #ff3366; /* 핑크/빨간색 */
+    
+}
+
+.change-negative {
+    background-color: #3399ff; /* 파란색 */
+}
+
+.card-footer-info {
+    padding-top: 15px;
+    border-top: 1px dashed #eee;
+    text-align: right;
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 15px;
+}
