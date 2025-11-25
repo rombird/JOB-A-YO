@@ -67,8 +67,6 @@ dependencies {
     //TEST
     testImplementation 'org.springframework.security:spring-security-test'
 
-    // MyBatis Starter 추가 (JDBC/JPA와 함께 사용 가능)
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 }
 
 tasks.named('test') {

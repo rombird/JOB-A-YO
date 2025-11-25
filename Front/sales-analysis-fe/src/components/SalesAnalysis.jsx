@@ -1,5 +1,3 @@
-// src/components/SalesAnalysis.jsx (파일명 변경 적용)
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { fetchSalesSummary } from '../services/salesApi';
 import { formatSalesData, getChangeStyle, formatQtrCode } from '../utils/formatters';
