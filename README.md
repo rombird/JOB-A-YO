@@ -4,6 +4,33 @@
 > 필수 기능 : 로그인·회원가입, 게시판글쓰기·글목록
 > → 백엔드 작업으로 구현 (**11월 3일까지**)
 
+
+```
+<Backend>
+build.gradle
+Mybatis 의존성 주입
+
+domain>dto>Vo 폴더 추가
+SalesSummaryVo 파일 추가
+
+dto 폴더 
+SalesSummaryResponseDto 추가
+
+demo>mapper 폴더 추가
+SalesSummaryMapper 파일 추가
+
+demo>service 폴더
+SalesSummaryService 파일 추가
+
+apiController 폴더
+SalesSummaryRestController 파일 추가
+
+DemoApplication
+@MapperScan 추가
+
++ SecurityConfig에 auth.requestMatchers("/api/sales/summary").permitAll()추가??
+```
+
 ---
 [서울시 상권분석 서비스 데이터](https://data.seoul.go.kr/dataList/datasetList.do)
 
