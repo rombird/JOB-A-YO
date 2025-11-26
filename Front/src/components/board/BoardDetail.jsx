@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import { useAuth } from '../../context/AuthContext';
+import moment from 'moment'; 
 
 import "../../css/common.css";
 import "../../css/boardDetail.css";
@@ -8,6 +10,7 @@ import "../../css/boardDetail.css";
 const BoardDetail = () => {
     const { id: boardId } = useParams(); // url경로가 /board/:id
     const navigate = useNavigate(); // 페이지 이동을 위한 함수
+    const { user, isLoggedIn } = useAuth();
 
     console.log('게시글 ID:', boardId);
     // 상태 관리
@@ -61,13 +64,19 @@ const BoardDetail = () => {
 
     // 댓글 작성 처리 (Post /comment/save)
     const commentWrite = async () => {
-        const {writer, content} = commentInput;
-    
-        if(!writer || !content){
-            alert("작성자와 내용을 모두 입력하세요");
+        // 로그인한 회원만 댓글 작성할 수 있도록 
+        const writer = user ? user.name : '';
+        const {content} = commentInput;
+        
+        if(!isLoggedIn){
+            alert("댓글을 작성하려면 로그인해야 합니다.");
+            navigate('/login', { state: { from: window.location.pathname } }); // 로그인하고 다시 댓글페이지로
             return;
         }
-
+        if(!content){
+            alert("내용을 입력하세요.");
+            return;
+        }
         try{
             // 백엔드 API 호출: Post api/comment/save
             const res = await axios.post("http://localhost:8090/api/comment/save",{
@@ -75,6 +84,8 @@ const BoardDetail = () => {
                 commentWriter : writer,
                 commentContents: content,
                 boardId: board.id   // 현재 게시글의 Id
+            }, {withCredentials: true
+
             });
 
             // 서버에서 반환된 갱신된 댓글 목록으로 상태 업데이트
@@ -90,6 +101,7 @@ const BoardDetail = () => {
     // 댓글 작성시 Enter 키 입력 처리 함수
     const handleEnterKey = (e) => {
         if(e.key === 'Enter' || e.keyCode === 13){
+            e.preventDefault();
             commentWrite();
         }
     }
@@ -164,7 +176,7 @@ const BoardDetail = () => {
                     {board.fileAttached === 1 && board.boardFileDtoList && board.boardFileDtoList.length > 0 && (
                         board.boardFileDtoList.map((file, index) => (
                                     <div key={index} className="filename">
-                                        <p>업로드한 파일 </p>
+                                        <p>첨부파일 </p>
                                         <a 
                                             href={`http://localhost:8090/api/board/download/${board.id}/${index}`}
                                             target="_blank" rel="noopener noreferrer"
@@ -188,37 +200,35 @@ const BoardDetail = () => {
                     className="comment-write"
                     type="text" id="comment-writer" placeholder="작성자 이름"
                     value={commentInput.writer} onChange={handleCommentInputChange}
-                    onKeyPress={handleEnterKey}
+                    onKeyDown={handleEnterKey}
                 />
                 <input 
                     className="comment-content"
                     type="text" id="comment-contents" placeholder="내용"
                     value={commentInput.content} onChange={handleCommentInputChange}
-                    onKeyPress={handleEnterKey}
+                    onKeyDown={handleEnterKey}
                 />
                 <button className="comment-btn" onClick={commentWrite}>작성</button>
             </div>
             <div className="comment-list">
                 <h4>댓글 목록</h4>
                 {commentList.length > 0 ? (
-                    <table>
-                        <thead>
-                            <tr><th>댓글번호</th><th>작성자</th><th>내용</th><th>작성시간</th></tr>
-                        </thead>
-                        <tbody>
-                            {commentList.map((comment) => (
-                                <tr key={comment.id}>
-                                    <td>{comment.id}</td>
-                                    <td>{comment.commentWriter}</td>
-                                    <td>{comment.commentContents}</td>
-                                    <td>{comment.commentCreatedTime}</td>
-                                </tr>
+                    <div className="comment-detail-wrapper">
+                        {commentList.map((comment) => (
+                            <div key={comment.id} className="comment-item">
+                                <p className="comment-item-list">
+                                    <span className="comment-writer">{comment.commentWriter}</span>
+                                    <span className="comment-time">{moment(
+                                            comment.commentCreatedTime, 
+                                            'YYYYMMDDHHmmssSSS' // 들어오는 문자열의 포맷을 명시
+                                        ).format('YYYY-MM-DD HH:mm:ss')}</span>
+                                    <span classnName="comment-content">{comment.commentContents}</span>
+                                </p>
+                            </div>
                             ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p>등록된 댓글이 없습니다.</p>
-                )}
+                    </div>        
+                ) : ( <p>등록된 댓글이 없습니다.</p> )
+                }
             </div>
         </div>
     );

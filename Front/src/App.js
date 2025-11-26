@@ -33,7 +33,6 @@ function App() {
                 <Route path="/board/WriteBoard" element={<WriteBoard />} />
                 <Route path="/board/:id" element={<BoardDetail />} />
                 {/* 글쓰기/수정 페이지 (수정 모드에 :id 사용) */}
-                <Route path="/board/writeBoard" element={<WriteBoard />} />
                 <Route path="/board/update/:id" element={<WriteBoard />} />
 
                 {/* 공지사항 */}

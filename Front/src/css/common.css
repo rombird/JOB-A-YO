@@ -64,13 +64,14 @@ body {
     padding:15px 0;
     margin:10px 0;
 }
-
+/* 로그아웃 상태에서 : 로그인, 회원가입 */
 .topHeader>.topList>.topNav{
     display:flex;
     justify-content: flex-end;
-    /* width:400px; */
     width:auto;
     margin-left:auto;
+}
+.topNav{
 }
 
 .topNavli>.login{
@@ -100,6 +101,13 @@ body {
     width:25px;
     height:25px;
     margin:0 5px;
+}
+/* 로그인상태 : 유제네임, 마이페이지, 로그아웃 */
+.topNavli>.username-check{
+    background-color: pink;
+    margin-right:20px;
+    font-size:17px;
+    font-family:'kopu';
 }
 .topNavli>.mypage{
     margin-right:20px;

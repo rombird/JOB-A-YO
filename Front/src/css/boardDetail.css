@@ -1,9 +1,12 @@
 .boardDetail{
     width:1000px;
-    margin-top:50px;
+    margin-top:100px;
 }
 .pathtitle{
     height:30px;
+    margin-bottom:20px;
+    /* background-color: pink; */
+    border-bottom:1px solid rgb(228, 232, 232);
 }
 .pathtitle>.path{
     height:30px;
@@ -14,7 +17,7 @@
     margin:0;
     font-family:"kopume";
     text-align: left;
-    border-bottom:1px solid rgb(228, 232, 232);
+    
 }
 
 /* 커뮤니티 내용 */
@@ -22,8 +25,21 @@
     text-align: left;
     margin-left:10px;
 }
+.boardContent p{
+    font-family:"kopume";
+}
+.content-number{
+}
 .content-number>p{
     margin:0;
+    padding-left:6px;
+    padding-top:4px;
+    width:65px;
+    height:30px;
+    border-radius: 16px;
+    background-color: #65A3FF;
+    color:white;
+    font-family:"kopu";
 }
 .content-title>h3{
     margin:10px 0;
@@ -70,7 +86,6 @@
 .fileadd{
     margin-top:200px;
     border-top:1px solid rgb(228, 232, 232);
-    height:30px;
     display:flex;
     align-items: center;
     text-align: center;
@@ -78,10 +93,16 @@
 .fileadd>.filename{
     margin-top:10px;
     display:flex;
-    height:30px;
+    width:1000px;
+    border:1px solid rgb(228, 232, 232);
 }
 .filename>p{
+    width:200px;
     margin:0 5px 0 0;
+    background-color: rgb(228, 232, 232);
+}
+.filename>a{
+    padding-left:5px;
 }
 .action-btn{
     font-family: "kopu";
@@ -127,7 +148,7 @@
 .comment>.comment-content{
     border:1px solid rgb(228, 232, 232);
     border-radius:8px;
-    width:700px;
+    width:670px;
     padding:10px;
 }
 .comment>.comment-btn{
@@ -145,4 +166,23 @@
 }
 .comment-list>h4{
     margin-bottom:20px;
+}
+.comment-detail-wrapper{
+    background-color: rgb(228, 232, 232);
+    margin:5px 0;
+    padding: 15px;
+}
+.comment-item{
+    border-bottom:1px solid #65A3FF;
+}
+.comment-item-list>span{
+    display:block;
+    font-family: "kopume";
+}
+.comment-writer{
+    margin-bottom:5px;
+}
+.comment-time{
+    font-size:12px;
+    margin-bottom:15px;
 }

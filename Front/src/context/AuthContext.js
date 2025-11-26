@@ -16,8 +16,9 @@ export const AuthProvider = ({ children }) => {
     // 로그아웃
     const logout = async () => {
         try {
-            await api.post('/logout'); // 만약 에러가 나면 axios로 바꿔야 함
-            // setIsLoggedIn(false);
+            await api.post('/logout'); // 서버에서 로그아웃 요청
+            setIsLoggedIn(false); // 인증상태를 false
+            setUser(null); // 사용자 정보 초기화
         } catch (error) {
             console.error("로그아웃 실패:", error);
         }

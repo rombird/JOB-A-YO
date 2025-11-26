@@ -74,7 +74,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((auth)->{
 			auth.requestMatchers("/",
                                         "/join",
-                                        "/login",
+                                        "/login", // 인증 없이 접근 허용
                                         "/validate",
                                         "/oauth2/**",
                                         "/login/oauth2/**").permitAll();
@@ -90,6 +90,7 @@ public class SecurityConfig {
             auth.requestMatchers("/api/board/update/**").authenticated();   // 글 수정
             auth.requestMatchers("/api/board/delete/**").authenticated();   // 글 삭제
             auth.requestMatchers("/api/board/image/upload").authenticated();    // CKEditor 텍스트
+            auth.requestMatchers("/api/comment/save").authenticated(); //
 
             // 2. Swagger 관련 경로 전체 허용 추가!
             auth.requestMatchers(
@@ -108,6 +109,7 @@ public class SecurityConfig {
 		//-----------------------------------------------------
 		// [수정] 로그인(직접처리 - UserRestController)
         // 리액트에서 넘길거기때문에 disable설정이면 된다
+        // 기본 로그인 폼 및 처리 필터를 사용하지않겠다(JWT 방식을 사용하므로 올바른 설정입니다)
 		//-----------------------------------------------------
 		http.formLogin((login)->{
 			login.disable();

@@ -439,8 +439,8 @@ const WriteBoard = () => {
                         <div className="under-line-dotted line-dotted"></div>
                         {/* <!-- 제출 버튼 있는 줄 --> */}
                         <div className="submit-box layoutCenter">
-                            <button type="button" className="list-btn">
-                                <Link to="/api/board/paging" className="list">목록</Link>
+                            <button type="button" className="list-btn" onClick={() => navigate('/api/board/paging')}>
+                                목록
                             </button>
                             <button type="submit" className="submit-btn" >{isEditMode ? "수정" : "등록"}</button>
                         </div>
