@@ -23,4 +23,8 @@ public class SalesSummaryResponseDto {
     private Double monthlyAverageSales; // 월평균_매출액 (분기 총합 / 3)
     private Double qoqChange;           // 전분기_대비_증감액
     private Double yoyChange;           // 전년_동분기_대비_증감액
+
+    // 추가: 하단에 표시할 이전 분기 절대값들
+    private Double previousQtrSales;    // 전분기 월평균 매출액
+    private Double previousYearSales;   // 전년 동분기 월평균 매출액
 }

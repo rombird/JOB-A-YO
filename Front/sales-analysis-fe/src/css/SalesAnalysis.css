@@ -6,7 +6,7 @@
     border-radius: 12px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    max-width: 800px;
+    max-width: 400px;
     margin: 40px auto; /* 중앙에 여백을 두고 배치 */
 }
 
@@ -125,4 +125,27 @@
     font-size: 0.85em;
     color: #999;
     margin-top: 15px;
+}
+
+.footer-data-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 0.95em;
+}
+
+.footer-label {
+    color: #666;
+    font-weight: 500;
+    text-align: right;
+    width: 120px;
+}
+
+.footer-value {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1.05em;
+    text-align: right;
+    width: 100px;
+    margin-left: 30px;
 }

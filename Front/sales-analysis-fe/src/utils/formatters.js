@@ -22,7 +22,7 @@ export const formatSalesData = (value, isChange = false) => {
   // 정수로 반올림하여 '억' 단위로 깔끔하게 표시
   const formattedValue = Math.round(absValue).toLocaleString();
 
-  return `${sign}${formattedValue} 억`;
+  return `${sign} ${formattedValue} 억`;
 };
 
 /**
@@ -41,3 +41,31 @@ export const formatQtrCode = (qtrCode) => {
     const quarter = qtrCode.substring(4, 5);
     return `${year}년 ${quarter}분기`;
 }
+
+/**
+ * 이전 분기 코드 계산 (예: 20252 -> 20251, 20251 -> 20244)
+ */
+export const getPreviousQtrCode = (qtrCode) => {
+  if (!qtrCode || qtrCode.length !== 5) return '';
+  
+  const year = parseInt(qtrCode.substring(0, 4));
+  const quarter = parseInt(qtrCode.substring(4, 5));
+  
+  if (quarter === 1) {
+    return `${year - 1}4`;
+  } else {
+    return `${year}${quarter - 1}`;
+  }
+};
+
+/**
+ * 전년 동분기 코드 계산 (예: 20252 -> 20242)
+ */
+export const getPreviousYearQtrCode = (qtrCode) => {
+  if (!qtrCode || qtrCode.length !== 5) return '';
+  
+  const year = parseInt(qtrCode.substring(0, 4));
+  const quarter = qtrCode.substring(4, 5);
+  
+  return `${year - 1}${quarter}`;
+};
