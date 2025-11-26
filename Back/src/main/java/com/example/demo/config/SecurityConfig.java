@@ -42,8 +42,6 @@ import java.util.Collections;
 // 8. OAuth2 로그인 허용
 // 9. 로그아웃 커스텀 처리
 
-
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
