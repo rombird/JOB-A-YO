@@ -3,10 +3,9 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 import "../../css/common.css";
+import "../../css/boardDetail.css";
 
-// 수정: 모든 로직을 Paging 함수 컴포넌트 내부에 정의합니다.
 const BoardDetail = () => {
-    // 1. URL에서 게시글 ID(pathVariable)를 가져옴
     const { id: boardId } = useParams(); // url경로가 /board/:id
     const navigate = useNavigate(); // 페이지 이동을 위한 함수
 
@@ -21,7 +20,6 @@ const BoardDetail = () => {
 
     const [page, setPage] = useState(1);    // 목록으로 돌아갈 때 필요한 페이지 정보
  
-    // 2. 데이터 가져오기
     useEffect(() => {
         if(!boardId) return;
 
@@ -49,8 +47,7 @@ const BoardDetail = () => {
         fetchBoardDetail();
     }, [boardId, navigate]);
 
-    // 3. 이벤트 핸들러(댓글 작성)
-   
+    // 댓글 작성
     // 댓글 입력 필드 변경 핸들러
     const handleCommentInputChange = (e) => {
         const{id, value} = e.target;
@@ -97,12 +94,10 @@ const BoardDetail = () => {
         }
     }
 
-    // 4. 페이지 이동 핸들러
-
-    // 목록 이동(url에 페이지 정보 포함)
+    // 페이지 이동 핸들러
     const listReq = () => {
         // 
-        navigate(`/board/paging?page=${page}`);
+        navigate(`/api/board/paging`);
     };
 
     // 수정 페이지 이동
@@ -136,95 +131,75 @@ const BoardDetail = () => {
 
     return (
         <div className="boardDetail layoutCenter">
-            <div className="sub-title">
+            <div className="pathtitle">
                 <div className="path">
-                    <div>이용안내 &gt; Community </div>
-                </div>
-                <div className="boardContent">
-                    <div>
-                        <span>{board.id}</span>
-                    </div>
-                    <div>
-                        <h3>{board.boardTitle}</h3>
-                    </div>
-                    <div>
-                        <p>{board.boardWriter}</p>
-                    </div>
-                    <div className="date-hit">
-                        <div className="date">
-                            <img src="" alt="시계사진넣기" />
-                            <p>{board.boardCreateTime}</p>
-                        </div>
-                        <div className="hit">
-                            <img src="" alt="조회" />
-                            <p>{board.boardHits}</p>
-                        </div>
-                    </div>
-                    <div>
-                        <div dangerouslySetInnerHTML={{ __html: board.boardContents }} />
-                    </div>
-
+                    <p>이용안내 &gt; Community </p>
                 </div>
             </div>
-        
-            <section className="boardContent">
-                <table>
-                    <tbody>
-                        {/* 파일 첨부 */}
-                        {board.fileAttached === 1 && board.boardFileDtoList && board.boardFileDtoList.length > 0 && (
-                            <tr>
-                                <th>업로드한 파일</th>
-                                <td>
-                                    {board.boardFileDtoList.map((file, index) => (
-                                        <div key={index}>
-                                            <a 
-                                                href={`http://localhost:8090/api/board/download/${board.id}/${index}`}
-                                                target="_blank" rel="noopener noreferrer"
-                                            >
-                                                {file.originalFilename}
-                                            </a>
-                                        </div>
-                                    ))}
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </section>
-
-            <hr />
-
-            {/* 액션 버튼 */}
-            <section className="actionButtons">
-                <button onClick={listReq}>목록</button>
-                <button onClick={updateReq}>수정</button>
-                <button onClick={deleteReq}>삭제</button>
-            </section>
-
-
-            {/* 댓글 작성 섹션 */}
-            <section id="comment-write">
-                <h3>댓글 작성</h3>
+            <div className="boardContent">
+                <div className="content-number">
+                    <p>NO. {board.id}</p>
+                </div>
+                <div className="content-title">
+                    <h3>{board.boardTitle}</h3>
+                </div>
+                <div className="writer">
+                    <p>{board.boardWriter}</p>
+                </div>
+                <div className="date-hit">
+                    <div className="date">
+                        <img src="../../images/clock.png" alt="시계사진넣기" />
+                        <p>{board.boardCreateTime}</p>
+                    </div>
+                    <div className="hit">
+                        <img src="../../images/read.png" alt="조회" />
+                        <p>{board.boardHits}</p>
+                    </div>
+                </div>
+                <div className="content-line"></div>
+                <div className="contentkey">
+                    <div dangerouslySetInnerHTML={{ __html: board.boardContents }} />
+                </div>
+                <div className="fileadd">
+                    {board.fileAttached === 1 && board.boardFileDtoList && board.boardFileDtoList.length > 0 && (
+                        board.boardFileDtoList.map((file, index) => (
+                                    <div key={index} className="filename">
+                                        <p>업로드한 파일 </p>
+                                        <a 
+                                            href={`http://localhost:8090/api/board/download/${board.id}/${index}`}
+                                            target="_blank" rel="noopener noreferrer"
+                                        >
+                                            {file.originalFilename}
+                                        </a>
+                                    </div>
+                                ))
+                            )
+                        }
+                </div>
+            </div>
+            <div className="action-btn">
+                <button className="listback-btn" onClick={listReq}>목록</button>
+                <button className="update-btn" onClick={updateReq}>수정</button>
+                <button className="delete-btn" onClick={deleteReq}>삭제</button>
+            </div>
+            <div className="comment">
+                <h4>댓글 작성</h4>
                 <input 
+                    className="comment-write"
                     type="text" id="comment-writer" placeholder="작성자 이름"
                     value={commentInput.writer} onChange={handleCommentInputChange}
                     onKeyPress={handleEnterKey}
                 />
                 <input 
+                    className="comment-content"
                     type="text" id="comment-contents" placeholder="내용"
                     value={commentInput.content} onChange={handleCommentInputChange}
                     onKeyPress={handleEnterKey}
                 />
-                <button onClick={commentWrite}>댓글 작성</button>
-            </section>
-
-
-
-            <hr />
-
-            {/* 댓글 목록 섹션 */}
-            <section id="comment-list">
-                <h3>댓글 목록</h3>
+                <button className="comment-btn" onClick={commentWrite}>작성</button>
+            </div>
+            <div className="comment-list">
+                <h4>댓글 목록</h4>
                 {commentList.length > 0 ? (
                     <table>
                         <thead>
@@ -244,7 +219,7 @@ const BoardDetail = () => {
                 ) : (
                     <p>등록된 댓글이 없습니다.</p>
                 )}
-            </section>
+            </div>
         </div>
     );
 }

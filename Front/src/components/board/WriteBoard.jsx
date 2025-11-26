@@ -269,7 +269,7 @@ const WriteBoard = () => {
                 <div className="sub-title">
                     <div className="inquiry">
                         <h3>커뮤니티 글{isEditMode ? '수정' : '쓰기'}</h3>
-                        <img src="../images/writing.png" alt="게시글 작성" />
+                        <img src="../../images/writing.png" alt="게시글 작성" />
                     </div>
                     <div className="path">
                         <div>이용안내 &gt; Community </div>
