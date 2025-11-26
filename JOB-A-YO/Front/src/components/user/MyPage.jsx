@@ -47,6 +47,7 @@ const MyPage = () => {
                                 <p>비밀번호(PW)</p>
                             </dt>
                             <dd className="table-update">
+                                <input type="text" placeholder='변경할 비밀번호를 입력하세요.'></input>
                                 <button className="btn-name" type="button" >비밀번호 변경</button>
                             </dd>
                         </dl>
