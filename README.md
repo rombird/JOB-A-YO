@@ -9,6 +9,7 @@
 cd FRONT
 npm install
 npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+npm install recharts
 npm start
 ```
 
