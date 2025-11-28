@@ -75,8 +75,9 @@ public class SecurityConfig {
                                         "/login", // 인증 없이 접근 허용
                                         "/validate",
                                         "/oauth2/**",
-                                        "/login/oauth2/**").permitAll();
-
+                                        "/login/oauth2/**",
+                                        "/api/predict-from-ml").permitAll();
+            auth.requestMatchers("/api/sales/summary").permitAll();
             // 게시판 API 권한 설정
             // 로그인 없어도 OK
             auth.requestMatchers("/api/board/paging").permitAll();  // 게시판 조회

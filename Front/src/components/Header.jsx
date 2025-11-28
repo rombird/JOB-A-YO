@@ -16,7 +16,7 @@ const Header = () => {
         navigate('/'); // 메인 페이지로 이동
     };
 
-    const displayUsername = user ? user.username : '';
+    const displayUsername = user ? user.name : '';
 
     return(
         <>
