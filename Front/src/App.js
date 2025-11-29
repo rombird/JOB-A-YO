@@ -37,6 +37,8 @@ function App() {
 
                 {/* 공지사항 */}
                 <Route path="/api/notices" element={<NoticePaging />} />
+
+                {/* <Route path="/predict" element={}/> */}
               </Routes>
             
             <Footer />

@@ -21,6 +21,8 @@ export const AuthProvider = ({ children }) => {
             setUser(null); // 사용자 정보 초기화
         } catch (error) {
             console.error("로그아웃 실패:", error);
+            setIsLoggedIn(false);
+            setUser(null);
         }
     };
 
