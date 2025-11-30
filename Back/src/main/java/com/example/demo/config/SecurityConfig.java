@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -81,8 +82,8 @@ public class SecurityConfig {
                                         // 게시판 관련 로그인 없어도 볼 수 있는 것들
                                         "/api/board/paging",
                                         "/api/board/*",
-                                        "/api/board/download/**",
-                                        "/api/sales/summary").permitAll();
+                                        "/api/board/download/**"
+            ).permitAll();
 
             // 유저관련 로그인 해야지 가능
             auth.requestMatchers("/myInfo/phone").authenticated();
@@ -106,17 +107,18 @@ public class SecurityConfig {
             auth.requestMatchers("/api/board/image/upload").authenticated();    // CKEditor 텍스트
             auth.requestMatchers("/api/comment/save").authenticated(); //
 
-            // 차트 보는 거 로그인 허용할까 말까
-//            auth.requestMatchers("/api/sales/summary").permitAll();
+            auth.requestMatchers("/api/sales/summary").permitAll();
 
 
             // 공지사항 보는 거 로그인 안해도 가능
             auth.requestMatchers("/api/notice/paging").permitAll();
+            auth.requestMatchers(HttpMethod.GET, "/api/notice/*").permitAll();
+            auth.requestMatchers(HttpMethod.GET, "/api/notice/download/**").permitAll();
 
-            // 공지사항 글 쓰기, 관리자만 가능
-            auth.requestMatchers("/api/notice/save").hasAnyRole("ADMIN"); //
-
-
+            // 공지사항(관리자만 가능), 글 쓰기와 수정 삭제는 관리자만 가능
+            auth.requestMatchers("/api/notice/save").hasAuthority("ADMIN");
+            auth.requestMatchers(HttpMethod.PUT, "/api/notice/update/*").hasAuthority("ADMIN");
+            auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").hasAuthority("ADMIN");
 
 
             // 2. Swagger 관련 경로 전체 허용 추가!

@@ -40,19 +40,19 @@ public class apiNoticeController {
 
 
     // 파일 저장 경로
-    @Value("${file.dir}")       // 파일 저장 경로
-    private String fileDir;
+    @Value("${noticeFile.dir}")       // 파일 저장 경로
+    private String noticeFileDir;
 
-    @Value("${CKEditor.image}")
-    private String CKEditorImageDir;
+    @Value("${noticeCKEditor.image}")
+    private String noticeCKEditorImageDir;
 
     @Operation(summary = "Notice'sPagingList", description = "공지사항 목록 및 페이징 정보")
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<NoticeDto> save(// 1. 폼 데이터 (제목, 글쓴이, 내용 등)를 DTO에 바인딩
                                           @ModelAttribute NoticeDto noticeDto,
                                           // 2. 파일 데이터를 "fileUpload" 키로 명시적으로 받음
                                           @RequestPart(value = "noticeFileUpload", required = false) List<MultipartFile> noticeFileUploads) throws IOException {
-
+        log.info("post/ api/notice/save , 공지사항 저장");
         // 수신한 파일을 DTO의 필드에 수동으로 설정
         // DTO에 List<MultipartFile> fileUpload; 필드가 있으므로 사용 가능
         if (noticeFileUploads != null && !noticeFileUploads.isEmpty()) {
@@ -143,7 +143,7 @@ public class apiNoticeController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "DB에 파일 정보를 찾을 수 없습니다");
             }
 
-            Path filePath = Paths.get(fileDir, storedFilename);
+            Path filePath = Paths.get(noticeFileDir, storedFilename);
             Resource resource = new UrlResource(filePath.toUri());
 
             // 3. 실제 파일 존재 여부 확인
@@ -185,7 +185,7 @@ public class apiNoticeController {
             String storedImageName = UUID.randomUUID().toString() + "_" + originalImageName;
 
             // 3. 파일이 저장될 경로
-            String CKEditorImageSavePath = CKEditorImageDir + storedImageName;
+            String CKEditorImageSavePath = noticeCKEditorImageDir + storedImageName;
 
             // 4. 파일 시스템에 저장
             File saveFile = new File(CKEditorImageSavePath); // 🟢 변경된 변수 사용
