@@ -139,7 +139,7 @@ const NoticePaging = () => {
                             name='searchKeyword'
                             defaultValue={searchQuery}
                         />
-                        <button type='submit' className='search-btn'>검색</button>
+                        <button type="submit" className="search-btn"><img src="../../images/search2.png" alt="돋보기" /></button>
                     </form>
                     <div className='notice-table'>
                         <div className='notice-middle'>
