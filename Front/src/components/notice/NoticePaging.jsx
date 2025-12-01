@@ -132,7 +132,7 @@ const NoticePaging = () => {
                     <p> HOME &gt; 이용안내 &gt; 공지사항 </p>
                 </div>
                 <div className="notice-list layoutCenter">
-                    <form>
+                    <form className="notice-list-form">
                         <input 
                             type='text'
                             placeholder='제목, 내용 검색'

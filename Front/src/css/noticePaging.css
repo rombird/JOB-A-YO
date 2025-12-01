@@ -17,9 +17,12 @@
     height:650px;
     margin-bottom:20px;
 }
-.notice-list>form{
+.notice-list>.notice-list-form{
     text-align: right;
-    margin:10px 0;
+    margin-top:30px;
+    display:flex;
+    position:relative;
+    margin-left:690px;
 }
 .notice-list input{
     width:280px;
@@ -41,14 +44,15 @@
     width:30px;
     height:30x;
     background: transparent;
-    margin-left:10px;
+    /* margin-left:10px; */
     padding:0;
+
 }
 .notice-list .search-btn>img{
     width:30px;
     height:30px;
     display:block;
-    background-color: pink;
+    margin-left:10px;
 }
 
 
