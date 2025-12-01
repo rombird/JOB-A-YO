@@ -98,3 +98,7 @@ body{
     height:60px;
     margin:5px 30px; 
 }
+.kakaoButton{
+    border:none;
+    background-color:transparent;
+}

@@ -77,7 +77,7 @@ const Header = () => {
                                     </div>
                                     <ul className="subNav">
                                         <li className="subList">
-                                            <Link to="api/notices" >공지사항</Link>
+                                            <Link to="/api/notices" >공지사항</Link>
                                         </li>
                                         <li className="subList">
                                             <Link to="/inquiry" >문의사항</Link>
