@@ -26,6 +26,8 @@ const NoticePaging = () => {
 
     // 사용자 정보(ADMIN 권한) 로딩
     useEffect(() => {
+        // 토큰 또는 로그인 상태를 확인하는 로직 (예: 로컬 스토리지에서 토큰 체크)
+        const token = localStorage.getItem('accessToken');
         const fetchUser = async () => {
             try{
                 const response = await api.get('/user');
