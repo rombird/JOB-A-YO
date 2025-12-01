@@ -22,11 +22,11 @@ function Home(){
                             </div>
                             <div className="searchKey">
                                 <ul className="keyList">
-                                    <li><button >#keyword1</button></li>
-                                    <li><button >#keyword2</button></li>
-                                    <li><button >#keyword3</button></li>
-                                    <li><button >#keyword4</button></li>
-                                    <li><button >#keyword5</button></li>
+                                    <li><button >#keyword</button></li>
+                                    <li><button >#keyword</button></li>
+                                    <li><button >#keyword</button></li>
+                                    <li><button >#keyword</button></li>
+                                    <li><button >#keyword</button></li>
                                 </ul>
                             </div>
                         </div>
