@@ -1,24 +1,47 @@
-- <a href="https://dev-coco.tistory.com/111">포트폴리오</a>  
-<hr/>
+<div align="center">
+    <h1>맞춤형 상권 프로젝트 『JOB-A-YO』 </h1>
+</div>
+<br/>
+<div align="center">
+    <h2>프로젝트 소개</h2>
+    <p>비수도권 지역의 청년층, 중장년층을 위한 스마트한 상권 솔루션</p>
+    <p>청년층에게는 비수도권지역에서 Job을 잡아 성장할 수 있는 기회 제공</p>
+    <p>중장년층에게는 고향 및 비수도권 지역에서 제 2의 인생을 Job을 수 있도록 도음을 제공</p>
+</div>
+<br/>
+<div align="center">
+    <h2>팀원 소개</h2>
+    <table>
+      <thead>
+        <tr>
+          <td>LEE SUHYEON</td>
+          <td>LEE INHO</td>
+          <td>LIM SAEROM</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>이미지1</td>
+          <td>이미지2</td>
+          <td>이미지3</td>
+        </tr>
+        <tr>
+          <td>데이터분석 통합</td>
+          <td>백엔드 통합</td>
+          <td>프론트엔드 통합</td>
+        </tr>
+        <tr>
+          <td>작업한 상세 내용</td>
+          <td>작업한 상세 내용2</td>
+          <td>작업한 상세 내용3</td>
+        </tr>
+      </tbody>
+    </table>
+    
+</div>
+<br/>
 
-# JOB-A-YO_PJ 
-## 프로젝트 소개
-맞춤형 상권 프로젝트 『JOB-A-YO』 
-<br/>
-<br/>
 
-## 프로젝트 정보(진행한 목적, 개발기간)
-2025년 11월 17일 ~ 2025년 12월 5일
-비수도권 지역의 경제활성화 방안으로 상권활성화 공략~!
-<br/>
-<br/>
-
-## 배포 주소
-http://localhost:8090(예시)
-<br/>
-<br/>
-
-## 팀 소개(깃허브 주소, 맡은역할)
 
 |이름|통합|페이지|
 |-|-|-|
