@@ -21,9 +21,9 @@
       </thead>
       <tbody>
         <tr>
-          <td>이미지1</td>
-          <td>이미지2</td>
-          <td>이미지3</td>
+          <td><img width="200" height="200" src="https://github.com/user-attachments/assets/e29f43b8-5eda-4614-b757-2a65eb276443" /></td>
+          <td><img width="200" height="200" src="https://github.com/user-attachments/assets/e29f43b8-5eda-4614-b757-2a65eb276443" /></td>
+          <td><img width="200" height="200" src="https://github.com/user-attachments/assets/e29f43b8-5eda-4614-b757-2a65eb276443" /></td>
         </tr>
         <tr>
           <td>데이터분석 통합</td>
