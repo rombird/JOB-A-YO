@@ -11,9 +11,10 @@
 <br/>
 <div align="center">
     <h2>팀원 소개</h2>
+    <p>이미지를 누르시면 해당 팀원의 깃허브 페이지로 연결됩니다</p>
     <table>
       <thead>
-        <tr>
+        <tr align="center">
           <td>LEE SUHYEON</td>
           <td>LEE INHO</td>
           <td>LIM SAEROM</td>
@@ -22,18 +23,18 @@
       <tbody>
         <tr>
           <td><a href="https://github.com/ddaeng2001" ><img width="200" height="200" src="https://github.com/user-attachments/assets/e29f43b8-5eda-4614-b757-2a65eb276443" /></a></td>
-          <td><img width="200" height="200" src="https://github.com/user-attachments/assets/f9dfd917-89ad-41c0-a0d8-bc790789f90b" /></td>
-          <td><img width="200" height="200" src="https://github.com/user-attachments/assets/ff368d14-7c14-49cf-a164-d196c9e376dd" /></td>
+          <td><a href="https://github.com/inno-inho"><img width="200" height="200" src="https://github.com/user-attachments/assets/f9dfd917-89ad-41c0-a0d8-bc790789f90b" /></a></td>
+          <td><a href="https://github.com/rombird" ><img width="200" height="200" src="https://github.com/user-attachments/assets/ff368d14-7c14-49cf-a164-d196c9e376dd" /></a></td>
         </tr>
-        <tr>
+        <tr align="center">
           <td>데이터분석 통합</td>
           <td>백엔드 통합</td>
           <td>프론트엔드 통합</td>
         </tr>
-        <tr>
-          <td><a href="https://github.com/ddaeng2001" /></td>
-          <td><a href="https://github.com/inno-inho" /></td>
-          <td><a href="https://github.com/rombird" /></td>
+        <tr align="center">
+          <td>각자 작업한 내용</td>
+          <td>각자 작업한 내용</td>
+          <td>각자 작업한 내용</td>
         </tr>
       </tbody>
     </table>
@@ -41,19 +42,10 @@
 </div>
 <br/>
 
+<div align="center">
+    
+</div>
 
-
-|이름|통합|페이지|
-|-|-|-|
-|이수현|데이터 분석 통합|**문의사항**관련|
-|이인호|백엔드 통합|**게시글**관련|
-|임새롬|프론트엔드 통합|**로그인, 회원가입**|
-|together|데이터 분석|**핵심기능**데이터분석관련|
-
-<br/>
-<br/>
-
-# 시작 가이드
 ## 요구사항(필요한 요구사항, 버전)  
 
 Requirements  
