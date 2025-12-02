@@ -21,7 +21,7 @@
       </thead>
       <tbody>
         <tr>
-          <td><img width="200" height="200" src="https://github.com/user-attachments/assets/e29f43b8-5eda-4614-b757-2a65eb276443" /></td>
+          <td><a href="https://github.com/ddaeng2001" ><img width="200" height="200" src="https://github.com/user-attachments/assets/e29f43b8-5eda-4614-b757-2a65eb276443" /></a></td>
           <td><img width="200" height="200" src="https://github.com/user-attachments/assets/f9dfd917-89ad-41c0-a0d8-bc790789f90b" /></td>
           <td><img width="200" height="200" src="https://github.com/user-attachments/assets/ff368d14-7c14-49cf-a164-d196c9e376dd" /></td>
         </tr>
@@ -31,9 +31,9 @@
           <td>프론트엔드 통합</td>
         </tr>
         <tr>
-          <td>작업한 상세 내용</td>
-          <td>작업한 상세 내용2</td>
-          <td>작업한 상세 내용3</td>
+          <td><a href="https://github.com/ddaeng2001" /></td>
+          <td><a href="https://github.com/inno-inho" /></td>
+          <td><a href="https://github.com/rombird" /></td>
         </tr>
       </tbody>
     </table>
