@@ -45,25 +45,30 @@
 <div align="center">
     <h2>주요 기능</h2>
     <div align="left">
-        <p> - 핵심 기능 : 사용자가 원하는 소비층, 사용할 수 있는 자금, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
-        <p> - 필수 기능 : 로그인·회원가입, 게시판글쓰기·글목록, 셀레니움 사용해서</p>
-        <p> - 엔드포인트 기록 </p>
+        <p> - 핵심 기능 : 사용자가 원하는 소비층, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
+        <p> - 필수 기능 : 로그인·회원가입, 게시판글쓰기·글목록, chart.js</p>
     </div>
 </div>
 
 <div align="center">
-    <h2>필요한 요구사항</h2>
-    ```
-    Requirements  
-    Installation(code로)  
-    Backend(실행하는 법)  
-    Frontend(실행하는 법) 
-    ```
+    <h2>설치 및 실행방법</h2>
 </div>
 
+```
+git clone https://github.com/rombird/JOB-A-YO.git
+cd front
+npm install [설치할 라이브러리?이름]
+npm install
+npm start
+
+cd back
+idea . 
+```
+
 <br/>
+
 <div align="center">
-    <h2>Stack</h2>
+    <h2>기술 스택</h2>
     <div>
         <h3>Environment</h3>
           <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
@@ -83,12 +88,61 @@
           <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
           <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
     </div>
+    <p>배포시 배포환경기술까지 추가로 넣어두기</p>
 </div>
+
 <br/>
 
+<div align="center">
+    <h2>프로젝트 구조</h2>
+    <p>tree .</p>
+</div>
 
+<br/>
 
-```
-tree (cmd에서)
-```
+<div align="center">
+    <h2>화면구성(UI)</h2>
+</div>
+
+<br/>
+
+<div align="center">
+    <h2>API 문서</h2>
+    <table>
+      <thead>
+        <tr align="center">
+          <td>메서드</td>
+          <td>엔드포인트</td>
+          <td>설명</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/login</td>
+          <td>로그인</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/join</td>
+          <td>회원가입</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/mypage</td>
+          <td>마이페이지</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<br />
+
+<div align="center">
+    <h2>개발 일정 Time Line</h2>
+</div>
+
+<div align="center">
+    <h2>회고</h2>
+</div>
 
