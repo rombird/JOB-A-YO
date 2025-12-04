@@ -57,8 +57,9 @@
 ```
 git clone https://github.com/rombird/JOB-A-YO.git
 cd front
-npm install [설치할 라이브러리?이름]
 npm install
+npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+npm install recharts
 npm start
 
 cd back
