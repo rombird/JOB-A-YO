@@ -56,14 +56,39 @@ public class apiBoardController {
     @Operation(summary = "PagingList", description = "게시글 목록 및 페이징 정보")
     @GetMapping("/paging")
     public ResponseEntity<?> paging(
-            @PageableDefault(page = 1, size = 10) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
+            @PageableDefault(page = 0, size = 10) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
         log.info("GET  /api/board/paging... 페이징처리 apiBoardController");
         Page<BoardDto> boardList = boardService.paging(pageable);
 
+//        int blockLimit = 10;
+//
+//        // startPage, endPage 계산 시 0-기반인 boardList.getNumber()를 1-기반으로 변환하여 사용해야 합니다.
+//        // boardList.getNumber()는 현재 페이지 인덱스 (0부터 시작)
+//        int currentPageOneBased = boardList.getNumber() + 1;
+//
+//        // 1-기반 페이지를 사용하여 startPage 계산
+//        int startPage = (((int)(Math.ceil((double)currentPageOneBased / blockLimit))) -1) * blockLimit + 1;
+//        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+//
+//        Map<String, Object> response = new HashMap();
+//
+//        response.put("boardList" , boardList);
+//        response.put("startPage", startPage);
+//        response.put("endPage", endPage);
+//
+//        return ResponseEntity.ok(response);
+
         int blockLimit = 10;
-        // React에서 startPage, endPage 계산에 필요한 정보를 함께 JSON으로 반환
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; // 1, 4, 7,
-        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+//        // React에서 startPage, endPage 계산에 필요한 정보를 함께 JSON으로 반환
+//        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; // 1, 4, 7,
+//        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+
+
+        int currentPage = pageable.getPageNumber() + 1; // ★ 0 기반 → 1 기반
+
+        int startPage = ((currentPage - 1) / blockLimit) * blockLimit + 1;
+
+        int endPage = Math.min(startPage + blockLimit - 1, boardList.getTotalPages());
 
         // Json 응답을 위한 Map 또는 별도의 DTO 사용
 
@@ -84,11 +109,11 @@ public class apiBoardController {
             // 1. 폼 데이터 (제목, 글쓴이, 내용 등)를 DTO에 바인딩
             @ModelAttribute BoardDto boardDto,
             // 2. 파일 데이터를 "fileUpload" 키로 명시적으로 받음
-            @RequestPart(value = "fileUpload", required = false) List<MultipartFile> fileUploads) throws IOException {
+            @RequestPart(value = "uploadFiles", required = false) List<MultipartFile> fileUploads) throws IOException {
 
         log.info("POST /api/board/writeBoard 게시글 작성 요청: {}", boardDto.getBoardTitle());
 
-        // 💡 3. 수신한 파일을 DTO의 필드에 수동으로 설정
+        // 3. 수신한 파일을 DTO의 필드에 수동으로 설정
         // DTO에 List<MultipartFile> fileUpload; 필드가 있으므로 사용 가능
         if (fileUploads != null && !fileUploads.isEmpty()) {
             boardDto.setFileUpload(fileUploads);
@@ -178,6 +203,8 @@ public class apiBoardController {
         }
     }
 
+
+    // 삭제
     @Operation(summary = "boardDelete", description = "게시글 삭제")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
@@ -277,35 +304,5 @@ public class apiBoardController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-//    @GetMapping("/update/{id}")
-//    public String updateForm(@PathVariable Long id, Model model){
-//        BoardDto boardDto = boardService.findById(id);
-//        model.addAttribute("boardUpdate", boardDto);
-//
-//        return "board/update";
-//    }
-//
-//    @Operation(summary = "boardUpdatePost", description = "게시글 수정 포스팅")
-//    @PostMapping("/board/update")
-//    public String update(@ModelAttribute BoardDto boardDto, Model model){
-//        log.info("post/ board/update... 게시판 업데이트 포스팅");
-//
-//        BoardDto board = boardService.update(boardDto);
-//        model.addAttribute("board", board);
-//
-//        System.out.println("contents = " + boardDto.getBoardContents());
-//        return "redirect:/board/" + boardDto.getId(); // 게시글 상세페이지로 이동
-//    }
 
 }
