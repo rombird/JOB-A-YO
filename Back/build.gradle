@@ -1,0 +1,105 @@
+plugins {
+    id 'org.springframework.boot' version '3.5.6'
+    id 'io.spring.dependency-management' version '1.1.7'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+
+
+
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url = uri('https://repo.spring.io/milestone')
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.21.2'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //SECURITY
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+    //OAUTH2 CLIENT
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    //JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    //REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.4.5'
+    implementation 'org.springframework.session:spring-session-data-redis:3.4.3'
+
+    //--------------------------------------------------
+    // AI CLIENT
+    //--------------------------------------------------
+
+    // spring-ai-ollama-spring-boot-starter: Spring AI Ollama 통합 지원
+    implementation 'org.springframework.ai:spring-ai-ollama-spring-boot-starter:1.0.0-M4'
+
+    // apache commons-text: 텍스트 처리 유틸리티
+    implementation 'org.apache.commons:commons-text:1.11.0'
+
+    // swagger-parser: OpenAPI 스펙 파싱
+    implementation 'io.swagger.parser.v3:swagger-parser-v3:2.1.23'
+
+    // jaxb-runtime: XML 바인딩 런타임
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.5'
+    // jaxb-api: XML 바인딩 API
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+
+    // Selenium Java 의존성 (런타임에 필요)
+    implementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
+
+    // WebDriverManager 의존성 (런타임에 필요)
+    implementation 'io.github.bonigarcia:webdrivermanager:5.6.2'
+
+
+    //TEST
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+
