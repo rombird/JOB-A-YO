@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import SalesAnalysis from "../components/SalesAnalysis";
+import KakaoMap from './KakaoMap';
 
 import "../css/home.css"
 
@@ -30,6 +31,10 @@ function Home(){
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                    {/*  카카오맵 */}
+                    <div className='map-container-wrapper' style={{margin: '20px'}}>
+                        <KakaoMap />
                     </div>
                 </div>
                 <div className="subMain layoutCenter">    
