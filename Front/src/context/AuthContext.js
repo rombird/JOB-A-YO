@@ -38,10 +38,10 @@ export const AuthProvider = ({ children }) => {
         }catch(error){
             console.error("사용자 정보 조회 실패: ", error);
             // 사용자 정보 조회 실패 시에는 로그아웃 상태로 간주
-            logout();
+            // logout();
             return null
         }
-    }, [setUser, logout])  
+    }, [setUser])  
 
 
 
@@ -90,10 +90,12 @@ export const AuthProvider = ({ children }) => {
                 setIsLoggedIn(true);
             }else{
                 setIsLoggedIn(false);
+                setUser(null);
             }
         }catch(error){
             console.error("로그인 후 사용자 정보 로드 실패 : ", error);
             setIsLoggedIn(false);
+            setUser(null);
         }
         
     };
