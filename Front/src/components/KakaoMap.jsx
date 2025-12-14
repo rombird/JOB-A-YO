@@ -1,47 +1,71 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react'; // 👈 1. useRef 임포트
+import useKakaoLoader from '../hooks/useKakaoLoader';
 
-const KakaoMap = ({mapWidth = "100%", mapHeight = "500px", initialLat = 33.450701, initialLng = 126.570667 }) => {
-    // 지도를 삽입할 Dom 요소의 참조를 저장
-    const mapContainer = useRef(null);
+const KakaoMap = ({ mapWidth, mapHeight, initialLat, initialLng }) => {
+  
+  // 2. 맵 컨테이너를 참조할 useRef 선언
+  const mapContainerRef = useRef(null); 
+  
+  // 스크립트 로드 상태를 체크
+  const { isLoaded, error } = useKakaoLoader();
 
-    useEffect(() => {
-        // 카카오맵 라이브러리가 로드되었는지 확인
-        if(!window.kakao || !mapContainer.current){
-            console.error("카카오맵 api가 로드되지 않았거나, DOM요소가 준비되지 않았습니다.");
-            return;
+  useEffect(() => {
+    // 1. 스크립트 로드 완료 후에만 맵을 생성
+    if (!isLoaded || !window.kakao) { // window.kakao 체크 추가 (안정성)
+      return;
+    }
+
+    let mapInstance = null;
+    
+    // 3. document.getElementById("map") 대신 useRef 참조 사용
+    const container = mapContainerRef.current; 
+
+    // 컨테이너가 아직 DOM에 마운트되지 않았거나 null인 경우 종료
+    if (!container) {
+        return;
+    }
+    
+    // 2. 맵 생성
+    const options = {
+      center: new window.kakao.maps.LatLng(initialLat, initialLng),
+      level: 3
+    };
+    mapInstance = new window.kakao.maps.Map(container, options);
+    
+    // 3. Cleanup: 컴포넌트 언마운트 시 맵 리소스를 정리
+    return () => {
+        // Cleanup 시에도 container를 안전하게 참조
+        if (mapInstance && container) { 
+            // 맵 인스턴스가 사용하던 DOM을 비움
+            container.innerHTML = "";
+            mapInstance = null;
         }
+    };
 
-        // 지도 표시 영역(컨테이너) 확보
-        const container = mapContainer.current;
+  }, [isLoaded, initialLat, initialLng]); 
 
-        // 지도의 중심 좌표 설정
-        const options = {
-            center: new window.kakao.maps.LatLng(initialLat, initialLng),
-            level: 3    // 지도의 확대 레벨
-        };
+  // 에러 처리
+  if (error) {
+    return <div style={{ width: mapWidth, height: mapHeight, padding: 20 }}>
+               에러 발생: {error}
+           </div>;
+  }
 
-        // 지도 객체 생성 및 렌더링
-        const map = new window.kakao.maps.Map(container, options);
+  // 로딩 상태 표시
+  if (!isLoaded) {
+    return <div style={{ width: mapWidth, height: mapHeight, padding: 20 }}>
+               카카오맵 로딩 중...
+           </div>;
+  }
 
-        // 마커
-        const markerPosition  = new window.kakao.maps.LatLng(initialLat, initialLng); 
-        const marker = new window.kakao.maps.Marker({position: markerPosition});
-        marker.setMap(map);
-
-        return () => {
-        };
-
-    }, [initialLat, initialLng]); // 초기 좌표가 변경되면 지도를 다시 그리도록 의존성 배열에 포함
-
-    // 지도가 그려질 영역 반환하기
-    return (
-        <>
-        <div
-        ref={mapContainer}
-        style={{width: mapWidth, height: mapHeight}}
-        />
-        </>
-    );
+  // 맵 컨테이너
+  return (
+    <div
+      // 4. ID를 제거하고 ref={mapContainerRef}로 연결
+      ref={mapContainerRef} 
+      style={{ width: mapWidth, height: mapHeight, border: "1px solid #ccc" }}
+    />
+  );
 };
 
 export default KakaoMap;

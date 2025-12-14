@@ -1,12 +1,13 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import SalesAnalysis from "../components/SalesAnalysis";
 import KakaoMap from './KakaoMap';
 
+
 import "../css/home.css"
 
-function Home(){
-    return(
+function Home() {
+    return (
         <>
             <main>
                 <div className="mainBanner layoutCenter">
@@ -33,11 +34,16 @@ function Home(){
                         </div>
                     </div>
                     {/*  카카오맵 */}
-                    <div className='map-container-wrapper' style={{margin: '20px'}}>
-                        <KakaoMap />
+                    <div className='map-container-wrapper'>
+                        <KakaoMap
+                            mapWidth="600px"
+                            mapHeight="400px"
+                            initialLat={37.497946}
+                            initialLng={127.027621}
+                        />
                     </div>
                 </div>
-                <div className="subMain layoutCenter">    
+                <div className="subMain layoutCenter">
                     <div className="subMain1">
                         <div className="bgImg">
                             <div className="title">
@@ -53,28 +59,28 @@ function Home(){
                                 {/* <button className="btn">&lt;</button> */}
                                 <div id="box" >
                                     <Link className="commercial" to="/trend" />
-                                        <dl>
-                                            <img src="/images/trend_img.png" alt="상권트렌드" />
-                                            <dt>상권트렌드</dt>
-                                            <dd>요즘 뜨는 주요 상권에 대한 <br />확인과 분석을 해보세요</dd>
-                                        </dl>
-                                    
+                                    <dl>
+                                        <img src="/images/trend_img.png" alt="상권트렌드" />
+                                        <dt>상권트렌드</dt>
+                                        <dd>요즘 뜨는 주요 상권에 대한 <br />확인과 분석을 해보세요</dd>
+                                    </dl>
+
                                 </div>
                                 <div id="box" >
                                     <Link className="girl" to="/myshop" />
-                                        <dl>
-                                            <img src="/images/girl_image.png" alt="나는 사장" />
-                                            <dt>나는 사장</dt>
-                                            <dd>지금 내 가게 주변의 상권분석과 <br /> 다양한 통계를 확인하세요</dd>
-                                        </dl>
+                                    <dl>
+                                        <img src="/images/girl_image.png" alt="나는 사장" />
+                                        <dt>나는 사장</dt>
+                                        <dd>지금 내 가게 주변의 상권분석과 <br /> 다양한 통계를 확인하세요</dd>
+                                    </dl>
                                 </div>
                                 <div id="box">
                                     <Link className="man" to="newshop" />
-                                        <dl>
-                                            <img src="/images/man_img.png" alt="나도 곧 사장" />
-                                            <dt>나도 곧 사장</dt>
-                                            <dd>예비 사장님들을 위한 <br /> 전략적이고 스마트한 창업분석</dd>
-                                        </dl>
+                                    <dl>
+                                        <img src="/images/man_img.png" alt="나도 곧 사장" />
+                                        <dt>나도 곧 사장</dt>
+                                        <dd>예비 사장님들을 위한 <br /> 전략적이고 스마트한 창업분석</dd>
+                                    </dl>
                                 </div>
                                 {/* <button className="btn">&gt;</button> */}
                             </div>
