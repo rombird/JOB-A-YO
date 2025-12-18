@@ -58,7 +58,7 @@ const Header = () => {
                             <ul className="mainNav">
                                 <li className="mainList">
                                     <div className="listLine">
-                                        <Link className="mainMenu" to="" >상권트렌드</Link>
+                                        <Link className="mainMenu" to="/custom" >상권트렌드</Link>
                                     </div>
                                 </li>
                                 <li className="mainList">

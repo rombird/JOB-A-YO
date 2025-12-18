@@ -82,7 +82,8 @@ public class SecurityConfig {
                                         // 게시판 관련 로그인 없어도 볼 수 있는 것들
                                         "/api/board/paging",
                                         "/api/board/*",
-                                        "/api/board/download/**"
+                                        "/api/board/download/**",
+                                        "/api/stores/count"
             ).permitAll();
 
             // 유저관련 로그인 해야지 가능
