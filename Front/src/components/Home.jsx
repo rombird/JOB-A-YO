@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SalesAnalysis from "../components/SalesAnalysis";
 import KakaoMap from './KakaoMap';
@@ -9,16 +9,27 @@ import "../css/home.css"
 function Home() {
     const [inputText, setInputText] = useState("");     // 입력창의 실시간 테스트
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [searchResults, setSearchResults] = useState("");     // 검색 결과를 저장할 상태
+    const [searchResults, setSearchResults] = useState([]);     // 검색 결과를 저장할 상태
+    const [pagination, setPagination] = useState(null);
+    const mapRef = useRef();    // kakaoMap의 메서드에 접근하기 위한 ref
+
+
 
     // 검색 버튼 클릭 함수
     const handleSearch = (e) => {
         e.preventDefault();     // form의 새로고침 방지
-        if(!inputText.trim()){
+        if (!inputText.trim()) {
             alert("검색어를 입력해주세요.");
             return;
         }
+        setSearchResults([]);   // 새로 검색 할 시 기존 리스트 초기화
         setSearchKeyword(inputText);    // KakaoMap으로 전달될 키워드 업데이트
+    };
+
+    // kakaoMap에서 검색이 완료되면 데이터를 받는 함수
+    const handleSearchComplete = (data, paging) => {
+        setSearchResults(prev => [...prev, ...data]);   // 기존 결과에 추가 (더보기 대응)
+        setPagination(paging);
     };
 
     return (
@@ -36,12 +47,12 @@ function Home() {
                                         <option value="jp" data-lang="일본어">일어</option>
                                     </select>
                                     <input
-                                     id="title"
-                                     type="text"
-                                     value={inputText}
-                                     onChange={(e) => setInputText(e.target.value)}
-                                     placeholder="관심있는 지역(행정동, 도로명 등) 및 가게를 검색하세요." />
-                                    <button id="searchBtn"><img src="/images/search2.png" alt="돋보기 검색" />검색</button>
+                                        id="title"
+                                        type="text"
+                                        value={inputText}
+                                        onChange={(e) => setInputText(e.target.value)}
+                                        placeholder="관심있는 지역(행정동, 도로명 등) 및 가게를 검색하세요." />
+                                    <button type='submit' id="searchBtn"><img src="/images/search2.png" alt="돋보기 검색" />검색</button>
                                 </form>
                             </div>
                             <div className="searchKey">
@@ -60,28 +71,38 @@ function Home() {
                     <div className='kakao-map-result'>
                         <div className='kakao-map'>
                             <KakaoMap
+                                ref={mapRef}
                                 mapWidth="600px"
                                 mapHeight="400px"
                                 initialLat={37.497946}
                                 initialLng={127.027621}
                                 searchKeyword={searchKeyword}
-                                onSearchComplete={setSearchResults} // 결과 데이터를 부모로 보내는 함수 
+                                onSearchComplete={handleSearchComplete} // 결과 데이터를 부모로 보내는 함수 
                             />
                         </div>
-                        <div className='result-section' style={{display: 'flex', gap:'20px'}}>
-                            <div 
-                                className='result-list' style={{width: '300px', height: '400px', overflowY: 'auto', border: '1px solid', padding: '10px'}}>
-                                <h3>검색 결과 ({searchResults.length})</h3>
-                                {searchResults.length > 0? (
-                                    <ul style={{listStyle: "none", padding: 0}}>
-                                        {searchResults.map((place, index) => (
-                                            <li key={index} style={{marginBottom: '15px', borderBottom: '1px solid #eee', pb: '10px'}}>
-                                                <strong style={{color: '#2db7ad'}}>{place.place_name}</strong>
-                                                <p style={{fontSize: '12px', margin: '5px 0'}}>{place.road_address_name}</p>
-                                                <span style={{fontSize: '11px', color: '#888'}}>{place.phone}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
+                        <div className='result-section'>
+                            <div
+                                className='result-list' >
+                                <div className='result-head'>검색 결과 {searchResults.length}개</div>
+                                {searchResults.length > 0 ? (
+                                    <>
+                                        <ul className='results' >
+                                            {searchResults.map((place, index) => (
+                                                <li className='result' key={index} onClick={() => mapRef.current.moveToLocation(place)} >
+                                                    <strong style={{ color: '#65A3FF', cursor: 'pointer' }}>{place.place_name}</strong>
+                                                    <p style={{ fontSize: '12px', margin: '5px 0' }}>{place.road_address_name}</p>
+                                                    <span style={{ fontSize: '11px', color: '#888' }}>{place.phone}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        {pagination && pagination.hasNextPage && (
+                                            <button className="more-btn" onClick={() => pagination.nextPage()} style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
+                                                더보기
+                                            </button>
+                                        )}
+                                
+                                    </>
+
                                 ) : (
                                     <p>검색 결과가 없습니다</p>
                                 )}
@@ -89,7 +110,7 @@ function Home() {
 
                         </div>
                     </div>
-                    
+
                 </div>
                 <div className="subMain layoutCenter">
                     <div className="subMain1">
