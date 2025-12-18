@@ -43,32 +43,6 @@
 <br/>
 
 <div align="center">
-    <h2>주요 기능</h2>
-    <div align="left">
-        <p> - 핵심 기능 : 사용자가 원하는 소비층, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
-        <p> - 필수 기능 : 로그인·회원가입, 게시판글쓰기·글목록, chart.js</p>
-    </div>
-</div>
-
-<div align="center">
-    <h2>설치 및 실행방법</h2>
-</div>
-
-```
-git clone https://github.com/rombird/JOB-A-YO.git
-cd front
-npm install
-npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
-npm install recharts
-npm start
-
-cd back
-idea . 
-```
-
-<br/>
-
-<div align="center">
     <h2>기술 스택</h2>
     <div>
         <h3>Environment</h3>
@@ -92,17 +66,27 @@ idea .
     <p>배포시 배포환경기술까지 추가로 넣어두기</p>
 </div>
 
-<br/>
+<br />
 
 <div align="center">
-    <h2>프로젝트 구조</h2>
-    <p>tree .</p>
+    <h2>주요 기능</h2>
+    <div align="left">
+        <p> - 핵심 기능 : 사용자가 원하는 소비층, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
+        <p> - 필수 기능 : 회원/인증, 게시판/공지사항, AI 챗봇 chart.js</p>
+    </div>
 </div>
 
-<br/>
+<br />
 
 <div align="center">
     <h2>화면구성(UI)</h2>
+    <p> gif로 핵심기능 찍으면 좋음 </p>
+</div>
+
+<br />
+
+<div align="center">
+    <h2> ERD </h2>
 </div>
 
 <br/>
@@ -237,6 +221,7 @@ idea .
             </tr>
         </tbody>
     </table>
+    <br />
     <table>
         <caption> AI챗봇(Chat API) </caption>
         <thead> 
@@ -256,12 +241,31 @@ idea .
     </table>
 </div> 
 
-<br /> 
+<br />
 
 <div align="center">
-  <h2> 개발 일정 Time Line </h2>
+    <h2>프로젝트 구조</h2>
+    <p>tree .</p>
 </div>
 
+<br/>
+
 <div align="center">
-    <h2> 회고 </h2>
+    <h2>설치 및 실행방법</h2>
 </div>
+
+```
+git clone https://github.com/rombird/JOB-A-YO.git
+cd front
+npm install
+npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+npm install recharts
+npm start
+
+cd back
+idea . 
+```
+<div align="center">
+  <h2> 개발 일정 & 회고 </h2>
+</div>
+
