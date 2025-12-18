@@ -12,15 +12,11 @@ main{
     height:200px;
     display:flex;
     align-items: center;
-    display: flex;
     flex-direction: column;
-    align-items: center; 
     justify-content: center; 
 }
-.searchBox{
-    padding:20px;
-}
-.searchBox>.search{
+
+.search{
     margin:15px;
     width:1280px;
     height:77px;
@@ -28,11 +24,25 @@ main{
     text-align: left;    
     border: 3px solid #65A3FF;
     box-shadow: 0 3px 8px rgba(0, 0, 0, .18);
-    position: relative;
-    line-height:50px;
+    /* position: relative; */
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    /* line-height:50px; */
 }
-.searchBox>.search>select{
-    width: 130px;
+
+.search > form{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.searchBox{
+    padding:20px;
+}
+
+.search>form>select{
+    width: 100px;
     border: none;
     /* box-sizing: border-box; */
     vertical-align: middle;
@@ -44,9 +54,13 @@ main{
     background-color: #fff;
     background-position: 100% 50%;
     margin:10px 50px;
+
     
 }
-.searchBox>.search>#title{
+#title{
+    /* 남은 공간을 input이 모두 차지하기 위해서 */
+    /* flex: 1;     */
+
     border:none;
     width: 800px;
     height: 40px;
@@ -56,7 +70,7 @@ main{
     padding: 3px 10px;
     /* box-sizing: border-box; */
 }
-.searchBox>.search>#searchBtn{
+#searchBtn{
     /* position: absolute; */
     /* top: 50%;
     right: 15px; */
@@ -73,19 +87,19 @@ main{
     justify-content: center;
     align-items: center;
 }
-.searchBox>.search>#searchBtn>img{
+#searchBtn>img{
     width:40px;
     height:40px;
     filter: opacity(0.5) drop-shadow(0 0 0 #fff);
-    display:block;
+    /* display:block; */
     margin-left:50px;
 }
-.searchBox>.searchKey>.keyList{
+.keyList{
     display:flex;
     /* border:1px solid; */
     margin:25px 380px;
 }
-.searchBox>.searchKey>.keyList button{
+.keyList button{
     border:none;
     border-radius:50px;
     margin:20px 5px;
