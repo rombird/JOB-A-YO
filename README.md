@@ -109,7 +109,7 @@ idea .
 
 <div align="center">
     <h2>API 문서</h2>
-    <table align="left">
+    <table>
         <caption>사용자(User API)</caption>
         <thead>
             <tr align="center">
@@ -131,12 +131,22 @@ idea .
             </tr>
             <tr>
               <td>GET</td>
-              <td>/mypage</td>
-              <td>마이페이지</td>
+              <td> /api/user/validate </td>                
+              <td> 토큰 검증 </td>
+            </tr>
+            <tr>
+              <td> PUT </td>
+              <td> /api/user </td>                
+              <td> 내 정보 수정 </td>
+            </tr>
+            <tr>
+              <td> DELETE </td>
+              <td> /api/user </td>                
+              <td> 회원 탈퇴 </td>
             </tr>
         </tbody>
     </table>
-
+    <br/>
     <table>
         <caption>게시판(Board API)</caption>
         <thead>
@@ -179,15 +189,58 @@ idea .
             </tr>
         </tbody>
     </table>
-</div>
-
+    <br/>
+    <table>
+         < ccacapcaptcaptintAPI)</ccaption>  <thead>
+            <tr>
+                <th>메서드</th>
+                <th>엔드포인트(URL)</th>
+                <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>POST</td>
+                <td>/api/comment/save</td>
+                <td>댓글작성</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <table>
+        <caption>공지사항(Notice API)</caption>
+        <thead>
+            <tr>
+                <th>메서드</th>
+                <th>엔드포인트(URL)</th>
+                <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td>/api/notice/list</td>
+                <td>공지사항목록</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/notice/save</td>
+                <td>공지작성</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/api/notice/{id}</td>
+                <td>공지수정</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/notice/delete/{id}</td>
+                <td>공지삭제</td>
+                <t    <></div>  </tbod<div   </table>
+</d>v>
 <br />
-
 <div align="center">
-    <h2>개발 일정 Time Line</h2>
+ div<h2>개발 일정 Time Line</h2>
 </div>
 
-<div align="center">
-    <h2>회고</h2>
-</div>
-
+<div align="cen
