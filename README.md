@@ -265,9 +265,17 @@ npm start
 cd back
 idea . 
 ```
+
+<br />
+
 <div align="center">
   <h2> 개발 일정 & 회고 </h2>
     <p> 프로젝트 기간 : 2025.11.18 ~ 2025.12.12(4주) </p>
+    <p> 회고에 추가할 내용 : API 통신 시 ERR_NETWORK 발생 <br/>
+        문제: 리액트에서 백엔드로 점포 수 조회 요청 시 AxiosError: Network Error 발생. <br />
+        원인: Spring Security 설정에서 새로운 엔드포인트(/api/stores/**)에 대한 접근 허용(permitAll)이 누락되어 요청이 차단됨. <br />
+        해결: SecurityConfig 파일의 filterChain 설정에 해당 경로를 추가하여 권한 검사 없이 접근 가능하도록 수정 후 정상 작동 확인. <br />
+    </p>
 </div>
 
 ```mermaid
