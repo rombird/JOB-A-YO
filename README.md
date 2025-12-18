@@ -267,5 +267,33 @@ idea .
 ```
 <div align="center">
   <h2> 개발 일정 & 회고 </h2>
+    <p> 프로젝트 기간 : 2025.11.18 ~ 2025.12.12(4주) </p>
 </div>
 
+```mermaid
+gantt
+    title 🗓️ Project Development Timeline
+    dateFormat  YYYY-MM-DD
+    axisFormat  %m/%d
+
+    section 기획 및 설계
+    요구사항 정의 및 기능 명세      :done, des1, 2025-12-01, 2025-12-05
+    DB 설계 및 ERD 작성           :done, des2, 2025-12-06, 2025-12-08
+    
+    section 백엔드(Spring Boot)
+    회원/인증 API (JWT)          :done, be1, 2025-12-09, 2025-12-13
+    게시판 & 공지사항 CRUD        :done, be2, 2025-12-14, 2025-12-18
+    매출 통계 & AI 챗봇 API      :active, be3, 2025-12-19, 2025-12-23
+    
+    section 프론트엔드(React)
+    UI 레이아웃 및 기본 컴포넌트    :done, fe1, 2025-12-09, 2025-12-15
+    API 연동 및 상태 관리         :active, fe2, 2025-12-16, 2025-12-22
+    
+    section 핵심 기능(지도)
+    카카오 지도 API 연동          :crit, map1, 2025-12-23, 2025-12-27
+    지역 선택 및 데이터 저장 로직    :crit, map2, 2025-12-28, 2025-12-31
+    
+    section 마무리
+    QA 및 버그 수정              : 2026-01-01, 2026-01-05
+    README 작성 및 배포          : 2026-01-06, 2026-01-07
+```
