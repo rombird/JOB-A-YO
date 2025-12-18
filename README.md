@@ -109,31 +109,75 @@ idea .
 
 <div align="center">
     <h2>API 문서</h2>
+    <table align="left">
+        <caption>사용자(User API)</caption>
+        <thead>
+            <tr align="center">
+              <th>메서드</th>
+              <th>엔드포인트(URL)</th>
+              <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>GET</td>
+              <td>/login</td>
+              <td>로그인</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>/join</td>
+              <td>회원가입</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>/mypage</td>
+              <td>마이페이지</td>
+            </tr>
+        </tbody>
+    </table>
+
     <table>
-      <thead>
-        <tr align="center">
-          <td>메서드</td>
-          <td>엔드포인트</td>
-          <td>설명</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>GET</td>
-          <td>/login</td>
-          <td>로그인</td>
-        </tr>
-        <tr>
-          <td>POST</td>
-          <td>/join</td>
-          <td>회원가입</td>
-        </tr>
-        <tr>
-          <td>GET</td>
-          <td>/mypage</td>
-          <td>마이페이지</td>
-        </tr>
-      </tbody>
+        <caption>게시판(Board API)</caption>
+        <thead>
+            <tr>
+                <th>메서드</th>
+                <th>엔드포인트(URL)</th>
+                <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>GET</td>
+              <td>/api/board/list</td>
+              <td>게시글 목록 조회</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>/api/board/{id}</td>
+              <td>게시글 상세조회 </td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>/api/board/save</td>
+              <td>게시글 작성</td>
+            </tr>
+            <tr>
+              <td>PUT</td>
+              <td>/api/board/{id}</td>
+              <td>게시글 수정</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td>/api/board/delete/{id}</td>
+              <td>게시글 삭제</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>/api/board/file/{id}</td>
+              <td>파일 다운로드</td>
+            </tr>
+        </tbody>
     </table>
 </div>
 
