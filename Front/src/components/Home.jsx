@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SalesAnalysis from "../components/SalesAnalysis";
 import KakaoMap from './KakaoMap';
@@ -11,9 +11,9 @@ function Home() {
     const [searchKeyword, setSearchKeyword] = useState("");
     const [searchResults, setSearchResults] = useState([]);     // 검색 결과를 저장할 상태
     const [pagination, setPagination] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
     const mapRef = useRef();    // kakaoMap의 메서드에 접근하기 위한 ref
-
-
+    const observerTarget = useRef(null);    // 스크롤 끝을 감지할 타겟 Ref
 
     // 검색 버튼 클릭 함수
     const handleSearch = (e) => {
@@ -30,7 +30,28 @@ function Home() {
     const handleSearchComplete = (data, paging) => {
         setSearchResults(prev => [...prev, ...data]);   // 기존 결과에 추가 (더보기 대응)
         setPagination(paging);
+        setTotalCount(paging.totalCount);
     };
+
+    // 무한 스크롤 로직
+    useEffect(() => {
+        if(!pagination || !pagination.hasNextPage) return;
+
+        const observer = new IntersectionObserver(
+            (e) => {
+                if (e[0].isIntersecting){
+                    pagination.nextPage();  // 다음 페이지 불러오기
+                }
+            },
+            {threshold: 1.0}
+        );
+        
+        if(observerTarget.current){
+            observer.observe(observerTarget.current);
+        }
+
+        return () => observer.disconnect();
+    }, [pagination]);
 
     return (
         <>
@@ -83,7 +104,7 @@ function Home() {
                         <div className='result-section'>
                             <div
                                 className='result-list' >
-                                <div className='result-head'>검색 결과 {searchResults.length}개</div>
+                                <div className='result-head'>검색 결과 {totalCount}개</div>
                                 {searchResults.length > 0 ? (
                                     <>
                                         <ul className='results' >
@@ -95,12 +116,12 @@ function Home() {
                                                 </li>
                                             ))}
                                         </ul>
-                                        {pagination && pagination.hasNextPage && (
-                                            <button className="more-btn" onClick={() => pagination.nextPage()} style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
-                                                더보기
-                                            </button>
-                                        )}
-                                
+                                       
+                                       {/* 이 div가 보이면 다음 데이터를 가져오는 거임 */}
+                                        <div ref={observerTarget} style={{height: '20px', background: 'transparent'}}>
+                                            {pagination?.hasNextPage && "로딩 중..."}
+                                        </div>
+                                        
                                     </>
 
                                 ) : (
