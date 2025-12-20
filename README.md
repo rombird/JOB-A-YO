@@ -1,3 +1,9 @@
+# JOB-A-YO STREAMLIT 실행 시 설치 라이브러리
+```
+pip install streamlit xgboost joblib scikit-learn pandas
+streamlit run app.py
+```
+
 # JOB-A-YO_PJ
 > 핵심 기능 : 사용자가 원하는 소비층, 사용할 수 있는 자금, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
 >   
