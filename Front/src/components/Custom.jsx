@@ -3,6 +3,11 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import api from "../api/axiosConfig"; 
 
 // 주요 지역 좌표 데이터 (서울 기준 예시)
+// const districts = {
+//   "종로구": [
+//     { code: "11110515", name: "청운효자동" },
+//     { code: "11110530", name: "사직동" }
+//   ],
 const regionData = [
   { name: "강남구", lat: 37.4959, lng: 127.0664 },
   { name: "강동구", lat: 37.5492, lng: 127.1464 },
