@@ -119,6 +119,9 @@ public class SecurityConfig {
             auth.requestMatchers(HttpMethod.GET, "/api/notice/*").permitAll();
             auth.requestMatchers(HttpMethod.GET, "/api/notice/download/**").permitAll();
 
+            // 데이터 분석 보는 거 누구든 혀용
+            auth.requestMatchers("/api/analysis/predict/**").permitAll();
+
             // 공지사항(관리자만 가능), 글 쓰기와 수정 삭제는 관리자만 가능
             auth.requestMatchers("/api/notice/save").hasAuthority("ADMIN");
             auth.requestMatchers(HttpMethod.PUT, "/api/notice/update/*").hasAuthority("ADMIN");
