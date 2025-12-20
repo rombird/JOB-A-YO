@@ -7,7 +7,7 @@ model = joblib.load('xgb_model.pkl')
 scaler = joblib.load('scaler.pkl')
 df = pd.read_csv('merged_final_data.csv') # 상권 데이터 원본
 
-st.title("🏘️ 상권 기반 창업 성공 확률 예측 서비스")
+st.title("🏘️ 창업 성공 확률 예측 서비스")
 
 # 2. 사용자 입력 (드롭다운)
 target_dong = st.selectbox("행정동을 선택하세요", df['행정동_코드_명'].unique())
