@@ -46,7 +46,7 @@ const MyShop = () => {
     return(
         <>
             <div style={{ padding: '20px' }}>
-                    <h1>우리 동네 업종별 예상 매출을 AI로 분석해보세요.</h1>
+                    <h2 style={{margin: '20px 0'}}>우리 동네 업종별 예상 매출을 AI로 분석해보세요.</h2>
                     <AnalysisSearch onSearch={handlePredict} loading={loading} />
                     <AnalysisResult data={result} />
             </div>
