@@ -5,8 +5,8 @@ import axios from 'axios';
 import api from '../api/axiosConfig';
 import SalesAnalysis from "../components/SalesAnalysis";
 import KakaoMap from './KakaoMap';
-import AnalysisResult from './AnalysisResult';
-import AnalysisSearch from './AnalysisSearch';
+import AnalysisResult from './revenueAnalysis/AnalysisResult';
+import AnalysisSearch from './revenueAnalysis/AnalysisSearch';
 
 
 import "../css/home.css"
@@ -20,26 +20,7 @@ function Home() {
     const mapRef = useRef();    // kakaoMap의 메서드에 접근하기 위한 ref
     const observerTarget = useRef(null);    // 스크롤 끝을 감지할 타겟 Ref
 
-    // 데이터 분석 모델에 쓸 상태들
-    const[result, setResult] = useState(null);
-    const[loading, setLoading] = useState(false);
-
-    const handlePredict = async (dong, sector) => {
-        setLoading(true);
-        try{
-            // 스프링부트 엔드포인트로 요청
-            const response = await api.get('/api/analysis/predict', {
-                params: {dong, sector}
-            });
-
-            console.log("뭘 들고오냐?: ", response);
-            setResult(response.data);
-        }catch(error){
-            alert("데이터를 가져오는 중 오류가 발생했습니다");
-        }finally{
-            setLoading(false);
-        }
-    }
+   
 
     // 검색 버튼 클릭 함수
     const handleSearch = (e) => {
@@ -82,11 +63,7 @@ function Home() {
     return (
         <>
             <main>
-                <div style={{ padding: '20px' }}>
-                    <h1>🏛️ 상권 분석 시뮬레이터</h1>
-                    <AnalysisSearch onSearch={handlePredict} loading={loading} />
-                    <AnalysisResult data={result} />
-                    </div>
+                
 
                 <div className="mainBanner layoutCenter">
                     {/* 검색창 */}

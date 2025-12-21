@@ -16,6 +16,7 @@ import Footer from "./components/Footer";
 import NoticePaging from './components/notice/NoticePaging';
 import NoticeWrite from './components/notice/NoticeWrite';
 import NoticeDetail from './components/notice/NoticeDetail';
+import MyShop from './components/revenueAnalysis/MyShop';
 
 function App() {
   return (
@@ -34,6 +35,11 @@ function App() {
                 <Route path="/api/board/paging" element={<Paging />} />
                 <Route path="/board/WriteBoard" element={<WriteBoard />} />
                 <Route path="/board/:id" element={<BoardDetail />} />
+
+                {/* 매출 예측 페이지 */}
+                <Route path="/myshop" element={<MyShop />} />
+
+
                 {/* 글쓰기/수정 페이지 (수정 모드에 :id 사용) */}
                 <Route path="/board/update/:id" element={<WriteBoard />} />
 

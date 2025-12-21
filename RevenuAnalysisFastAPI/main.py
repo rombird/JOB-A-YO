@@ -6,6 +6,7 @@ import numpy as np
 app = FastAPI()
 
 # 시작할 때 모델과 데이터 로드
+# 매출 예측 관련
 try:
     model = joblib.load('revenue_model.pkl')    # 평균 구하는 모델
     model_cols = joblib.load('model_columns.pkl')   # 원-핫 인코딩 할 때 컬럼 순서
