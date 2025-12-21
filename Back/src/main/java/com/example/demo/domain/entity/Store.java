@@ -1,34 +1,35 @@
 package com.example.demo.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "store")
+@Getter
+@NoArgsConstructor
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "store_name")
-    private String storeName;
+    private String dongName; // 행정동
+    private String categoryName; // 업종 명
+    private String storeChangeRate; // 점포 증감률
+    private String competitionIndex; // 경쟁도 지수
+    private String areaDensity; // 업종 면적 밀도
+    private String populationPerStore; // 점포당 유동인구
+    private String outlookGrade; // 전망등급
 
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "sales")
-    private Integer sales;
-
-    // JPA는 기본 생성자가 반드시 필요
-    protected Store() {}
-
-    public Store(String storeName, String address, Integer sales) {
-        this.storeName = storeName;
-        this.address = address;
-        this.sales = sales;
+    public Store(String dongName, String categoryName, String storeChangeRate,
+                 String competitionIndex, String areaDensity, String populationPerStore, String outlookGrade) {
+        this.dongName = dongName;
+        this.categoryName = categoryName;
+        this.storeChangeRate = storeChangeRate;
+        this.competitionIndex = competitionIndex;
+        this.areaDensity = areaDensity;
+        this.populationPerStore = populationPerStore;
+        this.outlookGrade = outlookGrade;
     }
 
-    // getter만 있어도 충분 (불변 객체 권장)
-    public String getStoreName() { return storeName; }
-    public String getAddress() { return address; }
-    public Integer getSales() { return sales; }
 }

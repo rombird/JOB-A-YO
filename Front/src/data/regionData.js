@@ -32,18 +32,6 @@ const guCodeMap = {
   "11740":"강동구",
 };
 
-
-// export const dongDataByRegion = {
-//   "강남구": [
-//     { name: "역삼1동", lat: 37.4954, lng: 127.0334, area: 2.35 
-//     { name: "삼성1동", lat: 37.5144, lng: 127.0625, area: 1.94 
-//   ],
-//   "마포구": [
-//     { name: "서교동", lat: 37.553, lng: 126.921, area: 1.65 
-//   ],
-  
-// };
-
 // 데이터 가공 함수
 const buildDongData = () => {
   const result = {};

@@ -4,8 +4,15 @@ import api from "../api/axiosConfig";
 import "../css/custom.css";
 import dongGeoJson from "../assets/BND_ADM_DONG.json";
 import { dongDataByRegion, categories } from "../data/regionData.js";
-import { transformCoordinates, transformGeoJsonToPath } from "../utils/mapUtils.js";
-import { dongDataByRegion } from '../data/regionData.js';
+import { transformGeoJsonToPath } from "../utils/mapUtils.js";
+
+// 보통 GeoJSON의 행정동 코드는 ADM_CD 또는 ADM_DR_CD라는 이름의 프로퍼티에 담겨 있습니다.
+const seoulDongGeoJson = {
+    ...dongGeoJson,
+    features: dongGeoJson.features.filter(f => 
+        f.properties && String(f.properties.ADM_CD).startsWith("11")
+    )
+};
 
 const Custom = () => {
     // 상태 관리
@@ -31,21 +38,15 @@ const Custom = () => {
             path: geoFeature ? transformGeoJsonToPath(geoFeature.geometry.coordinates) : []
         };
     });
-
-    
-
-    // 사용 예시: 강남구의 동 목록 가져오기
-    console.log(dongDataByRegion["강남구"]);
-
     const [category, setCategory] = useState("한식"); 
-    const [storeCount, setStoreCount] = useState(null); 
+    const [analysisResult, setAnalysisResult] = useState("");
     const [loading, setLoading] = useState(false); 
     const mapRef = useRef(null); // Map 객체에 접근하기 위한 ref
     
     // 사용자가 행정동을 선택하면 dongGeoJson 파일안에서 같은 행정동을 find로 찾아냄
     // -> 복잡한 좌표들을 transformCoordinates로 변환해 저장
     const currentPath = useMemo(() => { 
-        const feature = dongGeoJson.features.find(
+        const feature = seoulDongGeoJson.features.find(
             (f) => f.properties.ADM_NM === selectedDong.name 
         );
         return feature ? transformGeoJsonToPath(feature.geometry) : [];
@@ -57,7 +58,6 @@ const Custom = () => {
         setSelectedGu(guName);
         // 구가 바뀌면 해당 구의 첫 번째 동으로 자동 설정
         setSelectedDong(dongDataByRegion[guName][0]);
-        setStoreCount(null);
     };
 
     // '동' 변경 시 핸들러
@@ -69,7 +69,7 @@ const Custom = () => {
         // if (!baseDongInfo) return;
 
         // GeoJSON 데이터(dongGeoJson)에서 해당 동의 진짜 경계선(Feature) 찾음
-        const geoFeature = dongGeoJson.features.find(
+        const geoFeature = seoulDongGeoJson.features.find(
             (f) => f.properties.ADM_NM === dongName // JSON의 ADM_NM과 일치하는지 확인
         );
         // 기본값 설정 (못 찾았을 경우 대비)
@@ -79,12 +79,13 @@ const Custom = () => {
         // JSON 데이터가 확실히 있을 때만 카카오맵 형식으로 변환하여 저장
         if (geoFeature && geoFeature.properties) {
             finalArea = (geoFeature.properties.SHAPE_AREA / 1000000).toFixed(2);
-            finalPath = transformGeoJsonToPath(geoFeature.geometry);
+            finalPath = geoFeature ? transformGeoJsonToPath(geoFeature.geometry) : [];
         }
         setSelectedDong({
             ...baseDongInfo,
+            name: dongName,
             area: finalArea,
-            path: geoFeature ? transformGeoJsonToPath(geoFeature.geometry) : []
+            path: finalPath
         });
 
         console.log(geoFeature.properties); // ADM_NM, SGG_NM, SIDO_NM 
@@ -102,15 +103,15 @@ const Custom = () => {
         setLoading(true);
         try {
             const response = await api.post("/api/stores/count", {
-                regionName: selectedDong.name, // 여기서 '동' 이름을 보냅니다!
+                regionName: selectedDong.name, // 행정동 보냄
                 category: category
             });
-
-            setStoreCount(response.data);
             alert(`${selectedDong.name}의 ${category} 조회가 완료되었습니다.`);
+            setAnalysisResult(response.data);
+            
         } catch (error) {
             console.error("조회 실패:", error);
-            alert("서버 연결 실패! 포트 번호(8090)와 백엔드 실행 여부를 확인하세요.");
+            alert("데이터를 가져오는데 실패했습니다.");
         } finally {
             setLoading(false);
         }
@@ -134,52 +135,63 @@ const Custom = () => {
     }, [currentPath]);
 
     return (
-        <div className="custom">
-            <h3>📍 지역 및 업종별 점포 조회</h3>
-      
-            <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
-
-                <select onChange={handleGuChange} value={selectedGu}>
-                    {Object.keys(dongDataByRegion).map((gu) => (
-                        <option key={gu} value={gu}>{gu}</option>
-                    ))}
-                </select>
-
-                <select onChange={handleSelectDongChange} value={selectedDong.name}>
-                    {dongDataByRegion[selectedGu].map(d => (
-                        <option key={d.name} value={d.name}>{d.name}</option>
-                    ))}
-                </select>
-                <button onClick={handleFetchCount}>업종 선택 전 조회하기</button>
-
-                {/* 업종 선택 */}
-                <select value={category} onChange={(e) => { setCategory(e.target.value); setStoreCount(null); }}
-                    style={{ padding: "10px" }}
-                >
-                    {categories.map((cat) => (
-                        <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                </select>
-
-                {/* 하나로 통합된 버튼 */}
-                {/* <button 
-                    onClick={handleFetchCount} 
-                    disabled={loading}
-                    style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}
-                >
-                    {loading ? "조회 중..." : "조회 및 데이터 전송"}
-                </button> */}
+        <div className="map-container">
+            <div className="map-controls" >
+                <h4> 📝 상권 조회 </h4>
+                <div className="control-group">
+                    <label>자치구</label>
+                    <select onChange={handleGuChange} value={selectedGu}>
+                        {Object.keys(dongDataByRegion).map((gu) => (
+                            <option key={gu} value={gu}>{gu}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="control-group">
+                    <label>행정동</label>
+                    <select onChange={handleSelectDongChange} value={selectedDong.name}>
+                        {dongDataByRegion[selectedGu].map(d => (
+                            <option key={d.name} value={d.name}>{d.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="control-group">
+                    <label>업종명</label>
+                    <select value={category} onChange={(e) => { setCategory(e.target.value);}} >
+                        {categories.map((cat) => (
+                            <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                    </select>
+                </div>
+                <button className="analysis-btn" onClick={handleFetchCount} disabled={loading} >
+                    {loading ? "분석 중..." : "분석하기"}
+                </button>
             </div>
 
             {/* 결과 표시 창 */}
-            {/* {storeCount !== null && (
-                <div style={{ padding: "15px", backgroundColor: "#eef2ff", borderRadius: "8px", marginBottom: "20px", border: "1px solid #4f46e5" }}>
-                    <p style={{ fontSize: "18px", margin: 0 }}>
-                        <strong>{selectedRegion.name}</strong>의 <strong>{category}</strong> 점포 수는 
-                        <span style={{ color: "#4f46e5", fontWeight: "bold" }}> {storeCount}개</span>입니다.
-                    </p>
+            {analysisResult && (
+                <div className="analysis-box">
+                    <div className="result-header">
+                        <h4>📊 {selectedDong.name} {category} 리포트</h4>
+                    </div>
+                    <div className="result-content">
+                        <p className="main-sentence">{analysisResult}</p>
+                        <hr />
+                        <div className="term-guide">
+                            <h5>💡 용어 설명</h5>
+                            <dl>
+                                <dt>점포 증감률</dt>
+                                <dd>전년 대비 점포 수의 변화를 나타내는 지표입니다.</dd>
+                                <dt>경쟁도 지수</dt>
+                                <dd>해당 지역 내 동일 업종 간의 경쟁 강도를 나타냅니다.</dd>
+                                <dt>업종 면적 밀도</dt>
+                                <dd>지역 면적 대비 업종이 얼마나 밀집해 있는지 보여줍니다.</dd>
+                                <dt>점포당 유동인구</dt>
+                                <dd>한 점포가 가질 수 있는 잠재적 고객수를 의미합니다.</dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
-            )} */}
+            )}
 
             {/* 지도 영역 */}
             <Map className="kakaomap" center={{ lat: selectedDong.lat, lng: selectedDong.lng }} ref={mapRef} level={7}>
@@ -194,14 +206,6 @@ const Custom = () => {
                     />
                 )}
             </Map>
-
-            {selectedDong && (
-                <div className="info-box">
-                    <p>선택된 동: {selectedDong.name}</p>
-                    {/* area 값이 있는지 확인 후 출력 */}
-                    <p>면적: {selectedDong.area ? `${selectedDong.area} km²` : "면적 정보 없음"}</p>
-                </div>
-            )}
         </div>
     );
 };
