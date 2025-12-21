@@ -2,22 +2,30 @@ from fastapi import FastAPI, HTTPException
 import joblib
 import pandas as pd
 import numpy as np
+import uvicorn
 
 app = FastAPI()
 
 # 시작할 때 모델과 데이터 로드
-# 매출 예측 관련
+
 try:
+    # 매출 예측 관련
     model = joblib.load('revenue_model.pkl')    # 평균 구하는 모델
     model_cols = joblib.load('model_columns.pkl')   # 원-핫 인코딩 할 때 컬럼 순서
     dong_df = pd.read_pickle('dong_data.pkl')
     # 미리 평균값을 구해서 메모리에 올려둠
     global_avg = dong_df.mean(numeric_only=True) 
+
+    # 성공 확률 예측 관련
+    success_model = joblib.load('xgb_model.pkl')
+    success_scaler = joblib.load('scaler.pkl')
+    success_df = pd.read_csv('merged_final_data.csv')
+
     print("모델 및 평균 데이터 로드 완료")
 except Exception as e:
     print(f"로드 실패: {e}")
 
-
+# 매출 예측 엔드포인트
 @app.get("/predict")
 def predict_revenue(dong_name: str, sector_name: str):
     # 동네 데이터 찾기
@@ -82,6 +90,33 @@ def predict_revenue(dong_name: str, sector_name: str):
         "reasons": analysis_reasons
     }
 
+# 성공확률 엔드포인트
+@app.get("/api/analysis/success-rate")
+def get_success_rate(dong: str, sector: str):
+    # Streamlit 로직 이식
+    input_data = success_df[(success_df['행정동_코드_명'] == dong) &
+                            (success_df['서비스_업종_코드_명'] == sector)]
+
+    if input_data.empty:
+        raise HTTPException(status_code = 404, detail = "해당 조합의 데이터가 없습니다.")
+    
+    features = ['점포_수', '유사_업종_점포_수', '개업_율', '당월_매출_금액', '총_유동인구_수', 
+                '총_상주인구_수', '총_가구_수', '월_평균_소득_금액', '지출_총금액', '음식_지출_총금액']
+
+    # 최신 행 추출 및 스케일링 -> 옛날 데이터 말고 제일 최신의 데이터만 사용하여 모델 돌리기 위해서
+    X_input = input_data[features].iloc[[0]]
+    X_scaled = success_scaler.transform(X_input)
+
+    # 확률 예측
+    prob = success_model.predict_proba(X_scaled)[0][1]
+
+    return {
+        "dong": dong,
+        "sector": sector,
+        "success_probability": float(prob),
+        "metrics": X_input.to_dict(orient = 'records')[0]
+    }
+
 if __name__ == "__main__":
-    import uvicorn
+    # import uvicorn
     uvicorn.run(app, host = '0.0.0.0', port=8000)

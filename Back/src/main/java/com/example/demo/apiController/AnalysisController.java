@@ -1,6 +1,7 @@
 package com.example.demo.apiController;
 
 import com.example.demo.domain.dto.RevenuePredictionResponseDto;
+import com.example.demo.domain.dto.SuccessRateResponseDto;
 import com.example.demo.service.AnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,12 @@ public class AnalysisController {
         RevenuePredictionResponseDto revenuePredictionResponseDto = analysisService.getPrediction(dong, sector);
 
         return ResponseEntity.ok(revenuePredictionResponseDto);
+    }
+
+    @GetMapping("/success-rate")
+    public ResponseEntity<SuccessRateResponseDto> getSuccessRate(@RequestParam String dong, @RequestParam String sector){
+        SuccessRateResponseDto successRateResponseDto = analysisService.getSuccessRate(dong, sector);
+
+        return ResponseEntity.ok(successRateResponseDto);
     }
 }
