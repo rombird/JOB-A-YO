@@ -137,7 +137,7 @@ const Custom = () => {
     return (
         <div className="map-container">
             <div className="map-controls" >
-                <h4> 📝 상권 조회 </h4>
+                <h4> 📝 상권 분석 조회 </h4>
                 <div className="control-group">
                     <label>자치구</label>
                     <select onChange={handleGuChange} value={selectedGu}>

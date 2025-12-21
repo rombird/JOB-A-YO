@@ -45,33 +45,33 @@ function Home(){
                         <div className="issue layoutCenter">
                             <div className="service"></div>
                             <div className="issueBoxes">
-                                {/* <button className="btn">&lt;</button> */}
                                 <div id="box" >
-                                    <Link className="commercial" to="/trend" />
+                                    <Link className="commercial" to="">
                                         <dl>
                                             <img src="/images/trend_img.png" alt="상권트렌드" />
                                             <dt>상권트렌드</dt>
                                             <dd>요즘 뜨는 주요 상권에 대한 <br />확인과 분석을 해보세요</dd>
                                         </dl>
-                                    
+                                    </Link>
                                 </div>
                                 <div id="box" >
-                                    <Link className="girl" to="/myshop" />
+                                    <Link className="girl" to="">
                                         <dl>
                                             <img src="/images/girl_image.png" alt="나는 사장" />
                                             <dt>나는 사장</dt>
                                             <dd>지금 내 가게 주변의 상권분석과 <br /> 다양한 통계를 확인하세요</dd>
                                         </dl>
+                                    </Link>
                                 </div>
                                 <div id="box">
-                                    <Link className="man" to="newshop" />
+                                    <Link className="man" to="/custom">
                                         <dl>
                                             <img src="/images/man_img.png" alt="나도 곧 사장" />
                                             <dt>나도 곧 사장</dt>
                                             <dd>예비 사장님들을 위한 <br /> 전략적이고 스마트한 창업분석</dd>
                                         </dl>
+                                    </Link>
                                 </div>
-                                {/* <button className="btn">&gt;</button> */}
                             </div>
                             <div className="issueEnd">
                             </div>
