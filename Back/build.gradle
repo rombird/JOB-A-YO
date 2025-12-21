@@ -90,6 +90,10 @@ dependencies {
 
     //TEST
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // CSV -> DB
+    implementation 'org.apache.commons:commons-csv:1.10.0'
+
 }
 
 tasks.named('test') {

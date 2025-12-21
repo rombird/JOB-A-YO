@@ -1,97 +1,159 @@
-import React, { useState } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { Map, Polygon } from "react-kakao-maps-sdk";
 import api from "../api/axiosConfig"; 
-
-// 주요 지역 좌표 데이터 (서울 기준 예시)
-// const districts = {
-//   "종로구": [
-//     { code: "11110515", name: "청운효자동" },
-//     { code: "11110530", name: "사직동" }
-//   ],
-const regionData = [
-  { name: "강남구", lat: 37.4959, lng: 127.0664 },
-  { name: "강동구", lat: 37.5492, lng: 127.1464 },
-  { name: "강북구", lat: 37.6469, lng: 127.0147 },
-  { name: "강서구", lat: 37.5657, lng: 126.8226 },
-  { name: "관악구", lat: 37.4653, lng: 126.9438 },
-  { name: "광진구", lat: 37.5481, lng: 127.0857 },
-  { name: "구로구", lat: 37.4954, lng: 126.8581 },
-  { name: "금천구", lat: 37.4600, lng: 126.9008 },
-  { name: "노원구", lat: 37.6552, lng: 127.0771 },
-  { name: "동대문구", lat: 37.5838, lng: 127.0507 },
-  { name: "동작구", lat: 37.4965, lng: 126.9443 },
-  { name: "마포구", lat: 37.5622, lng: 126.9087 },
-  { name: "서대문구", lat: 37.5820, lng: 126.9356 },
-  { name: "서초구", lat: 37.4769, lng: 127.0378 },
-  { name: "성동구", lat: 37.5506, lng: 127.0409 },
-  { name: "성북구", lat: 37.6069, lng: 127.0232 },
-  { name: "송파구", lat: 37.5048, lng: 127.1144 },
-  { name: "양천구", lat: 37.5270, lng: 126.8561 },
-  { name: "영등포구", lat: 37.5206, lng: 126.9139 },
-  { name: "용산구", lat: 37.5311, lng: 126.9811 },
-  { name: "은평구", lat: 37.6176, lng: 126.9227 },
-  { name: "종로구", lat: 37.5991, lng: 126.9861 },
-  { name: "중구", lat: 37.5579, lng: 126.9941 },
-  { name: "중랑구", lat: 37.5953, lng: 127.0936 },
-];
-
-// 음식점 종류(업종) 리스트
-const categories = ["한식", "중식", "일식", "양식", "카페", "치킨"];
+import "../css/custom.css";
+import dongGeoJson from "../assets/BND_ADM_DONG.json";
+import { dongDataByRegion, categories } from "../data/regionData.js";
+import { transformCoordinates, transformGeoJsonToPath } from "../utils/mapUtils.js";
+import { dongDataByRegion } from '../data/regionData.js';
 
 const Custom = () => {
-    // 1. 상태 통합 (선택된 지역 객체 하나로 관리)
-    const [selectedRegion, setSelectedRegion] = useState(regionData[0]);
-    const [category, setCategory] = useState("한식");
-    const [storeCount, setStoreCount] = useState(null);
-    const [loading, setLoading] = useState(false);
+    // 상태 관리
+    const [selectedGu, setSelectedGu] = useState("강남구");  // 선택된 구 이름 
+    const [selectedDong, setSelectedDong] = useState(() => {
+        const guName = "강남구";
+        //  해당 구의 첫 번째 동 객체 가져오기 { name: "역삼1동", lat: ..., ... }
+        const firstDong = dongDataByRegion[guName][0]; 
+        
+        // GeoJSON에서 경계 데이터(Polygon) 찾기
+        
+        const geoFeature = dongGeoJson.features.find(
+        f =>
+            f.properties.SIDO_NM === "서울특별시" &&
+            f.properties.SGG_NM === selectedGu &&
+            f.properties.ADM_NM.includes(selectedDong.name)
+        );
 
-    // 지역 변경 핸들러
-    const handleSelectChange = (e) => {
-        const region = regionData.find((r) => r.name === e.target.value);
-        setSelectedRegion(region);
-        setStoreCount(null); // 지역 바뀌면 이전 결과 지우기
+        // 3. 기존 데이터와 GeoJSON 데이터를 합쳐서 상태 초기화
+        return {
+            ...firstDong,
+            area: geoFeature ? (geoFeature.properties.SHAPE_AREA / 1000000).toFixed(2) : firstDong.area,
+            path: geoFeature ? transformGeoJsonToPath(geoFeature.geometry.coordinates) : []
+        };
+    });
+
+    
+
+    // 사용 예시: 강남구의 동 목록 가져오기
+    console.log(dongDataByRegion["강남구"]);
+
+    const [category, setCategory] = useState("한식"); 
+    const [storeCount, setStoreCount] = useState(null); 
+    const [loading, setLoading] = useState(false); 
+    const mapRef = useRef(null); // Map 객체에 접근하기 위한 ref
+    
+    // 사용자가 행정동을 선택하면 dongGeoJson 파일안에서 같은 행정동을 find로 찾아냄
+    // -> 복잡한 좌표들을 transformCoordinates로 변환해 저장
+    const currentPath = useMemo(() => { 
+        const feature = dongGeoJson.features.find(
+            (f) => f.properties.ADM_NM === selectedDong.name 
+        );
+        return feature ? transformGeoJsonToPath(feature.geometry) : [];
+    }, [selectedDong.name]);
+    
+    // '구' 변경 시 핸들러
+    const handleGuChange = (e) => {
+        const guName = e.target.value;
+        setSelectedGu(guName);
+        // 구가 바뀌면 해당 구의 첫 번째 동으로 자동 설정
+        setSelectedDong(dongDataByRegion[guName][0]);
+        setStoreCount(null);
     };
 
-    // 2. 통합 버튼 클릭 시 실행 (통신 + 알림)
+    // '동' 변경 시 핸들러
+    const handleSelectDongChange = (e) => {
+        const dongName = e.target.value; // 사용자가 선택한 행정동
+        
+        // 기존 리스트(dongDataByRegion)에서 위도, 경도, 면적 정보를 가져옵니다.
+        const baseDongInfo = dongDataByRegion[selectedGu].find((d) => d.name === dongName);
+        // if (!baseDongInfo) return;
+
+        // GeoJSON 데이터(dongGeoJson)에서 해당 동의 진짜 경계선(Feature) 찾음
+        const geoFeature = dongGeoJson.features.find(
+            (f) => f.properties.ADM_NM === dongName // JSON의 ADM_NM과 일치하는지 확인
+        );
+        // 기본값 설정 (못 찾았을 경우 대비)
+        let finalArea = baseDongInfo?.area || 0;
+        let finalPath = [];
+
+        // JSON 데이터가 확실히 있을 때만 카카오맵 형식으로 변환하여 저장
+        if (geoFeature && geoFeature.properties) {
+            finalArea = (geoFeature.properties.SHAPE_AREA / 1000000).toFixed(2);
+            finalPath = transformGeoJsonToPath(geoFeature.geometry);
+        }
+        setSelectedDong({
+            ...baseDongInfo,
+            area: finalArea,
+            path: geoFeature ? transformGeoJsonToPath(geoFeature.geometry) : []
+        });
+
+        console.log(geoFeature.properties); // ADM_NM, SGG_NM, SIDO_NM 
+        console.log("coordinates 전체:", geoFeature.geometry.coordinates);
+        console.log("첫 ring:", geoFeature.geometry.coordinates[0]);
+        console.log("첫 좌표:", geoFeature.geometry.coordinates[0][0]);
+
+        console.log(
+        dongGeoJson.features.slice(0, 5).map(f => f.geometry.coordinates[0][0])
+        );
+
+    };
+
     const handleFetchCount = async () => {
         setLoading(true);
         try {
-            // 서버로 보내는 데이터: 현재 선택된 region의 name과 category
             const response = await api.post("/api/stores/count", {
-                regionName: selectedRegion.name,
+                regionName: selectedDong.name, // 여기서 '동' 이름을 보냅니다!
                 category: category
             });
 
             setStoreCount(response.data);
-            alert(`${selectedRegion.name}의 ${category} 점포 수 조회가 완료되었습니다.`);
+            alert(`${selectedDong.name}의 ${category} 조회가 완료되었습니다.`);
         } catch (error) {
-            console.error("데이터 조회 실패:", error);
+            console.error("조회 실패:", error);
             alert("서버 연결 실패! 포트 번호(8090)와 백엔드 실행 여부를 확인하세요.");
         } finally {
             setLoading(false);
         }
     };
 
+    // currentPath가 변경될 때마다 지도의 영역을 해당 경계에 맞춤
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map || currentPath.length === 0) return;
+
+        // kakao.maps.LatLngBounds 객체 생성
+        const bounds = new window.kakao.maps.LatLngBounds();
+
+        // currentPath는 [{lat, lng}, ...] 형태이므로 반복문을 통해 bounds 확장
+        currentPath.forEach(pos => {
+            bounds.extend(new window.kakao.maps.LatLng(pos.lat, pos.lng));
+        });
+
+        // 지도를 해당 영역으로 이동 (여백을 주려면 두 번째 인자로 padding 값 가능)
+        map.setBounds(bounds);
+    }, [currentPath]);
+
     return (
-        <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+        <div className="custom">
             <h3>📍 지역 및 업종별 점포 조회</h3>
       
             <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
-                {/* 지역 선택 */}
-                <select 
-                    onChange={handleSelectChange} 
-                    value={selectedRegion.name}
-                    style={{ padding: "10px" }}
-                >
-                    {regionData.map((r) => (
-                        <option key={r.name} value={r.name}>{r.name}</option>
+
+                <select onChange={handleGuChange} value={selectedGu}>
+                    {Object.keys(dongDataByRegion).map((gu) => (
+                        <option key={gu} value={gu}>{gu}</option>
                     ))}
                 </select>
 
+                <select onChange={handleSelectDongChange} value={selectedDong.name}>
+                    {dongDataByRegion[selectedGu].map(d => (
+                        <option key={d.name} value={d.name}>{d.name}</option>
+                    ))}
+                </select>
+                <button onClick={handleFetchCount}>업종 선택 전 조회하기</button>
+
                 {/* 업종 선택 */}
-                <select 
-                    value={category} 
-                    onChange={(e) => { setCategory(e.target.value); setStoreCount(null); }}
+                <select value={category} onChange={(e) => { setCategory(e.target.value); setStoreCount(null); }}
                     style={{ padding: "10px" }}
                 >
                     {categories.map((cat) => (
@@ -100,35 +162,46 @@ const Custom = () => {
                 </select>
 
                 {/* 하나로 통합된 버튼 */}
-                <button 
+                {/* <button 
                     onClick={handleFetchCount} 
                     disabled={loading}
                     style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}
                 >
                     {loading ? "조회 중..." : "조회 및 데이터 전송"}
-                </button>
+                </button> */}
             </div>
 
             {/* 결과 표시 창 */}
-            {storeCount !== null && (
+            {/* {storeCount !== null && (
                 <div style={{ padding: "15px", backgroundColor: "#eef2ff", borderRadius: "8px", marginBottom: "20px", border: "1px solid #4f46e5" }}>
                     <p style={{ fontSize: "18px", margin: 0 }}>
-                        📍 <strong>{selectedRegion.name}</strong>의 <strong>{category}</strong> 점포 수는 
+                        <strong>{selectedRegion.name}</strong>의 <strong>{category}</strong> 점포 수는 
                         <span style={{ color: "#4f46e5", fontWeight: "bold" }}> {storeCount}개</span>입니다.
                     </p>
                 </div>
-            )}
+            )} */}
 
             {/* 지도 영역 */}
-            <Map
-                center={{ lat: selectedRegion.lat, lng: selectedRegion.lng }}
-                style={{ width: "100%", height: "450px", borderRadius: "10px" }}
-                level={5}
-            >
-                <MapMarker position={{ lat: selectedRegion.lat, lng: selectedRegion.lng }}>
-                    <div style={{ padding: "5px", color: "#000" }}>{selectedRegion.name}</div>
-                </MapMarker>
+            <Map className="kakaomap" center={{ lat: selectedDong.lat, lng: selectedDong.lng }} ref={mapRef} level={7}>
+                {currentPath.length > 0 && (
+                    <Polygon
+                        path={currentPath} // 경계 좌표 배열
+                        strokeWeight={3} // 선의 두께
+                        strokeColor={"#39f"} // 선의 색깔
+                        strokeOpacity={0.8} // 선의 불투명도
+                        fillColor={"#39f"} // 채우기 색깔
+                        fillOpacity={0.3} // 채우기 불투명도
+                    />
+                )}
             </Map>
+
+            {selectedDong && (
+                <div className="info-box">
+                    <p>선택된 동: {selectedDong.name}</p>
+                    {/* area 값이 있는지 확인 후 출력 */}
+                    <p>면적: {selectedDong.area ? `${selectedDong.area} km²` : "면적 정보 없음"}</p>
+                </div>
+            )}
         </div>
     );
 };

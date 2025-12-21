@@ -1,0 +1,11 @@
+.custom{
+    padding: 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.kakaomap{
+    width: 100%;
+    height: 1000px;
+    border-radius:10px;
+}
