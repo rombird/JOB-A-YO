@@ -51,6 +51,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     ) throws IOException, ServletException, IOException {
         System.out.println("[JWTAUTHORIZATIONFILTER] doFilterInternal...");
 
+        // 1. 쿠키가 아예 없으면 바로 다음 필터로 (인증 처리 건너뛰기)
+        if (request.getCookies() == null) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // cookie 에서 JWT token을 가져옵니다.
         String token = null;
         String username = null;
