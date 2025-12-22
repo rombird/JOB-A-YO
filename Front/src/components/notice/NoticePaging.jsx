@@ -1,10 +1,6 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import React, {useEffect, useState, useCallback} from 'react';
-<<<<<<< HEAD
 import {useAuth} from  "../../context/AuthContext";
-=======
-import "../../context/AuthContext";
->>>>>>> origin/임새롬
 import api from "../../api/axiosConfig";
 import moment from 'moment';
 
@@ -14,16 +10,11 @@ import "../../css/noticePaging.css";
 const NoticePaging = () => {
     const navigate = useNavigate(); 
     const [searchParams, setSearchParams] = useSearchParams();
-<<<<<<< HEAD
     // const [userInfo, setUserInfo] = useState(null);
     // const[isAdmin, setIsAdmin] = useState(false);
     const {user, isLoggedIn, isLoading} = useAuth();
 
     const isAdmin = user?.role === "ADMIN";
-=======
-    const [userInfo, setUserInfo] = useState(null);
-    const[isAdmin, setIsAdmin] = useState(false);
->>>>>>> origin/임새롬
 
     // 데이터 및 페이징 정보 상태
     const [noticeData, setNoticeData] = useState({
@@ -36,7 +27,6 @@ const NoticePaging = () => {
     const currentPage = parseInt(searchParams.get('page') || '1', 10);   
     const searchQuery = searchParams.get('search') || '';
 
-<<<<<<< HEAD
     // // 사용자 정보(ADMIN 권한) 로딩
     // useEffect(() => {
 
@@ -58,27 +48,6 @@ const NoticePaging = () => {
     //     };
     //     fetchUser();
     // }, []);
-=======
-    // 사용자 정보(ADMIN 권한) 로딩
-    useEffect(() => {
-        // 토큰 또는 로그인 상태를 확인하는 로직 (예: 로컬 스토리지에서 토큰 체크)
-        const token = localStorage.getItem('accessToken');
-        const fetchUser = async () => {
-            try{
-                const response = await api.get('/user');
-                setUserInfo(response.data);
-
-                // role이 ADMIN인지 체크
-                if(response.data.role === 'ADMIN'){
-                    setIsAdmin(true);
-                }
-            }catch(error){
-                console.error("회원정보 조회 실패", error);
-            }
-        };
-        fetchUser();
-    }, []);
->>>>>>> origin/임새롬
 
     // 공지사항 목록 API 호출 함수
     const fetchNotices = useCallback(async (page, search) => {
@@ -128,44 +97,7 @@ const NoticePaging = () => {
     const {startPage, endPage} = noticeData;
     const totalPages = noticeData.noticeList.totalPages;
 
-<<<<<<< HEAD
     
-=======
-    // 페이지네이션 버튼 렌더링을 위한 배열 생성(startPage ~ endPage)
-    // const getPageNumbers = () =>{
-    //     const pages = [];
-    //     for (let i = startPage; i <= endPage; i++){
-    //         pages.push(i - 1);  // 배열에는 0부터 시작하는 index를 저장
-    //     }
-    //     return pages;
-    // };
-
-    // 1. 관리자 권한 확인 (AuthContext에서 사용자 역할(role)을 가져와야 합니다.)
-    // const { userRole } = useAuth();
-    // const isAdmin = userRole === 'ADMIN'; 
-    // useEffect(() => {
-    //     // [백엔드 API 호출] GET /api/notices
-    //     const fetchNotices = async () => {
-    //         try {
-    //             // 백엔드 NoticesRestController의 1번 메서드(getAllNotices)와 연결
-    //             const response = await api.get('/api/notices'); 
-    //             setNoticeList(response.data); // 응답 데이터가 List<NoticesDto> 라고 가정
-    //         } catch (error) {
-    //             console.error("공지사항 목록 로드 실패", error);
-    //             // navigate('/'); // 실패 시 홈으로 리다이렉트
-    //         }
-    //     };
-    //     fetchNotices();
-    // }, []);
-
-    // const handleRegisterClick = () => {
-    //     // 관리자만 접근 가능한 작성 페이지 경로
-    //     navigate('/notice/write'); 
-    // };
-
-                
-
->>>>>>> origin/임새롬
     return(
         <>
             <div className='notice layoutCenter'>
@@ -174,11 +106,7 @@ const NoticePaging = () => {
                     <p> HOME &gt; 이용안내 &gt; 공지사항 </p>
                 </div>
                 <div className="notice-list layoutCenter">
-<<<<<<< HEAD
                     <form className='notice-list-form'>
-=======
-                    <form className="notice-list-form">
->>>>>>> origin/임새롬
                         <input 
                             type='text'
                             placeholder='제목, 내용 검색'

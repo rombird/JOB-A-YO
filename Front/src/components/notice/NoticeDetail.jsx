@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/임새롬
 import axios from "axios";
 import { useNavigate, Link, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
@@ -213,48 +209,8 @@ if (!notice){
                     </>
                 )}
             </div>
-            {/* <div className="comment">
-                <h4>댓글 작성</h4>
-                <input 
-                    className="comment-write"
-                    type="text" id="comment-writer" placeholder="작성자 이름"
-                    value={commentInput.writer} onChange={handleCommentInputChange}
-                    onKeyDown={handleEnterKey}
-                />
-                <input 
-                    className="comment-content"
-                    type="text" id="comment-contents" placeholder="내용"
-                    value={commentInput.content} onChange={handleCommentInputChange}
-                    onKeyDown={handleEnterKey}
-                />
-                <button className="comment-btn" onClick={commentWrite}>작성</button>
-            </div>
-            <div className="comment-list">
-                <h4>댓글 목록</h4>
-                {commentList.length > 0 ? (
-                    <div className="comment-detail-wrapper">
-                        {commentList.map((comment) => (
-                            <div key={comment.id} className="comment-item">
-                                <p className="comment-item-list">
-                                    <span className="comment-writer">{comment.commentWriter}</span>
-                                    <span className="comment-time">{moment(
-                                            comment.commentCreatedTime, 
-                                            'YYYYMMDDHHmmssSSS' // 들어오는 문자열의 포맷을 명시
-                                        ).format('YYYY-MM-DD HH:mm:ss')}</span>
-                                    <span classnName="comment-content">{comment.commentContents}</span>
-                                </p>
-                            </div>
-                            ))}
-                    </div>        
-                ) : ( <p>등록된 댓글이 없습니다.</p> )
-                }
-            </div> */}
         </div>
     );
 }
 
-<<<<<<< HEAD
 export default NoticeDetail;
-=======
-export default NoticeDetail;
->>>>>>> origin/임새롬

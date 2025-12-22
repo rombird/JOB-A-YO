@@ -44,23 +44,14 @@ const Login = ()=>{
                 { username, password },
                 { headers: { "Content-Type": "application/json" } }
             );
-<<<<<<< HEAD
             console.log("로그인 성공 : ", resp.data)
             await login();
             
-=======
-            // alert("로그인 성공:", resp.data);
-            console.log("로그인 성공 : ", resp.data)
-            login();
->>>>>>> origin/임새롬
             navigate("/"); // 성공 시 / 경로로 이동
         } catch (error) {
             if(error.response && error.response.status === 401){
                 // 인증 안된 상태 -> 정상
-<<<<<<< HEAD
                 alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-=======
->>>>>>> origin/임새롬
                 return;
             }
             console.error("로그인 실패:", error.response ? error.response.data : error);
@@ -115,5 +106,3 @@ const Login = ()=>{
 }
 
 export default Login;
-
-

@@ -14,38 +14,16 @@ const Join  = ()=>{
     // 이메일
     const [emailPrefix, setEmailPrefix] = useState(''); 
     const [emailDomain, setEmailDomain] = useState('naver.com'); // 초기값 설정
-<<<<<<< HEAD
 
     const handleJoin = (e)=>{
         e.preventDefault();
         const fullEmail = `${emailPrefix}@${emailDomain}`;
-=======
-    const [rePw, setRePw] = useState(''); // 비밀번호 확인 (프런트엔드 유효성용)
-
-    const handleJoin = (e)=>{
-        e.preventDefault();
-
-        const fullEmail = `${emailPrefix}@${emailDomain}`;
-        // 3. 서버로 전송할 데이터 준비 (gender 필드 추가)
-        const joinData = {
-            username: username,
-            password: password,
-            name: name,
-            phone: phone,
-            email: fullEmail,
-        };
->>>>>>> origin/임새롬
 
         axios
             .post(
                 'http://localhost:8090/join',
-<<<<<<< HEAD
                  {"username":username, "password" : password, "name":name, "phone":phone, "email": fullEmail,},
                  {headers:{ 'Content-Type' : 'application/json' }}
-=======
-                joinData,
-                {headers:{ 'Content-Type' : 'application/json' }}
->>>>>>> origin/임새롬
             )
             .then(resp=>{
                 console.log(resp) // 요청을 해서 정상적인 응답이 오면 console에 반응

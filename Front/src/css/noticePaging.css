@@ -17,21 +17,14 @@
     height:650px;
     margin-bottom:20px;
 }
-<<<<<<< HEAD
+
 .notice-list-form{
     text-align: right;
     margin-top: 30px;
     display: flex;
     position: relative;
     margin-left: 690px;
-=======
-.notice-list>.notice-list-form{
-    text-align: right;
-    margin-top:30px;
-    display:flex;
-    position:relative;
-    margin-left:690px;
->>>>>>> origin/임새롬
+
 }
 .notice-list input{
     width:280px;
@@ -55,20 +48,12 @@
     background: transparent;
     /* margin-left:10px; */
     padding:0;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/임새롬
 }
 .notice-list .search-btn>img{
     width:30px;
     height:30px;
     display:block;
-<<<<<<< HEAD
     margin-left: 10px;
-=======
-    margin-left:10px;
->>>>>>> origin/임새롬
 }
 
 
@@ -123,7 +108,7 @@ td{
     height:50px;
     margin-left:300px;
 }
-<<<<<<< HEAD
+
 .notice-paging button{
     border:none;
     background: transparent;
@@ -135,11 +120,7 @@ td{
     margin-top:80px;
 }
 
-=======
-.notice-bottom>.notice-btn{
 
-}
->>>>>>> origin/임새롬
 .notice-create{
     width:170px;
     height:50px;
@@ -150,8 +131,5 @@ td{
     border-radius: 4px;
     font-family: "kopu";
     border:none;
-<<<<<<< HEAD
     margin-bottom:100px;
-=======
->>>>>>> origin/임새롬
 }

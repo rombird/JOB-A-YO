@@ -52,8 +52,6 @@ function App() {
                 <Route path="/notice/:id" element={<NoticeDetail />} />
                 <Route path="/notice/update/:id" element={<NoticeWrite />} />
 
-                {/* <Route path="/predict" element={}/> */}
-
                 <Route path="/custom" element={<Custom />} />
                 <Route path="/search" element={<Search />} />
               </Routes>

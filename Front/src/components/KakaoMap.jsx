@@ -1,48 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-import React, { useEffect, useRef } from 'react'; // 👈 1. useRef 임포트
-=======
-import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react'; // 1. useRef 임포트
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
-import useKakaoLoader from '../hooks/useKakaoLoader';
-
-const KakaoMap = forwardRef(({ mapWidth, mapHeight, initialLat, initialLng, searchKeyword, onSearchComplete }, ref) => {
-  
-  // 맵 컨테이너를 참조할 useRef 선언
-  const mapContainerRef = useRef(null); 
-  // 스크립트 로드 상태를 체크
-  const { isLoaded, error } = useKakaoLoader();
-  const[map, setMap] = useState(null);
-  const[markers, setMarkers] =useState([]); // 생성한 마커들을 관리
-  const[infowindow, setInfowindow] = useState(null);
-
-  // 부모 컴포넌트에서 지도 이동 및 인포윈도우 열기를 제어할 수 있게 노출
-  useImperativeHandle(ref, () => ({
-    moveToLocation: (place) => {
-      if(!map) return;
-      const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x);
-      map.panTo(moveLatLon);  // 부드럽게 이동
-      displayInfoWindow(place); // 인포윈도우 표시
-    }
-  }));
-
-  useEffect(() => {
-    // 지도 초기화 로직
-    if (!isLoaded || !window.kakao || !mapContainerRef.current) { // window.kakao 체크 추가 (안정성)
-      return;
-    }
-    
-<<<<<<< HEAD
-    // 3. document.getElementById("map") 대신 useRef 참조 사용
-    const container = mapContainerRef.current; 
-
-    // 컨테이너가 아직 DOM에 마운트되지 않았거나 null인 경우 종료
-    if (!container) {
-        return;
-    }
-    
-    // 2. 맵 생성
-=======
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react'; // 1. useRef 임포트
 import useKakaoLoader from '../hooks/useKakaoLoader';
 
@@ -73,34 +28,10 @@ const KakaoMap = forwardRef(({ mapWidth, mapHeight, initialLat, initialLng, sear
     }
     
     // 맵, 인포윈도우 생성
->>>>>>> origin/임새롬
-=======
-    // 맵, 인포윈도우 생성
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
     const options = {
       center: new window.kakao.maps.LatLng(initialLat, initialLng),
       level: 3
     };
-<<<<<<< HEAD
-<<<<<<< HEAD
-    mapInstance = new window.kakao.maps.Map(container, options);
-    
-    // 3. Cleanup: 컴포넌트 언마운트 시 맵 리소스를 정리
-=======
-    const mapInstance = new window.kakao.maps.Map(mapContainerRef.current, options);
-    const iw = new window.kakao.maps.InfoWindow({zIndex: 1});
-    setMap(mapInstance);  // 생성된 지도 인스턴스를 상태에 저장
-    setInfowindow(iw);  // 인포윈도우
-
-    // Cleanup: 컴포넌트 언마운트 시 맵 리소스를 정리
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
-    return () => {
-        // Cleanup 시에도 container를 안전하게 참조
-        if (mapInstance && mapContainerRef.current) { 
-            // 맵 인스턴스가 사용하던 DOM을 비움
-<<<<<<< HEAD
-            container.innerHTML = "";
-=======
     const mapInstance = new window.kakao.maps.Map(mapContainerRef.current, options);
     const iw = new window.kakao.maps.InfoWindow({zIndex: 1});
     setMap(mapInstance);  // 생성된 지도 인스턴스를 상태에 저장
@@ -112,21 +43,12 @@ const KakaoMap = forwardRef(({ mapWidth, mapHeight, initialLat, initialLng, sear
         if (mapInstance && mapContainerRef.current) { 
             // 맵 인스턴스가 사용하던 DOM을 비움
             mapContainerRef.current.innerHTML = "";
->>>>>>> origin/임새롬
-=======
-            mapContainerRef.current.innerHTML = "";
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
             mapInstance = null;
         }
     };
 
   }, [isLoaded, initialLat, initialLng]); 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
   // 인포윈도우 표시 함수
   const displayInfoWindow = (place) => {
     if(!map || !infowindow) return;
@@ -194,10 +116,6 @@ const KakaoMap = forwardRef(({ mapWidth, mapHeight, initialLat, initialLng, sear
   }, [searchKeyword, map]); // 키워드나 지도가 바뀔 때마다 실행
 
 
-<<<<<<< HEAD
->>>>>>> origin/임새롬
-=======
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
   // 에러 처리
   if (error) {
     return <div style={{ width: mapWidth, height: mapHeight, padding: 20 }}>
@@ -217,23 +135,9 @@ const KakaoMap = forwardRef(({ mapWidth, mapHeight, initialLat, initialLng, sear
     <div
       // 4. ID를 제거하고 ref={mapContainerRef}로 연결
       ref={mapContainerRef} 
-<<<<<<< HEAD
-<<<<<<< HEAD
-      style={{ width: mapWidth, height: mapHeight, border: "1px solid #ccc" }}
-    />
-  );
-};
-=======
       style={{ width: mapWidth, height: mapHeight}}
     />
   );
 });
->>>>>>> origin/임새롬
-=======
-      style={{ width: mapWidth, height: mapHeight}}
-    />
-  );
-});
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
 
 export default KakaoMap;

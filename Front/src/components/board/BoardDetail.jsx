@@ -234,8 +234,6 @@ const BoardDetail = () => {
     );
 }
 
-<<<<<<< HEAD
+
 export default BoardDetail;
-=======
-export default BoardDetail;
->>>>>>> origin/임새롬
+

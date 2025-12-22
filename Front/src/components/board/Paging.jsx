@@ -16,11 +16,7 @@ const Paging = () => {
     
     const navigate = useNavigate(); // useNavigate 를 사용하여 이동함수 가져옴
     const [searchParams] = useSearchParams(); // url에서 'page' 쿼리 파라미터를 가져와 현재 페이지를 결정
-<<<<<<< HEAD
     const page = searchParams.get('page') || '1';   // 1. URL의 page 파라미터는 1-based (없으면 '1')
-=======
-    const page = searchParams.get('page') || '1';
->>>>>>> origin/임새롬
     const pageSize = 10; // 한 페이지당 게시글 수
 
     // State 선언 (두 번째 코드 블록의 State)
@@ -43,7 +39,6 @@ const Paging = () => {
             // page=1 로 요청 시 서버에서 0번 페이지를 가져올 수도 있습니다.
             // 서버 설정에 따라 page=${page - 1} 또는 page=${page}를 사용해야 합니다.
             // 현재는 URL의 page를 그대로 사용하겠습니다.
-<<<<<<< HEAD
 
             
             const response = await api.get(`${API_ENDPOINT}?page=${page - 1}&size=${pageSize}`);
@@ -51,11 +46,6 @@ const Paging = () => {
 
             console.log("데이터가 뭔가요?" , data);
 
-=======
-            const response = await api.get(`${API_ENDPOINT}?page=${page}&size=${pageSize}`);
-            const data = response.data;
-            
->>>>>>> origin/임새롬
             setBoardData(data.boardList);
             setStartPage(data.startPage);
             setEndPage(data.endPage);
@@ -78,15 +68,10 @@ const Paging = () => {
     // Spring Data JPA의 Page 객체에서 number는 0부터 시작하므로 +1 해줍니다.
     const currentDisplayPage = boardData.number + 1;
 
-<<<<<<< HEAD
     console.log("보드데이터는 뭐야", boardData);
 
     // 페이지 링크 생성 헬퍼 함수
     const getPageLink = (pageNum) => `/api/board/paging?page=${pageNum}`;
-=======
-    // 페이지 링크 생성 헬퍼 함수
-    const getPageLink = (pageNum) => `/board/paging?page=${pageNum}`;
->>>>>>> origin/임새롬
 
     // 로딩 중일 때 표시
     // if (loading) {
