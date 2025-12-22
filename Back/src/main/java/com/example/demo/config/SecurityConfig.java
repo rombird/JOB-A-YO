@@ -113,6 +113,8 @@ public class SecurityConfig {
             // 차트 보는 거 로그인 허용할까 말까
             auth.requestMatchers("/api/sales/summary").permitAll();
 
+            // 네이버 트렌드 검색
+            auth.requestMatchers("/api/trend").permitAll();
 
             // 공지사항 보는 거 로그인 안해도 가능
             auth.requestMatchers("/api/notice/paging").permitAll();
