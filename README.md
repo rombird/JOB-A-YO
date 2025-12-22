@@ -14,8 +14,8 @@ npm install react-kakao-maps-sdk
 npm start
 ```
 
-*백엔드 추가한 작업*   
-SecurityConfig : "/api/stores/count" permitAll()에 추가  
+**백엔드 추가한 작업**   
+SecurityConfig : "/api/stores/custom" permitAll()에 추가  
 application.Properties에 코드 추가 : 
 ```
 spring.jpa.show-sql=false
@@ -27,4 +27,5 @@ apiController : apiCustomController.java
 domain → entity : Store.java  
        → dto : StoreRequest.java  
        → service : CsvImportService.java, StoreService.java  
+api endpoint : /api/stores/custom
       
