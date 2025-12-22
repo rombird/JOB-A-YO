@@ -1,7 +1,10 @@
 import React, {useState,useEffect} from 'react'
 import {Link, useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+<<<<<<< HEAD
 import SimpleChatbot from './SimpleChatbot';
+=======
+>>>>>>> origin/임새롬
 import "../css/common.css";
 
 
@@ -9,6 +12,7 @@ const Header = () => {
     const { isLoggedIn, logout, user } = useAuth(); 
     const navigate = useNavigate(); // useNavigate 훅 초기화
 
+<<<<<<< HEAD
     // #################################################
     // 챗봇 상태 추가
     // #################################################
@@ -19,6 +23,8 @@ const Header = () => {
         setIsChatbotVisible(prev => !prev);
     }
 
+=======
+>>>>>>> origin/임새롬
     // 로그아웃 처리 함수
     const handleLogout = async (e) => {
         e.preventDefault(); // 폼의 기본 동작 방지 (Link 대신 button/onClick을 사용할 경우 불필요하지만 습관적으로 체크)
@@ -69,17 +75,29 @@ const Header = () => {
                             <ul className="mainNav">
                                 <li className="mainList">
                                     <div className="listLine">
+<<<<<<< HEAD
                                         <Link className="mainMenu" to="" >상권트렌드</Link>
+=======
+                                        <Link className="mainMenu" to="/search" >동네 리포트</Link>
+>>>>>>> origin/임새롬
                                     </div>
                                 </li>
                                 <li className="mainList">
                                     <div className="listLine">
+<<<<<<< HEAD
                                         <Link className="mainMenu" to="/myshop" >나는 사장</Link>
+=======
+                                        <Link className="mainMenu" to="/myshop" >AI 예측 리포트</Link>
+>>>>>>> origin/임새롬
                                     </div>
                                 </li>
                                 <li className="mainList">
                                     <div className="listLine">
+<<<<<<< HEAD
                                         <Link className="mainMenu" to="/newshop" >나도 곧 사장</Link>
+=======
+                                        <Link className="mainMenu" to="/custom" >상권 통계</Link>
+>>>>>>> origin/임새롬
                                     </div>
                                 </li>
                                 <li className="mainList">
@@ -88,7 +106,11 @@ const Header = () => {
                                     </div>
                                     <ul className="subNav">
                                         <li className="subList">
+<<<<<<< HEAD
                                             <Link to="api/notices" >공지사항</Link>
+=======
+                                            <Link to="/api/notices" >공지사항</Link>
+>>>>>>> origin/임새롬
                                         </li>
                                         <li className="subList">
                                             <Link to="/inquiry" >문의사항</Link>
@@ -98,10 +120,16 @@ const Header = () => {
                                         </li>
                                     </ul>
                                 </li>
+<<<<<<< HEAD
                                 {/* 챗봇 버튼에 클릭 이벤트 연결 */}
                                 <li className="mainList">
                                     <div className="chatList">
                                         <button className="chatbotBtn" onClick={handleChatbotToggle} aria-label='챗봇 열기'><img className="chatbot" src="/images/chat.png" alt="chatbot이미지" /></button>
+=======
+                                <li className="mainList">
+                                    <div className="chatList">
+                                        <button className="chatbotBtn"><img className="chatbot" src="/images/chat.png" alt="chatbot이미지" /></button>
+>>>>>>> origin/임새롬
                                     </div>
                                 </li>
                             </ul>
@@ -109,12 +137,15 @@ const Header = () => {
                     </div>
                 </div>
             </header>
+<<<<<<< HEAD
             
             {/* 챗봇 컴포넌트 렌더링 */}
             <SimpleChatbot
                 isVisible={isChatbotVisible}
                 onClose={() => setIsChatbotVisible(false)}  // 닫기버튼을 누르면 상태를 false로 설정
             />
+=======
+>>>>>>> origin/임새롬
         </>
     )
 }

@@ -82,7 +82,12 @@ public class SecurityConfig {
                                         // 게시판 관련 로그인 없어도 볼 수 있는 것들
                                         "/api/board/paging",
                                         "/api/board/*",
+<<<<<<< HEAD
                                         "/api/board/download/**"
+=======
+                                        "/api/board/download/**",
+                                        "/api/stores/custom"
+>>>>>>> origin/임새롬
             ).permitAll();
 
             // 유저관련 로그인 해야지 가능
@@ -90,9 +95,12 @@ public class SecurityConfig {
             auth.requestMatchers("/user").authenticated();
             auth.requestMatchers("/myInfo/password").authenticated();
 
+<<<<<<< HEAD
             // 크롤링 관련, 누구나 열람 가능
             auth.requestMatchers("/api/crawl/**").permitAll();
 
+=======
+>>>>>>> origin/임새롬
             // 챗봇 관련
             // 심플 챗봇, 누구든지 가능
             auth.requestMatchers("/api/v1/simple-chat").permitAll();
@@ -106,23 +114,40 @@ public class SecurityConfig {
             // 게시판, 로그인 해야지 가능
             auth.requestMatchers("/api/board/WriteBoard").authenticated();   // 글 작성
             auth.requestMatchers("/api/board/update/**").authenticated();   // 글 수정
+<<<<<<< HEAD
             auth.requestMatchers("/api/board/delete/**").permitAll();   // 글 삭제
             auth.requestMatchers("/api/board/image/upload").authenticated();    // CKEditor 텍스트
             auth.requestMatchers("/api/comment/save").authenticated(); //
 
             // 차트 보는 거 로그인 허용할까 말까
+=======
+            auth.requestMatchers("/api/board/delete/**").authenticated();   // 글 삭제
+            auth.requestMatchers("/api/board/image/upload").authenticated();    // CKEditor 텍스트
+            auth.requestMatchers("/api/comment/save").authenticated(); //
+
+>>>>>>> origin/임새롬
             auth.requestMatchers("/api/sales/summary").permitAll();
 
 
             // 공지사항 보는 거 로그인 안해도 가능
+<<<<<<< HEAD
             auth.requestMatchers("/api/notice/paging").permitAll();
             auth.requestMatchers(HttpMethod.GET, "/api/notice/*").permitAll();
+=======
+
+            auth.requestMatchers("/api/notice/paging/**").permitAll();
+            auth.requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll();
+>>>>>>> origin/임새롬
             auth.requestMatchers(HttpMethod.GET, "/api/notice/download/**").permitAll();
 
             // 공지사항(관리자만 가능), 글 쓰기와 수정 삭제는 관리자만 가능
             auth.requestMatchers("/api/notice/save").hasAuthority("ADMIN");
             auth.requestMatchers(HttpMethod.PUT, "/api/notice/update/*").hasAuthority("ADMIN");
+<<<<<<< HEAD
             auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").permitAll();    //
+=======
+            auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").hasAuthority("ADMIN");
+>>>>>>> origin/임새롬
 
 
             // 2. Swagger 관련 경로 전체 허용 추가!
@@ -130,7 +155,13 @@ public class SecurityConfig {
                     "/v3/api-docs",                // v3/api-docs 경로 (JSON)
                     "/v3/api-docs/**",             // v3/api-docs 이하 모든 경로 (JSON)
                     "/swagger-ui.html",            // 기본 UI HTML 파일
+<<<<<<< HEAD
                     "/swagger-ui/**"          // Swagger UI 내부 리소스 (JS, CSS, Images)
+=======
+                    "/swagger-ui/**",               // Swagger UI 내부 리소스 (JS, CSS, Images)
+                    "/api/board/paging",         // 게시글 목록
+                    "/api/board/"
+>>>>>>> origin/임새롬
             ).permitAll();
 
             // 내가 주석처리함 user 경로를 이미 사용중이기 때문에

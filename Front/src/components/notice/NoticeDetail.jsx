@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/임새롬
 import axios from "axios";
 import { useNavigate, Link, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
@@ -249,4 +253,8 @@ if (!notice){
     );
 }
 
+<<<<<<< HEAD
 export default NoticeDetail;
+=======
+export default NoticeDetail;
+>>>>>>> origin/임새롬

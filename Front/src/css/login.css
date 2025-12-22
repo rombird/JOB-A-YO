@@ -97,4 +97,11 @@ body{
     width:60px;
     height:60px;
     margin:5px 30px; 
+<<<<<<< HEAD
+=======
+}
+.kakaoButton{
+    border:none;
+    background-color:transparent;
+>>>>>>> origin/임새롬
 }

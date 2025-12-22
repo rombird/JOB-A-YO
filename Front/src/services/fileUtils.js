@@ -27,7 +27,11 @@ export const validateAndGetFiles = (files, uploadedFiles, existingFiles, filesTo
     let validFiles = [];
     
     // 현재 첨부 가능한 파일의 총 개수 (기존 파일 중 삭제 예정이 아닌 파일 + 새로 업로드된 파일)
+<<<<<<< HEAD
     const currentFileCount = existingFiles.filter(f => !filesToDeleteIds.includes(f.id)).length + uploadedFiles.length;
+=======
+    const currentFileCount = existingFiles.filter(f => !filesToDeleteIds.includes(f.boardFileId)).length + uploadedFiles.length;
+>>>>>>> origin/임새롬
 
     for (const file of newFiles) {
         const ext = file.name.split('.').pop().toLowerCase();
@@ -51,7 +55,11 @@ export const validateAndGetFiles = (files, uploadedFiles, existingFiles, filesTo
         }
 
         // 4. 중복 파일명 검사 (기존 파일명 및 새로 업로드될 파일명 모두 체크)
+<<<<<<< HEAD
         const isDuplicate = existingFiles.some(f => f.boardFileName === file.name && !filesToDeleteIds.includes(f.id)) ||
+=======
+        const isDuplicate = existingFiles.some(f => f.boardFileName === file.name && !filesToDeleteIds.includes(f.boardFileId)) ||
+>>>>>>> origin/임새롬
                             uploadedFiles.some(f => f.name === file.name) ||
                             validFiles.some(f => f.name === file.name);
 

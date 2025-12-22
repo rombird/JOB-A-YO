@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## 백엔드 폴더 구조 (demo부분만 보시면 되요)
 ```
 └─src
@@ -39,6 +40,22 @@
             └─com
                 └─example
                     └─demo
+=======
+기본 세팅(프로그램 연결하기위한)
+1. redis, another redis 설치
+2. application.properties에서 확인한 다음 폴더 생성해두기
+   C:/springboot_img/CKEditor/
+3. REACT에서 
+
+```
+// REACT
+cd FRONT
+npm install
+npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+npm install recharts
+npm install react-kakao-maps-sdk
+npm start
+>>>>>>> origin/임새롬
 ```
 ## 프론트엔드 폴더 구조
 ```
@@ -50,17 +67,30 @@
 <<<<<<< HEAD
 =======
 
-- <a href="https://bigdata.sbiz.or.kr/#/" target="_blank">[소상공인365 사이트]</a>
-- <a href="https://www.semas.or.kr/web/main/index.kmdc" target="_blank">[소상공인시장진흥공단 사이트]</a>  
-- <a href="https://ols.semas.or.kr/ols/man/SMAN010M/page.do" target="_blank">[소상공인정책자금 사이트]</a>  
+**백엔드 추가한 작업**   
+SecurityConfig : "/api/stores/custom" permitAll()에 추가  
+application.Properties에 코드 추가 : 
+```
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.format_sql=false  
+```
+resources : 24년_상권분석_데이터.csv  
+apiController : apiCustomController.java  
+domain → entity : Store.java  
+       → dto : StoreRequest.java  
+       → service : CsvImportService.java, StoreService.java  
+api endpoint : /api/stores/custom  
 
-## 역할분담
-|이름|통합 담당 분야|
-|-|-|
-|이수현|데이터 분석|
-|이인호|백엔드 통합|
-|임새롬|프론트엔드 통합|
+**프론트 추가한 작업**  
+asset 폴더 추가  
+components → Home.jsx(수정), Header.jsx(수정), Search.jsx, Custom.jsx  
+css → common.css(수정), home.css(수정), custom.css, search.css  
+data 폴더 추가  
+utils → mapUtils.js  
+App.js(수정)  
 
+<<<<<<< HEAD
 
 ## 필수 페이지
 |페이지|상세|담당|
@@ -501,3 +531,7 @@ public class apiCommentController {
 <a href="https://www.youtube.com/watch?v=nMSFHreQdbU">[스프링부트, 리액트를 이용한 로그인(스프링 부트 기반 RestFul 서버 구축, 리액트 기반 JWT 저장, 자체/소셜(네이버,카카오) 로그인, RefreshToken과 AccessToken]</a>  
 <a href="https://hnev.tistory.com/category/Spring%20Boot/%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A7%8C%EB%93%A4%EA%B8%B0">[부트스트랩 게시판]</a>
 >>>>>>> 이노
+=======
+*kakaompa안나오면 npm install 해주세요
+      
+>>>>>>> origin/임새롬

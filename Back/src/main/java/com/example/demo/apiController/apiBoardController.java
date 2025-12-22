@@ -56,6 +56,7 @@ public class apiBoardController {
     @Operation(summary = "PagingList", description = "게시글 목록 및 페이징 정보")
     @GetMapping("/paging")
     public ResponseEntity<?> paging(
+<<<<<<< HEAD
             @PageableDefault(page = 0, size = 10) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
         log.info("GET  /api/board/paging... 페이징처리 apiBoardController");
         Page<BoardDto> boardList = boardService.paging(pageable);
@@ -89,6 +90,16 @@ public class apiBoardController {
         int startPage = ((currentPage - 1) / blockLimit) * blockLimit + 1;
 
         int endPage = Math.min(startPage + blockLimit - 1, boardList.getTotalPages());
+=======
+            @PageableDefault(page = 1, size = 10) Pageable pageable){     // @PageableDefault(page = 1) -> 기본적으로 1페이지 보여줄래
+        log.info("GET  /api/board/paging... 페이징처리 apiBoardController");
+        Page<BoardDto> boardList = boardService.paging(pageable);
+
+        int blockLimit = 10;
+        // React에서 startPage, endPage 계산에 필요한 정보를 함께 JSON으로 반환
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; // 1, 4, 7,
+        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+>>>>>>> origin/임새롬
 
         // Json 응답을 위한 Map 또는 별도의 DTO 사용
 
@@ -109,7 +120,11 @@ public class apiBoardController {
             // 1. 폼 데이터 (제목, 글쓴이, 내용 등)를 DTO에 바인딩
             @ModelAttribute BoardDto boardDto,
             // 2. 파일 데이터를 "fileUpload" 키로 명시적으로 받음
+<<<<<<< HEAD
             @RequestPart(value = "uploadFiles", required = false) List<MultipartFile> fileUploads) throws IOException {
+=======
+            @RequestPart(value = "fileUpload", required = false) List<MultipartFile> fileUploads) throws IOException {
+>>>>>>> origin/임새롬
 
         log.info("POST /api/board/writeBoard 게시글 작성 요청: {}", boardDto.getBoardTitle());
 

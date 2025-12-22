@@ -247,8 +247,12 @@ public class BoardService {
     // 페이징 기능
     @Transactional
     public Page<BoardDto> paging(Pageable pageable){
+<<<<<<< HEAD
         int page = pageable.getPageNumber();
 //        int page = pageable.getPageNumber();
+=======
+        int page = pageable.getPageNumber() - 1;
+>>>>>>> origin/임새롬
         int pageLimit = 10;  // 한 페이지에 보여줄 글 개수
 
         // 한 페이지당 pageLimit만큼 글을 보여주고 정렬 기준은 id 기준으로 내림차순 정렬

@@ -2,13 +2,19 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useSyncExternalStore  } from 'react';
 import api from '../api/axiosConfig';
 import axios from 'axios'; 
+<<<<<<< HEAD
 import { localeData } from 'moment';
+=======
+>>>>>>> origin/임새롬
 
 const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/임새롬
 // 전역적인 인증상태 관리하는 파일
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,16 +44,24 @@ export const AuthProvider = ({ children }) => {
         }catch(error){
             console.error("사용자 정보 조회 실패: ", error);
             // 사용자 정보 조회 실패 시에는 로그아웃 상태로 간주
+<<<<<<< HEAD
             // logout();
             return null
         }
     }, [setUser])  
+=======
+            logout();
+            return null
+        }
+    }, [setUser, logout])  
+>>>>>>> origin/임새롬
 
 
 
     // 자동 로그인 체크
     useEffect(() => {
         const checkAuthStatus = async () => {
+<<<<<<< HEAD
             // 토큰 없으면 아무 API도 호출하지 않고 바로 로그아웃 상태로 처리
             const token = localStorage.getItem("accessToken");
             if(!token){
@@ -57,6 +71,8 @@ export const AuthProvider = ({ children }) => {
                 return;
             }
 
+=======
+>>>>>>> origin/임새롬
             try {
                 await axios.get('http://localhost:8090/validate', { // axios를 사용하면 로그인 안된 상태(401)이라도 로그인 페이지로 튕기지 X
                     withCredentials:true
@@ -79,7 +95,11 @@ export const AuthProvider = ({ children }) => {
             }
         };
         checkAuthStatus();
+<<<<<<< HEAD
     }, [fetchUserInfo]);
+=======
+    }, []);
+>>>>>>> origin/임새롬
 
     // 로그인 성공 시
     const login = async () => {
@@ -90,23 +110,36 @@ export const AuthProvider = ({ children }) => {
                 setIsLoggedIn(true);
             }else{
                 setIsLoggedIn(false);
+<<<<<<< HEAD
                 setUser(null);
+=======
+>>>>>>> origin/임새롬
             }
         }catch(error){
             console.error("로그인 후 사용자 정보 로드 실패 : ", error);
             setIsLoggedIn(false);
+<<<<<<< HEAD
             setUser(null);
+=======
+>>>>>>> origin/임새롬
         }
         
     };
 
     
+<<<<<<< HEAD
     
 
     
+=======
+>>>>>>> origin/임새롬
     return (
         <AuthContext.Provider value={{ isLoggedIn, user, login, logout, isLoading }}>
             {children}
         </AuthContext.Provider>
     );
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> origin/임새롬
