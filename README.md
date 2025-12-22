@@ -27,5 +27,15 @@ apiController : apiCustomController.java
 domain → entity : Store.java  
        → dto : StoreRequest.java  
        → service : CsvImportService.java, StoreService.java  
-api endpoint : /api/stores/custom
+api endpoint : /api/stores/custom  
+
+**프론트 추가한 작업**  
+asset 폴더 추가  
+components → Home.jsx(수정), Header.jsx(수정), Search.jsx, Custom.jsx  
+css → common.css(수정), home.css(수정), custom.css, search.css  
+data 폴더 추가  
+utils → mapUtils.js  
+App.js(수정)  
+
+*kakaompa안나오면 npm install 해주세요
       
