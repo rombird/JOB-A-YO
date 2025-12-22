@@ -58,17 +58,17 @@ const Header = () => {
                             <ul className="mainNav">
                                 <li className="mainList">
                                     <div className="listLine">
-                                        <Link className="mainMenu" to="" >상권트렌드</Link>
+                                        <Link className="mainMenu" to="/search" >동네 리포트</Link>
                                     </div>
                                 </li>
                                 <li className="mainList">
                                     <div className="listLine">
-                                        <Link className="mainMenu" to="/myshop" >나는 사장</Link>
+                                        <Link className="mainMenu" to="/myshop" >AI 예측 리포트</Link>
                                     </div>
                                 </li>
                                 <li className="mainList">
                                     <div className="listLine">
-                                        <Link className="mainMenu" to="/custom" >나도 곧 사장</Link>
+                                        <Link className="mainMenu" to="/custom" >상권 통계</Link>
                                     </div>
                                 </li>
                                 <li className="mainList">

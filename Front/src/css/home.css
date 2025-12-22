@@ -31,7 +31,7 @@ main{
     position: relative;
     line-height:50px;
 }
-.searchBox>.search>select{
+.search select{
     width: 130px;
     border: none;
     /* box-sizing: border-box; */
@@ -46,7 +46,7 @@ main{
     margin:10px 50px;
     
 }
-.searchBox>.search>#title{
+.search #title{
     border:none;
     width: 800px;
     height: 40px;
@@ -56,7 +56,7 @@ main{
     padding: 3px 10px;
     /* box-sizing: border-box; */
 }
-.searchBox>.search>#searchBtn{
+.search #searchBtn{
     /* position: absolute; */
     /* top: 50%;
     right: 15px; */
@@ -73,19 +73,19 @@ main{
     justify-content: center;
     align-items: center;
 }
-.searchBox>.search>#searchBtn>img{
+.search #searchBtn>img{
     width:40px;
     height:40px;
     filter: opacity(0.5) drop-shadow(0 0 0 #fff);
     display:block;
     margin-left:50px;
 }
-.searchBox>.searchKey>.keyList{
+.searchKey>.keyList{
     display:flex;
     /* border:1px solid; */
     margin:25px 380px;
 }
-.searchBox>.searchKey>.keyList button{
+.searchKey>.keyList button{
     border:none;
     border-radius:50px;
     margin:20px 5px;

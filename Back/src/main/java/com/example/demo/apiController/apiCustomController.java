@@ -20,7 +20,7 @@ public class apiCustomController {
         this.storeService = storeService;
     }
 
-    @PostMapping("/count")
+    @PostMapping("/custom")
     public ResponseEntity<String> getStoreCount(@RequestBody StoreRequest request){
         String resultSentence = storeService.getAnalysisSentence(request);
         return ResponseEntity.ok(resultSentence);

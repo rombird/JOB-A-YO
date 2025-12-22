@@ -102,7 +102,7 @@ const Custom = () => {
     const handleFetchCount = async () => {
         setLoading(true);
         try {
-            const response = await api.post("/api/stores/count", {
+            const response = await api.post("/api/stores/custom", {
                 regionName: selectedDong.name, // 행정동 보냄
                 category: category
             });

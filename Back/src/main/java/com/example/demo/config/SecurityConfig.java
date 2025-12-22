@@ -83,7 +83,7 @@ public class SecurityConfig {
                                         "/api/board/paging",
                                         "/api/board/*",
                                         "/api/board/download/**",
-                                        "/api/stores/count"
+                                        "/api/stores/custom"
             ).permitAll();
 
             // 유저관련 로그인 해야지 가능
