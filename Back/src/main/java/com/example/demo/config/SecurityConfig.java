@@ -49,45 +49,41 @@ import java.util.Collections;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private CustomLoginSuccessHandler customLoginSuccessHandler;
-	@Autowired
-	private CustomLogoutHandler customLogoutHandler;
-	@Autowired
-	private CustomLogoutSuccessHandler customLogoutSuccessHandler;
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
-	@Autowired
-	private JwtTokenRepository jwtTokenRepository;
-	@Autowired
-	private RedisUtil redisUtil;
+    @Autowired
+    private CustomLoginSuccessHandler customLoginSuccessHandler;
+    @Autowired
+    private CustomLogoutHandler customLogoutHandler;
+    @Autowired
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenRepository jwtTokenRepository;
+    @Autowired
+    private RedisUtil redisUtil;
 
 
-	@Bean
-	protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		//CSRF비활성화
-		http.csrf((config)->{config.disable();});
-		//CSRF토큰 쿠키형태로 전달
+    @Bean
+    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+        //CSRF비활성화
+        http.csrf((config)->{config.disable();});
+        //CSRF토큰 쿠키형태로 전달
 //		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-		//권한체크
-		http.authorizeHttpRequests((auth)->{
-			auth.requestMatchers("/",
-                                        "/join",
-                                        "/login", // 인증 없이 접근 허용
-                                        "/validate",
-                                        "/oauth2/**",
-                                        "/login/oauth2/**",
-                                        // 게시판 관련 로그인 없어도 볼 수 있는 것들
-                                        "/api/board/paging",
-                                        "/api/board/*",
-<<<<<<< HEAD
-                                        "/api/board/download/**"
-=======
-                                        "/api/board/download/**",
-                                        "/api/stores/custom"
->>>>>>> origin/임새롬
+        //권한체크
+        http.authorizeHttpRequests((auth)->{
+            auth.requestMatchers("/",
+                    "/join",
+                    "/login", // 인증 없이 접근 허용
+                    "/validate",
+                    "/oauth2/**",
+                    "/login/oauth2/**",
+                    // 게시판 관련 로그인 없어도 볼 수 있는 것들
+                    "/api/board/paging",
+                    "/api/board/*",
+                    "/api/board/download/**",
+                    "/api/stores/custom"
             ).permitAll();
 
             // 유저관련 로그인 해야지 가능
@@ -95,12 +91,9 @@ public class SecurityConfig {
             auth.requestMatchers("/user").authenticated();
             auth.requestMatchers("/myInfo/password").authenticated();
 
-<<<<<<< HEAD
             // 크롤링 관련, 누구나 열람 가능
             auth.requestMatchers("/api/crawl/**").permitAll();
 
-=======
->>>>>>> origin/임새롬
             // 챗봇 관련
             // 심플 챗봇, 누구든지 가능
             auth.requestMatchers("/api/v1/simple-chat").permitAll();
@@ -114,30 +107,23 @@ public class SecurityConfig {
             // 게시판, 로그인 해야지 가능
             auth.requestMatchers("/api/board/WriteBoard").authenticated();   // 글 작성
             auth.requestMatchers("/api/board/update/**").authenticated();   // 글 수정
-<<<<<<< HEAD
+
             auth.requestMatchers("/api/board/delete/**").permitAll();   // 글 삭제
             auth.requestMatchers("/api/board/image/upload").authenticated();    // CKEditor 텍스트
             auth.requestMatchers("/api/comment/save").authenticated(); //
 
             // 차트 보는 거 로그인 허용할까 말까
-=======
-            auth.requestMatchers("/api/board/delete/**").authenticated();   // 글 삭제
-            auth.requestMatchers("/api/board/image/upload").authenticated();    // CKEditor 텍스트
-            auth.requestMatchers("/api/comment/save").authenticated(); //
-
->>>>>>> origin/임새롬
             auth.requestMatchers("/api/sales/summary").permitAll();
 
 
             // 공지사항 보는 거 로그인 안해도 가능
-<<<<<<< HEAD
             auth.requestMatchers("/api/notice/paging").permitAll();
             auth.requestMatchers(HttpMethod.GET, "/api/notice/*").permitAll();
-=======
+
 
             auth.requestMatchers("/api/notice/paging/**").permitAll();
             auth.requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll();
->>>>>>> origin/임새롬
+
             auth.requestMatchers(HttpMethod.GET, "/api/notice/download/**").permitAll();
 
             // 데이터 분석 보는 거 누구든 혀용
@@ -147,114 +133,106 @@ public class SecurityConfig {
             // 공지사항(관리자만 가능), 글 쓰기와 수정 삭제는 관리자만 가능
             auth.requestMatchers("/api/notice/save").hasAuthority("ADMIN");
             auth.requestMatchers(HttpMethod.PUT, "/api/notice/update/*").hasAuthority("ADMIN");
-<<<<<<< HEAD
-            auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").permitAll();    //
-=======
-            auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").hasAuthority("ADMIN");
->>>>>>> origin/임새롬
+            auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").hasAuthority("ADMIN");   //
 
+            // 네이버 트렌드 검색
+            auth.requestMatchers("/api/trend").permitAll();
 
             // 2. Swagger 관련 경로 전체 허용 추가!
             auth.requestMatchers(
                     "/v3/api-docs",                // v3/api-docs 경로 (JSON)
                     "/v3/api-docs/**",             // v3/api-docs 이하 모든 경로 (JSON)
                     "/swagger-ui.html",            // 기본 UI HTML 파일
-<<<<<<< HEAD
                     "/swagger-ui/**"          // Swagger UI 내부 리소스 (JS, CSS, Images)
-=======
-                    "/swagger-ui/**",               // Swagger UI 내부 리소스 (JS, CSS, Images)
-                    "/api/board/paging",         // 게시글 목록
-                    "/api/board/"
->>>>>>> origin/임새롬
-            ).permitAll();
+            ).permitAll();;
 
             // 내가 주석처리함 user 경로를 이미 사용중이기 때문에
-			auth.anyRequest().authenticated();
-		});
+            auth.anyRequest().authenticated();
+        });
 
-		//-----------------------------------------------------
-		// [수정] 로그인(직접처리 - UserRestController)
+        //-----------------------------------------------------
+        // [수정] 로그인(직접처리 - UserRestController)
         // 리액트에서 넘길거기때문에 disable설정이면 된다
 
         // 기본 로그인 폼 및 처리 필터를 사용하지않겠다(JWT 방식을 사용하므로 올바른 설정입니다)
 
-		//-----------------------------------------------------
-		http.formLogin((login)->{
-			login.disable();
+        //-----------------------------------------------------
+        http.formLogin((login)->{
+            login.disable();
 //            login.permitAll();
 //            login.loginPage("/login");
 //            login.successHandler(customLoginSuccessHandler());
 //            login.failureHandler(new CustomAuthenticationFailureHandler());
-		});
+        });
 
 
         // 로그아웃 시 해야할 작업들
         // AccessToken 블랙리스트 등록(Redis)
         // RefreshToken 삭제
         // 상태 로그 저장
-		http.logout((logout)->{
-			logout.permitAll();
-			logout.addLogoutHandler(customLogoutHandler);
-			logout.logoutSuccessHandler(customLogoutSuccessHandler);
-		});
-		//예외처리
-		http.exceptionHandling((ex)->{
-			ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
-			ex.accessDeniedHandler(new CustomAccessDeniedHandler());
-		});
+        http.logout((logout)->{
+            logout.permitAll();
+            logout.addLogoutHandler(customLogoutHandler);
+            logout.logoutSuccessHandler(customLogoutSuccessHandler);
+        });
+        //예외처리
+        http.exceptionHandling((ex)->{
+            ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+            ex.accessDeniedHandler(new CustomAccessDeniedHandler());
+        });
 
-		//OAUTH2 로그인
-		http.oauth2Login((oauth2)->{
-			oauth2.loginPage("/login");
-		});
+        //OAUTH2 로그인
+        http.oauth2Login((oauth2)->{
+            oauth2.loginPage("/login");
+        });
 
-		// 세션 사용 안함
-		http.sessionManagement((sessionManagerConfigure)->{
-			sessionManagerConfigure.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		});
+        // 세션 사용 안함
+        http.sessionManagement((sessionManagerConfigure)->{
+            sessionManagerConfigure.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        });
 
-		//JWT FILTER 추가
-		http.addFilterBefore(new JwtAuthorizationFilter(userRepository,jwtTokenProvider,jwtTokenRepository,redisUtil), LogoutFilter.class);
-		//-----------------------------------------------
-		//[추가] CORS
-		//-----------------------------------------------
-		http.cors((config)->{
-			config.configurationSource(corsConfigurationSource());
-		});
+        //JWT FILTER 추가
+        http.addFilterBefore(new JwtAuthorizationFilter(userRepository,jwtTokenProvider,jwtTokenRepository,redisUtil), LogoutFilter.class);
+        //-----------------------------------------------
+        //[추가] CORS
+        //-----------------------------------------------
+        http.cors((config)->{
+            config.configurationSource(corsConfigurationSource());
+        });
 
-		return http.build();
-		
-	}
+        return http.build();
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	//-----------------------------------------------------
-	//[추가] CORS - Bean을 생성해서 반환형태로
-	//-----------------------------------------------------
-	@Bean
-	CorsConfigurationSource corsConfigurationSource(){
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedHeaders(Collections.singletonList("*")); //허용헤더
-		config.setAllowedMethods(Collections.singletonList("*")); //허용메서드
-		config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));  //허용도메인
-		config.setAllowCredentials(true); // COOKIE TOKEN OPTION
-		return new CorsConfigurationSource(){
-			@Override
-			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-				return config;
-			}
-		};
-	}
-	//-----------------------------------------------------
-	//[추가] ATHENTICATION MANAGER 설정 - 로그인 직접처리를 위한 BEAN
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    //-----------------------------------------------------
+    //[추가] CORS - Bean을 생성해서 반환형태로
+    //-----------------------------------------------------
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(Collections.singletonList("*")); //허용헤더
+        config.setAllowedMethods(Collections.singletonList("*")); //허용메서드
+        config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));  //허용도메인
+        config.setAllowCredentials(true); // COOKIE TOKEN OPTION
+        return new CorsConfigurationSource(){
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                return config;
+            }
+        };
+    }
+    //-----------------------------------------------------
+    //[추가] ATHENTICATION MANAGER 설정 - 로그인 직접처리를 위한 BEAN
     // authentication을 빈으로 만들어 반환해야지 로그인처리 직접 가능
-	//-----------------------------------------------------
-	@Bean
-	public AuthenticationManager authenticationManager(
-			AuthenticationConfiguration authenticationConfiguration) throws Exception {
-		return authenticationConfiguration.getAuthenticationManager();
-	}
+    //-----------------------------------------------------
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
 }

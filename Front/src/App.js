@@ -16,15 +16,10 @@ import Footer from "./components/Footer";
 import NoticePaging from './components/notice/NoticePaging';
 import NoticeWrite from './components/notice/NoticeWrite';
 import NoticeDetail from './components/notice/NoticeDetail';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import Custom from './components/Custom';
 import Search from './components/Search';
->>>>>>> origin/임새롬
-=======
 import MyShop from './components/revenueAnalysis/MyShop';
->>>>>>> 474416e66b3960a87327c20268055e1ce6e501fe
+
 
 function App() {
   return (
@@ -57,13 +52,10 @@ function App() {
                 <Route path="/notice/:id" element={<NoticeDetail />} />
                 <Route path="/notice/update/:id" element={<NoticeWrite />} />
 
-<<<<<<< HEAD
                 {/* <Route path="/predict" element={}/> */}
 
-=======
                 <Route path="/custom" element={<Custom />} />
                 <Route path="/search" element={<Search />} />
->>>>>>> origin/임새롬
               </Routes>
             
             <Footer />
