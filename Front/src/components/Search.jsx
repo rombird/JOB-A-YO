@@ -3,6 +3,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import KakaoMap from './KakaoMap';
 import "../css/search.css";
 import "../css/home.css";
+import NaverTrendChart from './revenueAnalysis/NaverTrendChart';
 
 function Search() {
     const location = useLocation();
@@ -122,6 +123,7 @@ function Search() {
                     </div>
                 </div>
             </div>
+            <NaverTrendChart />
         </div>
     )
 }
