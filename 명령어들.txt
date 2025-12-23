@@ -8,3 +8,11 @@ python -m pip install --upgrade pip	-> 필요 라이브러리들 install 하는�
 python -m pip install pandas joblib fastapi uvicorn scikit-learn xgboost
 
 python main.py -> main.py 실행, FastAPI 실행됨
+
+# Front 터미널 명령어
+cd FRONT
+npm install
+npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+npm install recharts
+npm install react-kakao-maps-sdk
+npm start
