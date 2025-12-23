@@ -31,8 +31,6 @@ const MyShop = () => {
                 revenueData: revenueRes.data,
                 successData: successRes.data
             })
-
-
             // console.log("뭘 들고오냐?: ", response);
             // setResult(response.data);
         }catch(error){

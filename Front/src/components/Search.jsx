@@ -3,6 +3,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import KakaoMap from './KakaoMap';
 import "../css/search.css";
 import "../css/home.css";
+import NaverTrendChart from './revenueAnalysis/NaverTrendChart';
 
 function Search() {
     const location = useLocation();
@@ -99,28 +100,31 @@ function Search() {
                         <div className='result-head'>검색 결과 {totalCount}개</div>
                         {searchResults.length > 0 ? (
                             <>
-                                <ul className='results' >
+                                <ul className='results'>
                                     {searchResults.map((place, index) => (
                                         <li className='result' key={index} onClick={() => mapRef.current.moveToLocation(place)} >
-                                            <strong style={{ color: '#65A3FF', cursor: 'pointer' }}>{place.place_name}</strong>
-                                            <p style={{ fontSize: '12px', margin: '5px 0' }}>{place.road_address_name}</p>
-                                            <span style={{ fontSize: '11px', color: '#888' }}>{place.phone}</span>
+                                            <strong className="result-strong">{place.place_name}</strong>
+                                            <p className="result-p">{place.road_address_name}</p>
+                                            <span className="result-span">{place.phone}</span>
                                         </li>
                                     ))}
                                 </ul>
                                 
                                 {/* 이 div가 보이면 다음 데이터를 가져오는 거임 */}
-                                <div ref={observerTarget} style={{height: '20px', background: 'transparent'}}>
+                                <div className="result-loading" ref={observerTarget}>
                                     {pagination?.hasNextPage && "로딩 중..."}
                                 </div>
                                 
                             </>
 
                         ) : (
-                            <p>검색 결과가 없습니다</p>
+                            <p className="result-none">검색 결과가 없습니다</p>
                         )}
                     </div>
                 </div>
+            </div>
+            <div>
+                <NaverTrendChart />
             </div>
         </div>
     )

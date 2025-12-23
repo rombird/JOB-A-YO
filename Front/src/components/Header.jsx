@@ -9,9 +9,7 @@ const Header = () => {
     const { isLoggedIn, logout, user } = useAuth(); 
     const navigate = useNavigate(); // useNavigate 훅 초기화
 
-    // #################################################
     // 챗봇 상태 추가
-    // #################################################
     const [isChatbotVisible, setIsChatbotVisible] = useState(false);
 
     // 챗봇 열기/ 닫기 토글 함수
@@ -84,7 +82,7 @@ const Header = () => {
                                 </li>
                                 <li className="mainList">
                                     <div className="listLine">
-                                        <Link className="mainMenu" to="/guide" >이용안내</Link>
+                                        <Link className="mainMenu" to="/api/notices" >이용안내</Link>
                                     </div>
                                     <ul className="subNav">
                                         <li className="subList">

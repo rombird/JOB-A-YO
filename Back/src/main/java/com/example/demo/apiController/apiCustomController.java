@@ -1,6 +1,7 @@
 package com.example.demo.apiController;
 
 import com.example.demo.domain.dto.StoreRequest;
+import com.example.demo.domain.dto.StoreResponse;
 import com.example.demo.domain.entity.Store;
 
 import com.example.demo.service.StoreService;
@@ -21,9 +22,9 @@ public class apiCustomController {
     }
 
     @PostMapping("/custom")
-    public ResponseEntity<String> getStoreCount(@RequestBody StoreRequest request){
-        String resultSentence = storeService.getAnalysisSentence(request);
-        return ResponseEntity.ok(resultSentence);
+    public ResponseEntity<StoreResponse> getStoreAnalysis(@RequestBody StoreRequest request){
+        StoreResponse response = storeService.getAnalysis(request);
+        return ResponseEntity.ok(response);
     }
 
 

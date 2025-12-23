@@ -59,7 +59,7 @@ function PredictionForm() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
+    <div className="prediction" >
       <h2>상권 매력도 지수 예측</h2>
       <form onSubmit={handleSubmit}>
         

@@ -7,10 +7,9 @@ import "../css/home.css"
 function Home(){
     const [inputText, setInputText] = useState("");     // 입력창의 실시간 테스트
     const navigate = useNavigate(); // 네비게이트 함수 선언
-    const [pagination, setPagination] = useState(null);
-
     const observerTarget = useRef(null);    // 스크롤 끝을 감지할 타겟 Ref
-
+    const [pagination, setPagination] = useState(null);
+    
     // 검색 버튼 클릭 함수
     const handleSearch = (e) => {
         e.preventDefault();     // form의 새로고침 방지
@@ -23,12 +22,6 @@ function Home(){
         // setSearchKeyword(inputText);    // KakaoMap으로 전달될 키워드 업데이트
     };
 
-    // kakaoMap에서 검색이 완료되면 데이터를 받는 함수
-    // const handleSearchComplete = (data, paging) => {
-    //     setSearchResults(prev => [...prev, ...data]);   // 기존 결과에 추가 (더보기 대응)
-    //     setPagination(paging);
-    //     setTotalCount(paging.totalCount);
-    // };
 
     // 무한 스크롤 로직
     useEffect(() => {
@@ -108,7 +101,7 @@ function Home(){
                                     </Link>
                                 </div>
                                 <div id="box" >
-                                    <Link className="girl" to="">
+                                    <Link className="girl" to="/myshop">
                                         <dl>
                                             <img src="/images/girl_image.png" alt="AI 예측 리포트" />
                                             <dt>AI 예측 리포트</dt>

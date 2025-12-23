@@ -58,7 +58,7 @@
     position:absolute;
     right:20px;
     top:20px;
-    width:800px;
+    width:500px;
     z-index:10;
     background-color: rgba(255, 255, 255, 0.9);
     padding:15px;
@@ -81,7 +81,8 @@
     border:1px solid #65A3FF;
 }
 .main-sentence{
-    font-family:"kopume"
+    font-family:"kopume";
+    white-space: pre-wrap;
 }
 .term-guide>h5{
     font-family:"kopu";

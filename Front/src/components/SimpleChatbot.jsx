@@ -6,9 +6,7 @@ import "../css/simpleChatbot.css";
 // 심플챗봇  주소
 const SIMPLE_AI_URL = 'http://localhost:8090/api/v1/simple-chat';
 
-// ###########################################
 // 컴포넌트 정의 및 상태 관리
-// ###########################################
 const SimpleChatbot = ({isVisible, onClose}) => {
 
     // 대화 메시지 목록 상태
@@ -22,9 +20,7 @@ const SimpleChatbot = ({isVisible, onClose}) => {
     // Dom 참조(스크롤 제어용)
     const chatBodyRef = useRef(null);
 
-    // #################################################
     // 메시지 전송 로직
-    // #################################################
     const sendSimpleMessage = useCallback(async (textTosend) => {
         const text = textTosend.trim();
         if(!text || isLoading) return;
@@ -84,18 +80,14 @@ const SimpleChatbot = ({isVisible, onClose}) => {
         }
     };
 
-    // ##############################################
     // 스크롤 자동 이동 효과
-    // ##############################################
     useEffect(() => {
         if(chatBodyRef.current){
             chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
         }
     }, [message, isVisible]);
 
-    // ###############################################
     // 랜더링
-    // ###############################################
     return(
         <>
             {/* // chat-panel과 visible클래스를 isVisible prop에 따라 조건부 적용 */}

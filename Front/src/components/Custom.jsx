@@ -39,7 +39,7 @@ const Custom = () => {
         };
     });
     const [category, setCategory] = useState("한식"); 
-    const [analysisResult, setAnalysisResult] = useState("");
+    const [analysisResult, setAnalysisResult] = useState(null);
     const [loading, setLoading] = useState(false); 
     const mapRef = useRef(null); // Map 객체에 접근하기 위한 ref
     
@@ -171,11 +171,32 @@ const Custom = () => {
             {analysisResult && (
                 <div className="analysis-box">
                     <div className="result-header">
-                        <h4>📊 {selectedDong.name} {category} 리포트</h4>
+                        <h4>📊 {analysisResult.dongName} {analysisResult.category} 리포트</h4>
                     </div>
                     <div className="result-content">
-                        <p className="main-sentence">{analysisResult}</p>
+                        <p className="summary">{analysisResult.summary}</p>
                         <hr />
+                        <ul>
+                            <li>
+                                <b>점포 증감률</b> : {analysisResult.storeChangeRate}
+                                <br />
+                                <span>{analysisResult.storeChangeComment}</span>
+                            </li>
+                            <li>
+                                <b>업종 면적 밀도</b> : {analysisResult.areaDensity}
+                                <br />
+                                <span>{analysisResult.areaDensityComment}</span>
+                            </li>
+                            <li>
+                                <b>점포당 유동인구</b> : {analysisResult.populationPerStore}
+                                <br />
+                                <span>{analysisResult.populationComment}</span>
+                            </li>
+                        </ul>
+                        <hr />
+                        <p>
+                            ∘ 예상 전망 등급 : <b>{analysisResult.outlookGrade}</b>
+                        </p>
                         <div className="term-guide">
                             <h5>💡 용어 설명</h5>
                             <dl>
