@@ -42,7 +42,8 @@ const Custom = () => {
     const [analysisResult, setAnalysisResult] = useState(null);
     const [loading, setLoading] = useState(false); 
     const mapRef = useRef(null); // Map 객체에 접근하기 위한 ref
-    
+    const [open, setOpen] = useState(false);
+
     // 사용자가 행정동을 선택하면 dongGeoJson 파일안에서 같은 행정동을 find로 찾아냄
     // -> 복잡한 좌표들을 transformCoordinates로 변환해 저장
     const currentPath = useMemo(() => { 
@@ -166,8 +167,6 @@ const Custom = () => {
                     {loading ? "분석 중..." : "분석하기"}
                 </button>
             </div>
-
-            {/* 결과 표시 창 */}
             {analysisResult && (
                 <div className="analysis-box">
                     <div className="result-header">
@@ -197,6 +196,7 @@ const Custom = () => {
                         <p>
                             ∘ 예상 전망 등급 : <b>{analysisResult.outlookGrade}</b>
                         </p>
+                        <hr />
                         <div className="term-guide">
                             <h5>💡 용어 설명</h5>
                             <dl>
@@ -212,8 +212,8 @@ const Custom = () => {
                         </div>
                     </div>
                 </div>
+                
             )}
-
             {/* 지도 영역 */}
             <Map className="kakaomap" center={{ lat: selectedDong.lat, lng: selectedDong.lng }} ref={mapRef} level={7}>
                 {currentPath.length > 0 && (

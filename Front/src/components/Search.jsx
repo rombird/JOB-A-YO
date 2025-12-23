@@ -94,6 +94,7 @@ function Search() {
                         onSearchComplete={handleSearchComplete} // 결과 데이터를 부모로 보내는 함수 
                     />
                 </div>
+                
                 <div className='result-section'>
                     <div
                         className='result-list' >
@@ -123,7 +124,7 @@ function Search() {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="layoutCenter">
                 <NaverTrendChart />
             </div>
         </div>

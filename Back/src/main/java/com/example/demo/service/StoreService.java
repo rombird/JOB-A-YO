@@ -23,6 +23,10 @@ public class StoreService {
     private static final double HIGH_POPULATION = 300_000;
     private static final double MID_POPULATION = 150_000;
 
+    private double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
+
     private String interpretStoreChange(double rate) {
         // 0보다 크면 시장이 성장 중일 가능성, 0에 가까우면 안정단계, 0보다 작으면 점포감소
         if (rate > HIGH_GROWTH_RATE) return "최근 점포 수가 증가 중으로 성장 가능성이 있습니다.";
@@ -62,10 +66,10 @@ public class StoreService {
                 .findByDongNameAndCategoryName(request.regionName(), request.category())
                 .orElseThrow(() -> new RuntimeException("분석 데이터 없음"));
 
-        double changeRate = Double.parseDouble(s.getStoreChangeRate());
-        double compIndex = Double.parseDouble(s.getCompetitionIndex());
-        double areaDen = Double.parseDouble(s.getAreaDensity());
-        double popPerStore = Double.parseDouble(s.getPopulationPerStore());
+        double changeRate = round(Double.parseDouble(s.getStoreChangeRate()));
+        double compIndex = round(Double.parseDouble(s.getCompetitionIndex()));
+        double areaDen = round(Double.parseDouble(s.getAreaDensity()));
+        double popPerStore = round(Double.parseDouble(s.getPopulationPerStore()));
 
         return new StoreResponse(
                 s.getDongName(),

@@ -79,10 +79,10 @@
     padding: 20px;
     margin:5px;
     border:1px solid #65A3FF;
-}
-.main-sentence{
     font-family:"kopume";
-    white-space: pre-wrap;
+}
+.result-content li{
+    margin-bottom:10px;
 }
 .term-guide>h5{
     font-family:"kopu";
