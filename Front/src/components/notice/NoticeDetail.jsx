@@ -3,6 +3,7 @@ import { useNavigate, Link, useParams, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from "react";
 import { useAuth } from '../../context/AuthContext';
 import moment from 'moment'; 
+import api from "../../api/axiosConfig";
 
 import "../../css/common.css";
 import "../../css/boardDetail.css";
@@ -128,7 +129,7 @@ const NoticeDetail = () => {
                 // 1. 백엔드 API 호출 : Delete /api/notice/delete/{id}
                 // axios.delete 메서드 사용
             
-            await axios.delete(`http://localhost:8090/api/notice/delete/${notice.id}`);
+            await api.delete(`/api/notice/delete/${notice.id}`);
             
             // 2. 성공 시 알림 및 목록으로 이동
             alert("게시글이 삭제되었습니다");

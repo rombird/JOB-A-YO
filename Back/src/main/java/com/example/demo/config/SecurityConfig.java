@@ -74,7 +74,6 @@ public class SecurityConfig {
         //권한체크
         http.authorizeHttpRequests((auth)->{
             auth.requestMatchers("/",
-                    "/join",
                     "/login", // 인증 없이 접근 허용
                     "/validate",
                     "/oauth2/**",
@@ -122,6 +121,8 @@ public class SecurityConfig {
             auth.requestMatchers("/api/notice/paging").permitAll();
             auth.requestMatchers(HttpMethod.GET, "/api/notice/*").permitAll();
 
+            // 회원가입 누구나 허용
+            auth.requestMatchers("/join").permitAll();
 
             auth.requestMatchers("/api/notice/paging/**").permitAll();
             auth.requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll();
@@ -135,7 +136,7 @@ public class SecurityConfig {
             // 공지사항(관리자만 가능), 글 쓰기와 수정 삭제는 관리자만 가능
             auth.requestMatchers("/api/notice/save").hasAuthority("ADMIN");
             auth.requestMatchers(HttpMethod.PUT, "/api/notice/update/*").hasAuthority("ADMIN");
-            auth.requestMatchers(HttpMethod.DELETE, "/api/notice/delete/*").hasAuthority("ADMIN");   //
+            auth.requestMatchers("/api/notice/delete/**").hasAuthority("ADMIN");   //
 
             // 네이버 트렌드 검색
             auth.requestMatchers("/api/trend").permitAll();

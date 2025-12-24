@@ -58,7 +58,7 @@
     position:absolute;
     right:20px;
     top:20px;
-    width:800px;
+    width:500px;
     z-index:10;
     background-color: rgba(255, 255, 255, 0.9);
     padding:15px;
@@ -79,9 +79,10 @@
     padding: 20px;
     margin:5px;
     border:1px solid #65A3FF;
+    font-family:"kopume";
 }
-.main-sentence{
-    font-family:"kopume"
+.result-content li{
+    margin-bottom:10px;
 }
 .term-guide>h5{
     font-family:"kopu";

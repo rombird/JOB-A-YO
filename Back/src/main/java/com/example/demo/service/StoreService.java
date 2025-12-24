@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.dto.StoreRequest;
+import com.example.demo.domain.dto.StoreResponse;
 import com.example.demo.domain.entity.Store;
 import com.example.demo.domain.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,27 +15,79 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
 
-    public String getAnalysisSentence(StoreRequest request){
-        return storeRepository.findByDongNameAndCategoryName(request.regionName(), request.category())
-                .map(s -> {
-                    try {
-                        // String 타입을 double로 변환 (소수점 처리를 위해)
-                        double changeRate = Double.parseDouble(s.getStoreChangeRate());
-                        double compIndex = Double.parseDouble(s.getCompetitionIndex());
-                        double areaDen = Double.parseDouble(s.getAreaDensity());
-                        double popPerStore = Double.parseDouble(s.getPopulationPerStore());
+    private static final double HIGH_GROWTH_RATE = 0.05;
+    private static final double HIGH_COMPETITION = 1.2;
+    private static final double MID_COMPETITION = 0.8;
+    private static final double HIGH_DENSITY = 40;
+    private static final double MID_DENSITY = 20;
+    private static final double HIGH_POPULATION = 300_000;
+    private static final double MID_POPULATION = 150_000;
 
-                        // %.2f 를 사용하여 소수점 둘째 자리까지 제한
-                        return String.format(
-                                "%s의 %s 업종 분석: 점포 증감률 %.2f, 경쟁도 지수 %.2f, 업종 면적 밀도 %.2f, 점포당 유동인구 %.2f, 예상 전망 등급은 %s입니다.",
-                                s.getDongName(), s.getCategoryName(), changeRate, compIndex, areaDen, popPerStore, s.getOutlookGrade()
-                        );
-                    } catch (Exception e) {
-                        // 숫자 변환 실패 시 기존 문자열 그대로 출력 (안전장치)
-                        return String.format("%s의 %s 업종 분석 결과... (데이터 형식 오류)", s.getDongName(), s.getCategoryName());
-                    }
-                })
-                .orElse("해당 지역 및 업종에 대한 분석 데이터가 존재하지 않습니다.");
+    private double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
+
+    private String interpretStoreChange(double rate) {
+        // 0보다 크면 시장이 성장 중일 가능성, 0에 가까우면 안정단계, 0보다 작으면 점포감소
+        if (rate > HIGH_GROWTH_RATE) return "최근 점포 수가 증가 중으로 성장 가능성이 있습니다.";
+        if (rate > 0) return "점포 수가 소폭 증가하며 안정적인 흐름입니다.";
+        return "점포 수가 감소 추세로 신중한 접근이 필요합니다.";
+    }
+
+    private String interpretCompetition(double comp) {
+        // 1보다 클수록 경쟁 치열, 1에 가까우면 평균 경쟁수준, 1보다 작으면 경쟁완화
+        if (comp> HIGH_COMPETITION) return "경쟁이 치열한 편으로 차별화 전략이 필요합니다.";
+        if (comp >= MID_COMPETITION) return "경쟁 수준이 평균적인 편입니다.";
+        return "경쟁이 비교적 낮아 신규 진입에 유리합니다.";
+    }
+    private String interpretAreaDensity(double density) {
+        // 높을수록 상권집중도 높음, 낮을수록 분산된 상권
+        if (density > HIGH_DENSITY) return "업종 점포가 매우 밀집되어 경쟁이 치열한 상권입니다.";
+        if (density > MID_DENSITY) return "업종 젚모가 비교적 밀집된 지역입니다.";
+        return "업종 점포 밀도가 낮아 틈새 상권일 가능성이 있습니다.";
+    }
+    private String interpretPopulation(double value){
+        // 높을수록 수요대비 점포수 적음, 낮을수록 점포수 대비 수요 부족 가능성
+        if (value > HIGH_POPULATION) return "점포 1곳당 잠재 고객 수가 충분한 편입니다.";
+        if (value > MID_POPULATION) return "점포당 유동인구가 평균적인 수준입니다.";
+        return "점포 수 대비 유동인구가 적어 매출 확보에 주의가 필요합니다.";
+    }
+
+    private String buildSummary(double rate, double comp, double density) {
+        if (rate > 0 && comp < 1)
+            return "점포 수가 증가 중이며 경쟁이 낮아 신규 진입에 유리한 상권입니다.";
+        if (rate > 0 && comp >= 1)
+            return "성장 가능성은 있으나 경쟁이 존재해 차별화 전략이 필요합니다.";
+        return "전반적으로 신중한 접근이 요구되는 상권입니다.";
+    }
+
+    public StoreResponse getAnalysis(StoreRequest request) {
+        Store s = storeRepository
+                .findByDongNameAndCategoryName(request.regionName(), request.category())
+                .orElseThrow(() -> new RuntimeException("분석 데이터 없음"));
+
+        double changeRate = round(Double.parseDouble(s.getStoreChangeRate()));
+        double compIndex = round(Double.parseDouble(s.getCompetitionIndex()));
+        double areaDen = round(Double.parseDouble(s.getAreaDensity()));
+        double popPerStore = round(Double.parseDouble(s.getPopulationPerStore()));
+
+        return new StoreResponse(
+                s.getDongName(),
+                s.getCategoryName(),
+                changeRate,
+                interpretStoreChange(changeRate),
+                compIndex,
+                interpretCompetition(compIndex),
+                areaDen,
+                interpretAreaDensity(areaDen),
+                popPerStore,
+                interpretPopulation(popPerStore),
+                s.getOutlookGrade(),
+                buildSummary(changeRate, compIndex, areaDen)
+        );
+
+
+    }
+
 
 }
