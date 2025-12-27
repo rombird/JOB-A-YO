@@ -355,9 +355,11 @@ gantt
     
     section Spring Boot(백엔드)
     회원/인증 API (JWT) & 공지사항 CURD & 커뮤니티 CRUD         :done, be1, 2025-11-18, 2025-11-22
+    백엔드 통합                                               : done, be2, 2025-11-30, 2025-12-06
     
     section React(프론트엔드)
     UI 레이아웃 및 기본 컴포넌트    :done, fe1, 2025-11-23, 2025-11-25
+    프론트 통합                   : done, fe2, 2025-11-30, 2025-12-06
     
     section 핵심 기능(지도)
     카카오 지도 API 연동          :crit, map1, 2025-12-16, 2025-12-17
