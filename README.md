@@ -32,9 +32,9 @@
           <td>프론트엔드 통합</td>
         </tr>
         <tr align="center">
-          <td>각자 작업한 내용</td>
-          <td>각자 작업한 내용</td>
-          <td>각자 작업한 내용</td>
+          <td> 공지사항CRUD <br /> 머신러닝 구축 <br /> chart.js로 트렌드 정보 설계 </td>
+          <td> 커뮤니티CRUD <br /> FastAPI로 AI 예측 리포트 설계 <br />  </td>
+          <td> 유저(로그인)CRUD <br /> 상권 통계 설계 </td>
         </tr>
       </tbody>
     </table>
@@ -63,32 +63,40 @@
           <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
           <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
     </div>
-    <p>배포시 배포환경기술까지 추가로 넣어두기</p>
+    <div>
+        <h3> Deployment </h3>
+        <p> 배포 진행 중 ... </p>
+    </div>
+    
 </div>
 
 <br />
 
 <div align="center">
     <h2>화면 구성(UI) 및 주요 기능</h2>
-    <div align="left">
-        <p> - 핵심 기능 : 머신러닝 예측모델 구축으로 사용자가 지역, 업종을 입력하면 그에 맞는 상권을 분석해서 결과를 분석
-        <p> - 필수 기능 : 회원/인증, 게시판/공지사항, AI 챗봇 chart.js </p>
+    <div align="left" >
+        <b> ­상권 분석 예측 기능 </b> 
+        <p>   머신 예측모델 구축으로 사용자가 지역, 업종을 입력하면 그에 맞는 상권을 분석해서 결과를 분석 </p>  <br />
+        <b> 로그인 관련 기능 </b> 
+        <p> 사용자 로그인 시 Access Token 발급, 보안 강화를 위해 Refresh Token 도입하여 Access Token 만료 시 자동 재발급 로직 구현  </p> <br/>
+        <b> ­커뮤니티 & 공지사항 </b> 
+        <p> RESTful API 기반의 커뮤니티/공지사항 생성·조회·수정·삭제 구현, 공지사항은 관리자('ADMIN') 권한을 가진 사용자만 작성 가능한 시스템으로 일반 사용자와 관리자 권한 분리 </p> <br />
          <table>
           <thead>
             <tr align="center">
               <td> 메인 페이지 </td>
-              <td> <img /> </td>
+              <td>  <img width="900" height="630" alt="Image" src="https://github.com/user-attachments/assets/c227b58b-4359-45bb-b2b6-7bc76ae7a946" /> </td>
             </tr>
           </thead>
           <tbody>
             <tr>
                 <td> AI 예측 리포트 (핵심기능) </td>
-                <td> <img width="1280" height="750" alt="Image" src="https://github.com/user-attachments/assets/2241ef6b-1f65-4682-a3fb-818ccadfac32" /> 
+                <td> <img width="900" height="750" alt="Image" src="https://github.com/user-attachments/assets/2241ef6b-1f65-4682-a3fb-818ccadfac32" /> 
                     예상매출액, 창업성공확률을 머신러닝모델구축 후 FastAPI 연결 </td>
             </tr>
             <tr>
                 <td> 상권 통계 </td>
-                <td>  <img width="1280" height="750" alt="Image" src="https://github.com/user-attachments/assets/27011611-d3be-46f2-91cd-e9eb5f1711dd" /> 
+                <td>  <img width="900" height="750" alt="Image" src="https://github.com/user-attachments/assets/27011611-d3be-46f2-91cd-e9eb5f1711dd" /> 
                     업종증감률, 업종면적밀도, 점포당 유동인구로 예상 전망 등급 공식에 대입하여 분석 </td>
             </tr>
           </tbody>
@@ -100,6 +108,7 @@
 
 <div align="center">
     <h2> ERD </h2>
+    <img />
 </div>
 
 <br/>
@@ -258,8 +267,65 @@
 
 <div align="center">
     <h2>프로젝트 구조</h2>
-    <p>tree .</p>
-</div>
+</div>  
+
+```
+Back
+└─src
+    ├─main
+    │  ├─generated
+    │  ├─java
+    │  │  └─com
+    │  │      └─example
+    │  │          └─demo
+    │  │              ├─apiController
+    │  │              ├─config
+    │  │              │  └─auth
+    │  │              │      ├─exceptionHandler
+    │  │              │      ├─jwt
+    │  │              │      ├─loginHandler
+    │  │              │      ├─logoutHandler
+    │  │              │      ├─provider
+    │  │              │      ├─redis
+    │  │              │      └─scheduled
+    │  │              ├─controller
+    │  │              ├─domain
+    │  │              │  ├─dto
+    │  │              │  ├─entity
+    │  │              │  └─repository
+    │  │              └─service
+    │  └─resources
+    │      ├─static
+    │      │  ├─css
+    │      │  ├─font
+    │      │  ├─image
+    │      │  └─js
+    │      └─templates
+    │          ├─board
+    │          └─user
+    └─test
+
+Front
+└─src
+    ├─api
+    ├─assets
+    ├─components
+    │  ├─board
+    │  ├─notice
+    │  └─user
+    ├─context
+    ├─css
+    ├─data
+    ├─hooks
+    ├─services
+    └─utils
+
+Ml
+├─app
+│  └─__pycache__
+├─data
+└─models
+```
 
 <br/>
 
@@ -267,14 +333,14 @@
     <h2>설치 및 실행방법</h2>
 </div>
 
+<br />
 
 <div align="center">
   <h2> 개발 일정 & 회고 </h2>
     <p> 프로젝트 기간 : 2025.11.18 ~ 2025.12.12(4주) </p>
     <p> 회고에 추가할 내용 : API 통신 시 ERR_NETWORK 발생 <br/>
-        문제: 리액트에서 백엔드로 점포 수 조회 요청 시 AxiosError: Network Error 발생. <br />
-        원인: Spring Security 설정에서 새로운 엔드포인트(/api/stores/**)에 대한 접근 허용(permitAll)이 누락되어 요청이 차단됨. <br />
-        해결: SecurityConfig 파일의 filterChain 설정에 해당 경로를 추가하여 권한 검사 없이 접근 가능하도록 수정 후 정상 작동 확인. <br />
+        Spring Security 설정에서 새로운 엔드포인트(/api/stores/**)에 대한 접근 허용(permitAll)이 누락되어 요청이 차단됨. <br />
+        해결 → SecurityConfig 파일의 filterChain 설정에 해당 경로를 추가하여 권한 검사 없이 접근 가능하도록 수정 후 정상 작동 확인. <br />
     </p>
 </div>
 
@@ -285,23 +351,20 @@ gantt
     axisFormat  %m/%d
 
     section 기획 및 설계
-    요구사항 정의 및 기능 명세      :done, des1, 2025-12-01, 2025-12-05
-    DB 설계 및 ERD 작성           :done, des2, 2025-12-06, 2025-12-08
+    요구사항 정의 및 기능 명세      :done, des1, 2025-11-17, 2025-11-18
     
-    section 백엔드(Spring Boot)
-    회원/인증 API (JWT)          :done, be1, 2025-12-09, 2025-12-13
-    게시판 & 공지사항 CRUD        :done, be2, 2025-12-14, 2025-12-18
-    매출 통계 & AI 챗봇 API      :active, be3, 2025-12-19, 2025-12-23
+    section Spring Boot(백엔드)
+    회원/인증 API (JWT) & 공지사항 CURD & 커뮤니티 CRUD         :done, be1, 2025-11-18, 2025-11-22
     
-    section 프론트엔드(React)
-    UI 레이아웃 및 기본 컴포넌트    :done, fe1, 2025-12-09, 2025-12-15
-    API 연동 및 상태 관리         :active, fe2, 2025-12-16, 2025-12-22
+    section React(프론트엔드)
+    UI 레이아웃 및 기본 컴포넌트    :done, fe1, 2025-11-23, 2025-11-25
     
     section 핵심 기능(지도)
-    카카오 지도 API 연동          :crit, map1, 2025-12-23, 2025-12-27
-    지역 선택 및 데이터 저장 로직    :crit, map2, 2025-12-28, 2025-12-31
-    
+    카카오 지도 API 연동          :crit, map1, 2025-12-16, 2025-12-17
+    지역 선택 및 데이터 저장 로직, 머신러닝 예측 모델    :crit, map2, 2025-12-17, 2025-12-21
+     
     section 마무리
-    QA 및 버그 수정              : 2026-01-01, 2026-01-05
-    README 작성 및 배포          : 2026-01-06, 2026-01-07
+    QA 및 버그 수정              : 2025-11-26, 2025-11-29
+    README 작성 및 배포          : 2025-12-06, 2025-12-07
+    최종 마무리                  : 2025-12-21, 2025-12-22
 ```
