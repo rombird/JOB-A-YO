@@ -69,18 +69,31 @@
 <br />
 
 <div align="center">
-    <h2>주요 기능</h2>
+    <h2>화면 구성(UI) 및 주요 기능</h2>
     <div align="left">
-        <p> - 핵심 기능 : 사용자가 원하는 소비층, 원하는 지역 등을 입력하면 그에 맞는 상권을 분석해서 결과를 예측 or 비슷한 다른 조건들을 추천해주는 시스템 → 고객 맞춤형 보고서 제공
-        <p> - 필수 기능 : 회원/인증, 게시판/공지사항, AI 챗봇 chart.js</p>
+        <p> - 핵심 기능 : 머신러닝 예측모델 구축으로 사용자가 지역, 업종을 입력하면 그에 맞는 상권을 분석해서 결과를 분석
+        <p> - 필수 기능 : 회원/인증, 게시판/공지사항, AI 챗봇 chart.js </p>
+         <table>
+          <thead>
+            <tr align="center">
+              <td> 메인 페이지 </td>
+              <td> <img /> </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td> AI 예측 리포트 (핵심기능) </td>
+                <td> <img width="1280" height="750" alt="Image" src="https://github.com/user-attachments/assets/2241ef6b-1f65-4682-a3fb-818ccadfac32" /> 
+                    예상매출액, 창업성공확률을 머신러닝모델구축 후 FastAPI 연결 </td>
+            </tr>
+            <tr>
+                <td> 상권 통계 </td>
+                <td>  <img width="1280" height="750" alt="Image" src="https://github.com/user-attachments/assets/27011611-d3be-46f2-91cd-e9eb5f1711dd" /> 
+                    업종증감률, 업종면적밀도, 점포당 유동인구로 예상 전망 등급 공식에 대입하여 분석 </td>
+            </tr>
+          </tbody>
+        </table>
     </div>
-</div>
-
-<br />
-
-<div align="center">
-    <h2>화면구성(UI)</h2>
-    <p> gif로 핵심기능 찍으면 좋음 </p>
 </div>
 
 <br />
